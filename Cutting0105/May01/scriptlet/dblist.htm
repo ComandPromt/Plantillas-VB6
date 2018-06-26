@@ -1,0 +1,260 @@
+<html>
+
+<head>
+<title>Table Scriptlet</title>
+<style>
+  .defScriptlet {
+     font-Family: verdana;
+     font-Size: 10;
+     background-color: "beige";
+     margin: 0;
+  }
+  .defTable {
+     width:100%;
+     font-Family: verdana;
+     font-Size: 10;
+     margin: 0;
+     cellspacing: 0;
+     border: 0;
+     cellpadding: 0;
+  }
+  .defHead {
+     background-color: "#000000";
+     color: "white";
+     cursor: "";
+     font-Family: verdana;
+     font-Size: 11;
+     font-Weight: bold;
+     text-align: center;
+     margin: 1;
+  }
+ .defItem {
+     font-Family: verdana;
+     font-Size: 10;
+     margin: 1;
+  }
+ .itemSelected {
+     font-Family: verdana;
+     font-Size: 10;
+     font-weight: bold;
+     background-color: "blue";
+     color: "white";
+  }
+</style>
+</head>
+
+
+<script language="JavaScript" for="rds" event="ondatasetcomplete">
+	DoInsertTable();
+	if (m_selectableItems || m_mouseTracking) {
+		m_selectedRow = document.all("tableRow")[0];
+		m_selectedRow.className = "itemSelected";
+	}
+</script>
+
+<script language="JavaScript" for="tableRow" event="onmousedown">
+	if (m_selectableItems)
+	if (window.event.button == 2)
+		m_selectedRow.className = "defItem";
+</script>
+
+<script language="JavaScript" for="tableRow" event="ondblclick">
+	if (m_selectableItems || m_mouseTracking) 
+		alert(m_selectedRow.innerHTML);
+</script>
+
+<script language="JavaScript" for="tableRow" event="onclick">
+	if (m_selectedRow == null)
+		return;
+	SelectRow(window.event.srcElement);
+</script>
+
+<script language="JavaScript" for="tableRow" event="onmouseover">
+	if (m_mouseTracking)
+		SelectRow(window.event.srcElement);
+</script>
+
+
+
+
+
+<script language=JavaScript>
+function SelectRow(oElem)
+{
+	m_selectedRow.className = "defItem";
+	m_selectedRow = oElem.parentElement;
+	m_selectedRow.className = "itemSelected";	
+}
+</script>
+
+
+<script language=JavaScript>
+public_description = new CreateTable();
+var inScriptlet = (typeof(window.external.version)=="string");
+var m_records = -1;
+var m_server = "";
+var m_connect = "";
+var m_CmdText = "";
+var m_clsid = "clsid:BD96C556-65A3-11D0-983A-00C04FC29E33";
+var m_selectedRow = null;
+var m_selectableItems = 1;
+var m_mouseTracking = 0;
+
+
+/*----------------------------------------------*/
+function CreateTable() {
+/*----------------------------------------------*/
+  this.put_Server = DoPutServer;  
+  this.get_Server = DoGetServer;
+  this.put_Connect = DoPutConnect;  
+  this.get_Connect = DoGetConnect;
+  this.put_CmdText = DoPutCmdText;  
+  this.get_CmdText = DoGetCmdText;
+  this.put_SelectableItems = DoPutSelectableItems;  
+  this.get_SelectableItems = DoGetSelectableItems;
+  this.put_MouseTracking = DoPutMouseTracking;  
+  this.get_MouseTracking = DoGetMouseTracking;
+  this.get_RecordCount = DoGetRecordCount;
+  this.Execute = DoExecute;
+}
+
+
+/*----------------------------------------------*/
+// PROPERTY Server
+/*----------------------------------------------*/
+function DoPutServer( sServer ) {
+   m_server = sServer;
+}
+function DoGetServer() {
+   return m_server;
+}
+
+
+/*----------------------------------------------*/
+// PROPERTY Connect
+/*----------------------------------------------*/
+function DoPutConnect( sConnect ) {
+   m_connect = sConnect;
+}
+function DoGetConnect() {
+   return m_connect;
+}
+
+
+/*----------------------------------------------*/
+// PROPERTY CmdText
+/*----------------------------------------------*/
+function DoPutCmdText( sCmd ) {
+   m_cmdText = sCmd;
+}
+function DoGetCmdText() {
+   return m_cmdText;
+}
+
+
+/*----------------------------------------------*/
+// PROPERTY SelectableItems
+/*----------------------------------------------*/
+function DoPutSelectableItems(sVal) {
+   m_selectableItems = sVal;
+}
+function DoGetSelectableItems() {
+   return m_selectableItems;
+}
+
+
+/*----------------------------------------------*/
+// PROPERTY MouseTracking
+/*----------------------------------------------*/
+function DoPutMouseTracking(sVal) {
+   m_mouseTracking = sVal;
+}
+function DoGetMouseTracking() {
+   return m_mouseTracking;
+}
+
+
+/*----------------------------------------------*/
+// PROPERTY RecordCount
+/*----------------------------------------------*/
+function DoGetRecordCount() {
+   return m_records;
+}
+
+
+/*----------------------------------------------*/
+function DoExecute() {
+/*----------------------------------------------*/
+   if( inScriptlet ) {
+     window.external.scrollbar = 2;
+     window.external.selectableContent = 1;
+   }
+
+   DoInsertRDSControl();
+}
+
+
+/*----------------------------------------------*/
+function DoInsertRDSControl() {
+/*----------------------------------------------*/
+  s0 = "<object id=rds height=1 width=1 ";
+  s1 = "classid=\"" + m_clsid + "\"" + ">";
+  s2 = "<param name=\"Server\" value=\"" + m_server + "\">";
+  s3 = "<param name=\"Connect\" value=\"" + m_connect + "\">";
+  s4 = "<param name=\"SQL\" value=\"" + m_cmdText + "\">";
+  s5 = "</object>";
+  s = s0+s1+s2+s3+s4+s5;
+
+  document.all("rdsControl").innerHTML = s;
+}
+
+
+/*----------------------------------------------*/
+function DoInsertTable() {
+/*----------------------------------------------*/
+  var s0, s1, s2, s3, s4, s5, s6;
+  var iNumOfFields = rds.recordset.Fields.count;
+
+  s0 = "<table class=defTable>";
+  s1 = "<thead><tr>";
+
+  s2 = "";
+  for (i=0; i<iNumOfFields; i++)
+    s2 += "<th id=tHead class=defHead>" + rds.recordset.Fields(i).Name + "</th>";
+
+  s3 = "</tr></thead>";
+  
+  s4 = "<tbody class=defItem>";
+
+  s5 = "";
+  var counter = 0;
+  while (!rds.recordset.EOF)
+  {
+    s5 += "<tr id=tableRow recno=" + counter + ">";
+    for (i=0; i<iNumOfFields; i++)
+    {
+        s5 += "<td>" + rds.recordset.Fields(i).value + "</td>"; 
+    }
+    s5 += "</tr>";
+    
+    rds.recordset.moveNext();
+    counter ++;
+  }  
+
+  s6 = "</tr></tbody>";
+  
+  s = s0+s1+s2+s3+s4+s5+s6;
+  
+  document.all("rdsTable").style.display = "";
+  document.all("rdsTable").innerHTML = s;
+  m_records = rds.recordset.recordcount;
+}
+
+</script>
+
+
+<body class=defScriptlet>
+  <div id=rdsControl></div>
+  <div id=rdsTable></div>
+</body>
+</html>

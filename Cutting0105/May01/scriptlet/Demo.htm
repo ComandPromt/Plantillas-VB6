@@ -1,0 +1,20 @@
+<!-- Create a DSN to Northwind called NW or modify the code below -->
+
+<html>
+<title>The Table Scriptlet in action</title>
+<script language="VBScript" for=window event=onload>
+slet.Server = "http://expo-star"
+'slet.Connect = "provider=sqloledb;uid=sa;pwd=;server=localhost"
+slet.Connect = "DSN=NW"
+slet.CmdText = "select firstname, lastname, employeeid from employees"
+slet.SelectableItems = 1
+slet.Execute
+</script>
+
+<body>
+<object id=slet width=100% height=90% 
+       data="dblist.htm" 
+       type="text/x-scriptlet">
+</object>
+</body>
+</html>
