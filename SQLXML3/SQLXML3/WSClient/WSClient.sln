@@ -1,0 +1,27 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSClient", "WSClient.csproj", "{697C94D0-4302-473E-B7EC-A6F0C965611C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSWeb", "http://localhost/SQLXML/WSWeb/WSWeb.csproj", "{52262A67-0E72-4C78-904D-1E5C9AE09B16}"
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{697C94D0-4302-473E-B7EC-A6F0C965611C}.Debug.ActiveCfg = Debug|.NET
+		{697C94D0-4302-473E-B7EC-A6F0C965611C}.Debug.Build.0 = Debug|.NET
+		{697C94D0-4302-473E-B7EC-A6F0C965611C}.Release.ActiveCfg = Release|.NET
+		{697C94D0-4302-473E-B7EC-A6F0C965611C}.Release.Build.0 = Release|.NET
+		{52262A67-0E72-4C78-904D-1E5C9AE09B16}.Debug.ActiveCfg = Debug|.NET
+		{52262A67-0E72-4C78-904D-1E5C9AE09B16}.Debug.Build.0 = Debug|.NET
+		{52262A67-0E72-4C78-904D-1E5C9AE09B16}.Release.ActiveCfg = Release|.NET
+		{52262A67-0E72-4C78-904D-1E5C9AE09B16}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

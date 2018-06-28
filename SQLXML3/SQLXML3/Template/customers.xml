@@ -1,0 +1,7 @@
+<ROOT xmlns:sql="urn:schemas-microsoft-com:xml-sql">
+  <sql:query client-side-xml="0">
+    SELECT *
+    FROM   Customers
+    FOR XML AUTO
+  </sql:query>
+</ROOT>

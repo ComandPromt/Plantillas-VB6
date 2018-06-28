@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:s1="http://schemas.microsoft.com/SQLServer/2001/12/SOAP/types/SqlMessage" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s0="http://schemas.microsoft.com/SQLServer/2001/12/SOAP/types" xmlns:s3="http://ETIER3/Northwind/SoapProcedures" xmlns:s2="http://schemas.microsoft.com/SQLServer/2001/12/SOAP/types/SqlResultStream" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://ETIER3/Northwind/SoapProcedures" name="Procedures" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <s:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/SQLServer/2001/12/SOAP/types">
+      <s:import namespace="http://www.w3.org/2001/XMLSchema" />
+      <s:simpleType name="nonNegativeInteger">
+        <s:restriction base="s:int">
+          <s:minInclusive value="0" />
+        </s:restriction>
+      </s:simpleType>
+      <s:attribute name="IsNested" type="s:boolean" />
+      <s:complexType name="SqlRowSet">
+        <s:sequence>
+          <s:element ref="s:schema" />
+          <s:any />
+        </s:sequence>
+        <s:attribute ref="s0:IsNested" />
+      </s:complexType>
+      <s:complexType name="SqlXml" mixed="true">
+        <s:sequence>
+          <s:any />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="SqlResultCode">
+        <s:restriction base="s:int">
+          <s:minInclusive value="0" />
+        </s:restriction>
+      </s:simpleType>
+    </s:schema>
+    <s:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/SQLServer/2001/12/SOAP/types/SqlMessage">
+      <s:import namespace="http://www.w3.org/2001/XMLSchema" />
+      <s:import namespace="http://schemas.microsoft.com/SQLServer/2001/12/SOAP/types" />
+      <s:complexType name="SqlMessage">
+        <s:sequence minOccurs="1" maxOccurs="1">
+          <s:element name="Class" type="s0:nonNegativeInteger" />
+          <s:element name="LineNumber" type="s0:nonNegativeInteger" />
+          <s:element name="Message" type="s:string" />
+          <s:element name="Number" type="s0:nonNegativeInteger" />
+          <s:element name="Procedure" type="s:string" />
+          <s:element name="Server" type="s:string" />
+          <s:element name="Source" type="s:string" />
+          <s:element name="State" type="s0:nonNegativeInteger" />
+        </s:sequence>
+        <s:attribute ref="s0:IsNested" />
+      </s:complexType>
+    </s:schema>
+    <s:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/SQLServer/2001/12/SOAP/types/SqlResultStream">
+      <s:import namespace="http://www.w3.org/2001/XMLSchema" />
+      <s:import namespace="http://schemas.microsoft.com/SQLServer/2001/12/SOAP/types" />
+      <s:import namespace="http://schemas.microsoft.com/SQLServer/2001/12/SOAP/types/SqlMessage" />
+      <s:complexType name="SqlResultStream">
+        <s:choice minOccurs="1" maxOccurs="unbounded">
+          <s:element name="SqlRowSet" type="s0:SqlRowSet" />
+          <s:element name="SqlXml" type="s0:SqlXml" />
+          <s:element name="SqlMessage" type="s1:SqlMessage" />
+          <s:element name="SqlResultCode" type="s0:SqlResultCode" />
+        </s:choice>
+      </s:complexType>
+    </s:schema>
+    <s:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://ETIER3/Northwind/SoapProcedures">
+      <s:import namespace="http://www.w3.org/2001/XMLSchema" />
+      <s:import namespace="http://schemas.microsoft.com/SQLServer/2001/12/SOAP/types" />
+      <s:import namespace="http://schemas.microsoft.com/SQLServer/2001/12/SOAP/types/SqlMessage" />
+      <s:import namespace="http://schemas.microsoft.com/SQLServer/2001/12/SOAP/types/SqlResultStream" />
+      <s:element name="SalesByCategory">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CategoryName" nillable="true" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OrdYear" nillable="true" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SalesByCategoryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="SalesByCategoryResult" type="s2:SqlResultStream" />
+            <s:element name="returnValue" nillable="true" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CustOrderHist">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerID" nillable="true" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CustOrderHistResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CustOrderHistResult" type="s2:SqlResultStream" />
+            <s:element name="returnValue" nillable="true" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAllCustomers">
+        <s:complexType>
+          <s:sequence />
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAllCustomersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetAllCustomersResult" type="s2:SqlResultStream" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCustomerContactView">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerID" nillable="true" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCustomerContactViewResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetCustomerContactViewResult" type="s2:SqlResultStream" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </types>
+  <message name="SalesByCategoryIn">
+    <part name="parameters" element="s3:SalesByCategory" />
+  </message>
+  <message name="SalesByCategoryOut">
+    <part name="parameters" element="s3:SalesByCategoryResponse" />
+  </message>
+  <message name="CustOrderHistIn">
+    <part name="parameters" element="s3:CustOrderHist" />
+  </message>
+  <message name="CustOrderHistOut">
+    <part name="parameters" element="s3:CustOrderHistResponse" />
+  </message>
+  <message name="GetAllCustomersIn">
+    <part name="parameters" element="s3:GetAllCustomers" />
+  </message>
+  <message name="GetAllCustomersOut">
+    <part name="parameters" element="s3:GetAllCustomersResponse" />
+  </message>
+  <message name="GetCustomerContactViewIn">
+    <part name="parameters" element="s3:GetCustomerContactView" />
+  </message>
+  <message name="GetCustomerContactViewOut">
+    <part name="parameters" element="s3:GetCustomerContactViewResponse" />
+  </message>
+  <portType name="SXSPort">
+    <operation name="SalesByCategory">
+      <input message="s3:SalesByCategoryIn" />
+      <output message="s3:SalesByCategoryOut" />
+    </operation>
+    <operation name="CustOrderHist">
+      <input message="s3:CustOrderHistIn" />
+      <output message="s3:CustOrderHistOut" />
+    </operation>
+    <operation name="GetAllCustomers">
+      <input message="s3:GetAllCustomersIn" />
+      <output message="s3:GetAllCustomersOut" />
+    </operation>
+    <operation name="GetCustomerContactView">
+      <input message="s3:GetCustomerContactViewIn" />
+      <output message="s3:GetCustomerContactViewOut" />
+    </operation>
+  </portType>
+  <binding name="SXSBinding" type="s3:SXSPort">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <operation name="SalesByCategory">
+      <soap:operation soapAction="http://ETIER3/Northwind/SoapProcedures/SalesByCategory" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="CustOrderHist">
+      <soap:operation soapAction="http://ETIER3/Northwind/SoapProcedures/CustOrderHist" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="GetAllCustomers">
+      <soap:operation soapAction="http://ETIER3/Northwind/SoapProcedures/GetAllCustomers" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="GetCustomerContactView">
+      <soap:operation soapAction="http://ETIER3/Northwind/SoapProcedures/GetCustomerContactView" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="Procedures">
+    <port name="SXSPort" binding="s3:SXSBinding">
+      <soap:address location="http://ETIER3/Northwind/SoapProcedures" />
+    </port>
+  </service>
+</definitions>
