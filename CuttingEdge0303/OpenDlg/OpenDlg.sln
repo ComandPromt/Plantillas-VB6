@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenDlg", "OpenDlg.csproj", "{CD03DC94-6D5F-4A43-B035-B0EFF80320E6}"
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{CD03DC94-6D5F-4A43-B035-B0EFF80320E6}.Debug.ActiveCfg = Debug|.NET
+		{CD03DC94-6D5F-4A43-B035-B0EFF80320E6}.Debug.Build.0 = Debug|.NET
+		{CD03DC94-6D5F-4A43-B035-B0EFF80320E6}.Release.ActiveCfg = Release|.NET
+		{CD03DC94-6D5F-4A43-B035-B0EFF80320E6}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s0="MsdnMag.CuttingEdge" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="MsdnMag.CuttingEdge" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <s:schema elementFormDefault="qualified" targetNamespace="MsdnMag.CuttingEdge">
+      <s:import namespace="http://www.w3.org/2001/XMLSchema" />
+      <s:element name="GetInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="connString" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="userKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetInfoResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataSet" nillable="true">
+        <s:complexType>
+          <s:sequence>
+            <s:element ref="s:schema" />
+            <s:any />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </types>
+  <message name="GetInfoSoapIn">
+    <part name="parameters" element="s0:GetInfo" />
+  </message>
+  <message name="GetInfoSoapOut">
+    <part name="parameters" element="s0:GetInfoResponse" />
+  </message>
+  <message name="GetInfoHttpGetIn">
+    <part name="connString" type="s:string" />
+    <part name="userKey" type="s:string" />
+  </message>
+  <message name="GetInfoHttpGetOut">
+    <part name="Body" element="s0:DataSet" />
+  </message>
+  <message name="GetInfoHttpPostIn">
+    <part name="connString" type="s:string" />
+    <part name="userKey" type="s:string" />
+  </message>
+  <message name="GetInfoHttpPostOut">
+    <part name="Body" element="s0:DataSet" />
+  </message>
+  <portType name="MyDebugToolSoap">
+    <operation name="GetInfo">
+      <input message="s0:GetInfoSoapIn" />
+      <output message="s0:GetInfoSoapOut" />
+    </operation>
+  </portType>
+  <portType name="MyDebugToolHttpGet">
+    <operation name="GetInfo">
+      <input message="s0:GetInfoHttpGetIn" />
+      <output message="s0:GetInfoHttpGetOut" />
+    </operation>
+  </portType>
+  <portType name="MyDebugToolHttpPost">
+    <operation name="GetInfo">
+      <input message="s0:GetInfoHttpPostIn" />
+      <output message="s0:GetInfoHttpPostOut" />
+    </operation>
+  </portType>
+  <binding name="MyDebugToolSoap" type="s0:MyDebugToolSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <operation name="GetInfo">
+      <soap:operation soapAction="MsdnMag.CuttingEdge/GetInfo" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <binding name="MyDebugToolHttpGet" type="s0:MyDebugToolHttpGet">
+    <http:binding verb="GET" />
+    <operation name="GetInfo">
+      <http:operation location="/GetInfo" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+  </binding>
+  <binding name="MyDebugToolHttpPost" type="s0:MyDebugToolHttpPost">
+    <http:binding verb="POST" />
+    <operation name="GetInfo">
+      <http:operation location="/GetInfo" />
+      <input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+  </binding>
+  <service name="MyDebugTool">
+    <port name="MyDebugToolSoap" binding="s0:MyDebugToolSoap">
+      <soap:address location="http://localhost/mydebug/mydebug.asmx" />
+    </port>
+    <port name="MyDebugToolHttpGet" binding="s0:MyDebugToolHttpGet">
+      <http:address location="http://localhost/mydebug/mydebug.asmx" />
+    </port>
+    <port name="MyDebugToolHttpPost" binding="s0:MyDebugToolHttpPost">
+      <http:address location="http://localhost/mydebug/mydebug.asmx" />
+    </port>
+  </service>
+</definitions>

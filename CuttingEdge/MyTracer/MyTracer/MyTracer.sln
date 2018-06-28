@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyTracer", "MyTracer.csproj", "{E8599E39-805B-49D6-B758-01B91A79242C}"
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{E8599E39-805B-49D6-B758-01B91A79242C}.Debug.ActiveCfg = Debug|.NET
+		{E8599E39-805B-49D6-B758-01B91A79242C}.Debug.Build.0 = Debug|.NET
+		{E8599E39-805B-49D6-B758-01B91A79242C}.Release.ActiveCfg = Release|.NET
+		{E8599E39-805B-49D6-B758-01B91A79242C}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

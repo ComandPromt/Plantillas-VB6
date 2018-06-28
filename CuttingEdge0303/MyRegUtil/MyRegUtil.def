@@ -1,0 +1,3 @@
+EXPORTS
+	InitializeRegistry		@2		
+	ResetRegistry			@3
