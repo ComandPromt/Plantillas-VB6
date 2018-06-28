@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<title xmlns:skin="urn:schemas-DevHawk-net:webskinui">
+	<skin:database connectionstring="server=localhost;integrated security=SSPI;database=pubs" var="pubs" />
+
+	<skin:class assembly="DevHawkBooks" class="DevHawkBooks.Controller" var="control" />
+	<skin:transform var="control" method="GetTransform"/>
+
+	<skin:query var="pubs" type="Text">
+		<skin:parameter name="@id" datatype="varchar" size="6" key="id" collection="querystring" />		
+
+		SELECT title_id as ID, title as Name, RTRIM(Type) as Type, Price, Notes, PubDate as PublicationDate
+		FROM titles info WHERE title_id = @id
+		FOR XML AUTO, ELEMENTS
+	</skin:query>
+	
+	<authors>
+		<skin:query var="pubs" type="Text">
+			<skin:parameter name="@id" datatype="varchar" size="6" key="id" collection="querystring" />		
+
+			SELECT au_id as ID, au_lname as LastName, au_fname as FirstName 
+			FROM authors author WHERE au_id IN (SELECT au_id FROM titleauthor WHERE title_id = @id)
+			FOR XML AUTO
+		</skin:query>
+	</authors>
+
+	<skin:query var="pubs" type="Text">
+		<skin:parameter name="@id" datatype="varchar" size="6" key="id" collection="querystring" />		
+
+		SELECT pub_id as ID, pub_name as Name
+		FROM publishers publisher 
+		WHERE pub_id IN (SELECT pub_id FROM titles WHERE title_id = @id)
+		FOR XML AUTO
+	</skin:query>
+	
+</title>

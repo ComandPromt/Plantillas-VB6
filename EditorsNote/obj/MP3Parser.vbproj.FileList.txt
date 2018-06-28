@@ -1,0 +1,11 @@
+bin\MP3Parser.exe.config
+bin\MP3Parser.exe
+bin\MP3Parser.pdb
+bin\MP3Parser.xml
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\MP3Parser.MP3Form.resources
+obj\Debug\MP3Parser.Resources.resources
+obj\Debug\MP3Parser.vbproj.GenerateResource.Cache
+obj\Debug\MP3Parser.exe
+obj\Debug\MP3Parser.xml
+obj\Debug\MP3Parser.pdb

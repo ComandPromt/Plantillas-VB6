@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?>
+<UpgradeLog>
+<Properties><Property Name="Solution" Value="MP3Parser">
+</Property><Property Name="Solution File" Value="E:\btuga completos\mula\1000s of Visual Basic Source Code examples\VB6 and ASP\EditorsNote\MP3Parser.sln">
+</Property><Property Name="User Options File" Value="E:\btuga completos\mula\1000s of Visual Basic Source Code examples\VB6 and ASP\EditorsNote\MP3Parser.suo">
+</Property><Property Name="Date" Value="segunda-feira, 9 de Maio de 2005">
+</Property><Property Name="Time" Value="9:17">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="MP3Parser.sln" Description="File successfully backed up as E:\btuga completos\mula\1000s of Visual Basic Source Code examples\VB6 and ASP\EditorsNote\Backup\MP3Parser.sln">
+</Event><Event ErrorLevel="0" Project="" Source="MP3Parser.suo" Description="File successfully backed up as E:\btuga completos\mula\1000s of Visual Basic Source Code examples\VB6 and ASP\EditorsNote\Backup\MP3Parser.suo">
+</Event><Event ErrorLevel="0" Project="MP3Parser" Source="MP3Parser.vbproj" Description="Project file successfully backed up as E:\btuga completos\mula\1000s of Visual Basic Source Code examples\VB6 and ASP\EditorsNote\Backup\MP3Parser.vbproj">
+</Event><Event ErrorLevel="0" Project="MP3Parser" Source="MP3Parser.vbproj.user" Description="Project user file successfully backed up as E:\btuga completos\mula\1000s of Visual Basic Source Code examples\VB6 and ASP\EditorsNote\Backup\MP3Parser.vbproj.user">
+</Event><Event ErrorLevel="0" Project="MP3Parser" Source="AssemblyInfo.vb" Description="File successfully backed up as E:\btuga completos\mula\1000s of Visual Basic Source Code examples\VB6 and ASP\EditorsNote\Backup\AssemblyInfo.vb">
+</Event><Event ErrorLevel="0" Project="MP3Parser" Source="MP3.vb" Description="File successfully backed up as E:\btuga completos\mula\1000s of Visual Basic Source Code examples\VB6 and ASP\EditorsNote\Backup\MP3.vb">
+</Event><Event ErrorLevel="0" Project="MP3Parser" Source="MP3Form.vb" Description="File successfully backed up as E:\btuga completos\mula\1000s of Visual Basic Source Code examples\VB6 and ASP\EditorsNote\Backup\MP3Form.vb">
+</Event><Event ErrorLevel="0" Project="MP3Parser" Source="app.config" Description="File successfully backed up as E:\btuga completos\mula\1000s of Visual Basic Source Code examples\VB6 and ASP\EditorsNote\Backup\app.config">
+</Event><Event ErrorLevel="0" Project="MP3Parser" Source="MP3Form.resx" Description="File successfully backed up as E:\btuga completos\mula\1000s of Visual Basic Source Code examples\VB6 and ASP\EditorsNote\Backup\MP3Form.resx">
+</Event><Event ErrorLevel="0" Project="MP3Parser" Source="MP3Parser.vbproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="MP3Parser" Source="MP3Parser.vbproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="MP3Parser.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="MP3Parser.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="MP3Parser" Source="app.config" Description="File converted successfully. All &lt;supportedRuntime&gt; and &lt;requiredRuntime&gt; tags were removed to enable the project to build and run with Visual Studio 2005.">
+</Event><Event ErrorLevel="3" Project="MP3Parser" Source="app.config" Description="Converted">
+</Event></UpgradeLog>

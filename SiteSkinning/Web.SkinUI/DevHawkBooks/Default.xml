@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<default xmlns:skin="urn:schemas-DevHawk-net:webskinui">
+	<skin:database connectionstring="server=localhost;integrated security=SSPI;database=pubs" var="pubs" />
+
+	<skin:class assembly="DevHawkBooks" class="DevHawkBooks.Controller" var="control" />
+	<skin:methodcall var="control" method="SetSkin" />
+	<skin:transform var="control" method="GetTransform"/>
+
+	<authors>
+		<skin:query var="pubs" type="Text">
+		SELECT au_id as ID, au_lname as LastName, au_fname as FirstName 
+		FROM authors author FOR XML AUTO
+		</skin:query>
+	</authors>
+
+	<publishers>
+		<skin:query var="pubs" type="Text">
+		SELECT pub_id as ID, pub_name as Name 
+		FROM publishers publisher FOR XML AUTO
+		</skin:query>
+	</publishers>
+
+	<titles>
+		<skin:query var="pubs" type="Text">
+		SELECT title_id as ID, title as Name, RTRIM(Type) as Type
+		FROM titles title FOR XML AUTO
+		</skin:query>
+	</titles>
+
+</default>

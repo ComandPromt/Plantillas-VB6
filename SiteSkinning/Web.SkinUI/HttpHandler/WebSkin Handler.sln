@@ -1,0 +1,27 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.SkinUI", "Web.SkinUI.csproj", "{29BDB18E-A9BF-468C-8EDB-275C70EF091F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevHawkBooks", "http://localhost/DevHawkBooks/DevHawkBooks.csproj", "{2D864E1F-1E89-40F0-AB62-9FE3E207777B}"
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{29BDB18E-A9BF-468C-8EDB-275C70EF091F}.Debug.ActiveCfg = Debug|.NET
+		{29BDB18E-A9BF-468C-8EDB-275C70EF091F}.Debug.Build.0 = Debug|.NET
+		{29BDB18E-A9BF-468C-8EDB-275C70EF091F}.Release.ActiveCfg = Release|.NET
+		{29BDB18E-A9BF-468C-8EDB-275C70EF091F}.Release.Build.0 = Release|.NET
+		{2D864E1F-1E89-40F0-AB62-9FE3E207777B}.Debug.ActiveCfg = Debug|.NET
+		{2D864E1F-1E89-40F0-AB62-9FE3E207777B}.Debug.Build.0 = Debug|.NET
+		{2D864E1F-1E89-40F0-AB62-9FE3E207777B}.Release.ActiveCfg = Release|.NET
+		{2D864E1F-1E89-40F0-AB62-9FE3E207777B}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

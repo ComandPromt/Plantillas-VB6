@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<publisher xmlns:skin="urn:schemas-DevHawk-net:webskinui">
+	<skin:database connectionstring="server=localhost;integrated security=SSPI;database=pubs" var="pubs" />
+
+	<skin:class assembly="DevHawkBooks" class="DevHawkBooks.Controller" var="control" />
+	<skin:transform var="control" method="GetTransform"/>
+	
+	<skin:query var="pubs" type="Text">
+		<skin:parameter name="@id" datatype="char" size="4" key="id" collection="querystring" />		
+
+		SELECT pub_id as ID, pub_name as Name, City, State, Country
+		FROM publishers info WHERE pub_id = @id
+		FOR XML AUTO, ELEMENTS
+	</skin:query>
+	
+	<titles>
+		<skin:query var="pubs" type="Text">
+			<skin:parameter name="@id" datatype="char" size="4" key="id" collection="querystring" />		
+			SELECT title_id as ID, title as Name, RTRIM(Type) as Type
+			FROM titles title WHERE pub_id = @id
+			FOR XML AUTO
+		</skin:query>
+	</titles>
+</publisher>
