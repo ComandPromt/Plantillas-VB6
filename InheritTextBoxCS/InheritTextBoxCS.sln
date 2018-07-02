@@ -1,0 +1,27 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InheritTextBoxClientCS", "InheritTextBoxClientCS\InheritTextBoxClientCS.csproj", "{0CA188B2-37E1-410F-B202-EBBE89A42BAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InheritTextBoxControlCS", "InheritTextBoxControlCS\InheritTextBoxControlCS.csproj", "{542C2EA9-A5FE-49F2-B33E-6DAF0526F2B1}"
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{0CA188B2-37E1-410F-B202-EBBE89A42BAA}.Debug.ActiveCfg = Debug|.NET
+		{0CA188B2-37E1-410F-B202-EBBE89A42BAA}.Debug.Build.0 = Debug|.NET
+		{0CA188B2-37E1-410F-B202-EBBE89A42BAA}.Release.ActiveCfg = Release|.NET
+		{0CA188B2-37E1-410F-B202-EBBE89A42BAA}.Release.Build.0 = Release|.NET
+		{542C2EA9-A5FE-49F2-B33E-6DAF0526F2B1}.Debug.ActiveCfg = Debug|.NET
+		{542C2EA9-A5FE-49F2-B33E-6DAF0526F2B1}.Debug.Build.0 = Debug|.NET
+		{542C2EA9-A5FE-49F2-B33E-6DAF0526F2B1}.Release.ActiveCfg = Release|.NET
+		{542C2EA9-A5FE-49F2-B33E-6DAF0526F2B1}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

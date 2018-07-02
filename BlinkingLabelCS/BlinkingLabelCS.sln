@@ -1,0 +1,27 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlinkingLabelControlCS", "BlinkingLabelControlCS\BlinkingLabelControlCS.csproj", "{D8363CEA-241D-41F1-A2E4-7BF0D88C0D87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlinkingLabelClientCS", "BlinkingLabelClientCS\BlinkingLabelClientCS.csproj", "{605B60A7-C158-4781-9649-A715E8B1688F}"
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{D8363CEA-241D-41F1-A2E4-7BF0D88C0D87}.Debug.ActiveCfg = Debug|.NET
+		{D8363CEA-241D-41F1-A2E4-7BF0D88C0D87}.Debug.Build.0 = Debug|.NET
+		{D8363CEA-241D-41F1-A2E4-7BF0D88C0D87}.Release.ActiveCfg = Release|.NET
+		{D8363CEA-241D-41F1-A2E4-7BF0D88C0D87}.Release.Build.0 = Release|.NET
+		{605B60A7-C158-4781-9649-A715E8B1688F}.Debug.ActiveCfg = Debug|.NET
+		{605B60A7-C158-4781-9649-A715E8B1688F}.Debug.Build.0 = Debug|.NET
+		{605B60A7-C158-4781-9649-A715E8B1688F}.Release.ActiveCfg = Release|.NET
+		{605B60A7-C158-4781-9649-A715E8B1688F}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
