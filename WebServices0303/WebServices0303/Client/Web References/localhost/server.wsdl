@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:txext="urn:schemas-newtelligence-com:transactions" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:i0="urn:msdn-microsoft-com:hows" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="urn:msdn-microsoft-com:hows" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <import namespace="urn:msdn-microsoft-com:hows" location="server.xsd" />
+  <types />
+  <message name="Add">
+    <part name="data" element="i0:Add" />
+  </message>
+  <message name="AddResponse">
+    <part name="data" element="i0:AddResponse" />
+  </message>
+  <portType name="Arithmetic">
+    <operation name="Add">
+      <input message="i0:Add" />
+      <output message="i0:AddResponse" />
+    </operation>
+  </portType>
+  <binding name="Arithmetic" type="i0:Arithmetic">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <operation name="Add">
+      <soap:operation soapAction="urn:msdn-microsoft-com:hows/Add" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+</definitions>

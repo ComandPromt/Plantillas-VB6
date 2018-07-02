@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema elementFormDefault="qualified" targetNamespace="urn:msdn-microsoft-com:hows" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element name="Add">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="n1" type="xsd:int" />
+        <xsd:element name="n2" type="xsd:int" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="AddResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="sum" type="xsd:int" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

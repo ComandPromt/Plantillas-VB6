@@ -1,0 +1,33 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: XSP - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP186.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XSP_EXPORTS" /Fp"Release/XSP.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Code\XSP\XSP.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP186.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP187.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opends60.lib /nologo /dll /incremental:no /pdb:"Release/XSP.pdb" /machine:I386 /out:"Release/XSP.dll" /implib:"Release/XSP.lib" 
+.\Release\XSP.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP187.tmp"
+<h3>Output Window</h3>
+Compiling...
+XSP.cpp
+Linking...
+   Creating library Release/XSP.lib and object Release/XSP.exp
+
+
+
+<h3>Results</h3>
+XSP.dll - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
