@@ -1,0 +1,5 @@
+frmCabExplorer = 0, 0, 0, 0, C, 0, 0, 0, 0, C
+CABFile = 0, 0, 0, 0, C
+Callback = 0, 0, 0, 0, C
+frmGetPath = 0, 0, 0, 0, C, 0, 0, 0, 0, C
+frmReport = 0, 0, 0, 0, C, 0, 0, 0, 0, C
