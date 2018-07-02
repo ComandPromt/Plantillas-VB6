@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s0="http://example.org/dataset-service" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:i0="http://example.org/dataset" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://example.org/dataset-service" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <import namespace="http://example.org/dataset" location="http://localhost/datasetservice/datasetservice.asmx?schema=AuthorSet" />
+  <types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://example.org/dataset-service">
+      <s:import namespace="http://example.org/dataset" />
+      <s:import namespace="http://www.w3.org/2001/XMLSchema" />
+      <s:element name="GetAuthorsAsTypedDataSet">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetAuthorsAsTypedDataSetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAuthorsAsTypedDataSetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any namespace="http://example.org/dataset" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAuthorsAsXml">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetAuthorsAsXmlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAuthorsAsXmlResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAuthors">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetAuthorsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAuthorsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </types>
+  <message name="GetAuthorsAsTypedDataSetSoapIn">
+    <part name="parameters" element="s0:GetAuthorsAsTypedDataSet" />
+  </message>
+  <message name="GetAuthorsAsTypedDataSetSoapOut">
+    <part name="parameters" element="s0:GetAuthorsAsTypedDataSetResponse" />
+  </message>
+  <message name="GetAuthorsAsXmlSoapIn">
+    <part name="parameters" element="s0:GetAuthorsAsXml" />
+  </message>
+  <message name="GetAuthorsAsXmlSoapOut">
+    <part name="parameters" element="s0:GetAuthorsAsXmlResponse" />
+  </message>
+  <message name="GetAuthorsSoapIn">
+    <part name="parameters" element="s0:GetAuthors" />
+  </message>
+  <message name="GetAuthorsSoapOut">
+    <part name="parameters" element="s0:GetAuthorsResponse" />
+  </message>
+  <portType name="DataSetServiceSoap">
+    <operation name="GetAuthorsAsTypedDataSet">
+      <input message="s0:GetAuthorsAsTypedDataSetSoapIn" />
+      <output message="s0:GetAuthorsAsTypedDataSetSoapOut" />
+    </operation>
+    <operation name="GetAuthorsAsXml">
+      <input message="s0:GetAuthorsAsXmlSoapIn" />
+      <output message="s0:GetAuthorsAsXmlSoapOut" />
+    </operation>
+    <operation name="GetAuthors">
+      <input message="s0:GetAuthorsSoapIn" />
+      <output message="s0:GetAuthorsSoapOut" />
+    </operation>
+  </portType>
+  <binding name="DataSetServiceSoap" type="s0:DataSetServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <operation name="GetAuthorsAsTypedDataSet">
+      <soap:operation soapAction="http://example.org/dataset-service/GetAuthorsAsTypedDataSet" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="GetAuthorsAsXml">
+      <soap:operation soapAction="http://example.org/dataset-service/GetAuthorsAsXml" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="GetAuthors">
+      <soap:operation soapAction="http://example.org/dataset-service/GetAuthors" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="DataSetService">
+    <port name="DataSetServiceSoap" binding="s0:DataSetServiceSoap">
+      <soap:address location="http://localhost/datasetservice/datasetservice.asmx" />
+    </port>
+  </service>
+</definitions>
