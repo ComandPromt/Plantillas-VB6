@@ -1,0 +1,61 @@
+SELECT [ALL | DISTINCT] <selected fields> 
+ FROM <table> 
+{WHERE <search condition>}
+
+{..} : optional
+
+With WHERE clause you can pass any search condition you
+like using logical operators, character strings or comparison.
+
+You can even retrieve a specified column from a table by
+listing them in the selected fields statement next to SELECT.
+
+syntax:
+
+SELECT * {tablename.columnname}
+ FROM <table>
+WHERE <search criteria>
+ORDER BY  <columnname>
+
+ORDER BY is the clause that is used for sorting the output.
+
+When you want to specify a row the only thing you have to
+is just the following:
+
+SELECT ...
+WHERE <fieldname> {logical|comparison operators} <yourcriteria>
+
+
+Criteria in WHERE clause can be used with the following search
+conditions:
+
+Comparison Operators: =, >, <, >=, <=, <>
+String Comparisons: LIKE, NOT LIKE
+Logical Operators: AND, OR, NOT
+Range: BETWEEN, NOT BETWEEN
+List: IN, NOT IN
+and the well known NULL and NOT NULL.
+
+
+I think that LIKE needs more to be said:
+
+syntax:
+SELECT * 
+ FROM dbMYDB
+  WHERE nickname LIKE 'B%'
+
+now that one needs to be explained. The wildcard "%" is used
+as an "*" in a DOS dir statement... remember?
+It can be implemented as '%B%'. There is a restrain with LIKE
+that is that it can only be used with char, nchar, varchar,
+nvarchar and datetime data types.
+
+Tip 1:
+The case-sensitive is subjected to your installation of the SQL
+SERVER!
+
+Tip 2:
+When you want to aquire a list of unique values you use 
+DISTINCT clause after SELECT.
+
+I hope you find this useful.

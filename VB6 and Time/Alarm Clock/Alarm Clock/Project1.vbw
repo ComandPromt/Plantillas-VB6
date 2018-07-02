@@ -1,0 +1,7 @@
+frmMain = 44, 44, 625, 277, C, 22, 22, 603, 255, C
+frmSetAlarm = 27, 66, 608, 265, C, 66, 66, 647, 265, C
+mdlPlayAlarm = 44, 44, 574, 243, C
+Multimedia = 44, 44, 574, 243, C
+frmAbout = 0, 0, 0, 0, C, 66, 66, 596, 274, C
+mdlCallWinDir = 66, 66, 495, 514, 
+mdlGetWinDirDeclare = 88, 88, 517, 536, Z

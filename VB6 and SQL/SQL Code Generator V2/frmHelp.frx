@@ -1,0 +1,30 @@
+ÿmUSE OF THE  ADD-IN SQLGeneratorAddIn.dll
+
+- Register SQLGeneratorAddIn.dll:
+- Copy to c:\windows\system
+- Start Menu - Run - regsvr32.exe SQLGeneratorAddIn.dll
+- Open VB and click in menu Add-Ins - Add-In Manager - SQLGeneratorAddIn - Loaded/Unloades - OK
+- In Menu Add-Ins click in SQL GeneratorAddIn and use the tool
+
+Want creat Add-In? See my tutorial about here in PSC.
+
+
+Binaries in:
+http://www.geocities.com/ribafs/
+
+
+SAMPLES TO RELATIONSHIPS
+
+INNER JOIN, LEFT JOIN and RIGHT JOIN
+
+SELECT Customers.Name, Sales.CodeSales
+
+FROM Customers (INNER, LEFT or RIGHT) JOIN Sales ON Customers.CodeSales = Sales.CodeSales
+
+UNION and UNION ALL
+
+SELECT NAME FROM CUSTOMERS UNION SELECT NAME FROM SALES
+SELECT NAME FROM CUSTOMERS UNION ALL SELECT NOME FROM SALES
+
+
+Tip: To run in VB5, open the project file in Notepad and remove line with Retained word.

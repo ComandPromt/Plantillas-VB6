@@ -1,0 +1,7 @@
+FRMMain = 1, 100, 849, 657, , 22, 29, 749, 519, C
+ModMain = 65, 205, 792, 632, C
+ModWinSock = 112, 177, 839, 604, C
+ModMouse = 66, 87, 793, 514, C
+mIntelJPEGLibrary = 0, 0, 0, 0, C
+cDIBSection = 0, 0, 0, 0, C
+ModScreenCapture = 132, 174, 859, 601, C
