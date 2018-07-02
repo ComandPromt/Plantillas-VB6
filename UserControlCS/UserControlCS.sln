@@ -1,0 +1,27 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserControlLibraryCS", "UserControlLibrary1CS\UserControlLibraryCS.csproj", "{BCED3343-5587-4821-AF5C-2CE4A882CC9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserControlClientCS", "UserControlClientCS\UserControlClientCS.csproj", "{CC860A0C-8CB2-42CB-8827-2EBB90F3A822}"
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{BCED3343-5587-4821-AF5C-2CE4A882CC9E}.Debug.ActiveCfg = Debug|.NET
+		{BCED3343-5587-4821-AF5C-2CE4A882CC9E}.Debug.Build.0 = Debug|.NET
+		{BCED3343-5587-4821-AF5C-2CE4A882CC9E}.Release.ActiveCfg = Release|.NET
+		{BCED3343-5587-4821-AF5C-2CE4A882CC9E}.Release.Build.0 = Release|.NET
+		{CC860A0C-8CB2-42CB-8827-2EBB90F3A822}.Debug.ActiveCfg = Debug|.NET
+		{CC860A0C-8CB2-42CB-8827-2EBB90F3A822}.Debug.Build.0 = Debug|.NET
+		{CC860A0C-8CB2-42CB-8827-2EBB90F3A822}.Release.ActiveCfg = Release|.NET
+		{CC860A0C-8CB2-42CB-8827-2EBB90F3A822}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
