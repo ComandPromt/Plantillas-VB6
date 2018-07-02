@@ -1,0 +1,5 @@
+CMyItemData = 0, 0, 0, 0, C
+frmtest = 122, 46, 598, 317, C, 149, 67, 543, 321, C
+CMyItemDatas = 0, 0, 0, 0, C
+CoolMenu = 48, 10, 590, 388, C
+CMWndProc = 0, 0, 0, 0, C

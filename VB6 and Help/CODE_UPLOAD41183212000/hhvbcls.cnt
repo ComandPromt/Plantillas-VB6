@@ -1,0 +1,61 @@
+:Base hhvbcls.hlp
+:Title Help for the HTML Help VB Class 3.0d
+1 Introduction
+2 Introduction=IDH_introduction
+1 Methods
+2 HHCheckRegistry Method=IDH_hhcheckregistry_method
+2 HHClose Method=IDH_hhclose_method
+2 HHDisplayALink Method=IDH_hhdisplayalink_method
+2 HHDisplayContents Method=IDH_hhdisplaycontents_method
+2 HHDisplayIndex Method=IDH_hhdisplayindex_method
+2 HHDisplayKeyword Method=IDH_hhdisplaykeyword_method
+2 HHDisplayPopup Method=IDH_hhdisplaypopup_method
+2 HHDisplaySearch Method=IDH_hhdisplaysearch_method
+2 HHDisplayTopicID Method=IDH_hhdisplaytopicid_method
+2 HHDisplayTopicURL Method=IDH_hhdisplaytopicurl_method
+2 HHInvokeWhatsThisHelp Method=IDH_hhinvokewhatsthishelp_method
+2 HHRegister Method=IDH_hhregister_method
+2 HHSetHelpFile Method=IDH_hhsethelpfile_method
+2 HHUnRegister Method=IDH_hhunregister_method
+2 HHVerifyMinConfig Method=IDH_hhverifyminconfig_method
+1 Properties
+2 CHMFile Property=IDH_chmfile_property
+2 HHAlink Property=IDH_hhalink_property
+2 HHDefaultURL Property=IDH_hhdefaulturl_property
+2 HHFriendlyName Property=IDH_hhfriendlyname_property
+2 HHInstalled Property=IDH_hhinstalled_property
+2 HHKeyword Property=IDH_hhkeyword_property
+2 HHMsgText Property=IDH_hhmsgtext_property
+2 HHMsgTitle Property=IDH_hhmsgtitle_property
+2 HHPopupBackColor Property=IDH_hhpopupbackcolor_property
+2 HHPopupCustomBackColor Property=IDH_hhpopupcustombackcolor_property
+2 HHPopupCustomColors Property=IDH_hhpopupcustomcolors_property
+2 HHPopupCustomTextColor Property=IDH_hhpopupcustomtextcolor_property
+2 HHPopupFile Property=IDH_hhpopupfile_property
+2 HHPopupID Property=IDH_hhpopupid_property
+2 HHPopupText Property=IDH_hhpopuptext_property
+2 HHPopupTextBold Property=IDH_hhpopuptextbold_property
+2 HHPopupTextColor Property=IDH_hhpopuptextcolor_property
+2 HHPopupTextFont Property=IDH_hhpopuptextfont_property
+2 HHPopupTextItalic Property=IDH_hhpopuptextitalic_property
+2 HHPopupTextSize Property=IDH_hhpopuptextsize_property
+2 HHPopupTextUnderline Property=IDH_hhpopuptextunderline_property
+2 HHPopupType Property=IDH_hhpopuptype_property
+2 HHRegFileExists Property=IDH_hhregfileexists_property
+2 HHRegFileName Property=IDH_hhregfilename_property
+2 HHRegFilePath Property=IDH_hhregfilepath_property
+2 HHShowOnTop Property=IDH_hhshowontop_property
+2 HHTopicID Property=IDH_hhtopicid_property
+2 HHTopicURL Property=IDH_hhtopicurl_property
+2 HHVersion Property=IDH_hhversion_property
+2 HHWindow Property=IDH_hhwindow_property
+2 IEFriendlyName Property=IDH_iefriendlyname_property
+2 IEVersion Property=IDH_ieversion_property
+1 Subroutines
+2 HHSubclass Subroutine=IDH_hhsubclass_subroutine
+1 Disclaimers
+2 Disclaimers=IDH_disclaimers
+1 Revision Update
+2 Revision Update=IDH_revision_history
+1 Copyright
+2 Copyright=IDH_copyright
