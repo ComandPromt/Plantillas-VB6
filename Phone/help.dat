@@ -1,0 +1,22 @@
+Entry/Entries
+
+....Changing
+To change any field, eg 'Name', or 'Address', then all you have to do is simply move the mouse cursor over where that field is (so that the mouse cursor turns into an 'I'). Then change it or delete it by typing with the keyboard. After changing it, click on the save button to save the changes.
+....Deleting
+To delete an entry, select it in the 'Name' list, or type the name in the search field for Phonebook to find. Once the entry is selected, click the delete button (denoted by a large 'X' button), PhoneBook will then ask if you are sure, click 'yes'.
+....Printing
+PhoneBook will print one entry at a time. To do this, select the entry which you would like to print, once selected, click the 'Print' Button (the button with a picture of a printer on it). PhoneBook, will then ask you if you are ready to print, this is so that you can make sure that you have your printer turned on and there is paper in it. <<<<<<IMPORTANT>>>>> PHONEBOOK WILL PRINT TO YOUR DEFAULT PRINTER.
+....Saving
+To save your data that you have changed, eg if you have edited someone's name or phone number, you simply click on the save button (this is the one with the big picture of a disk on it), select save from the file menu, or press Ctrl + S. If you wish to erase the changes made, then Exit without saving.
+....Searching
+To search for a particular entry, simply click inside the search box (this is locate up the top, underneath the text 'Name To Search For:'), then type either a Firstname or surname. For example to find Jake Blue, I could type 'Ja' or 'ue' as these are both found within the name.
+....Sorting (Alphabetically)
+To sort your entries alphabetically, just click on the 'sort' button, this is located to the right of the save button. When you hold the mouse cursor over the sort button, it will come up with text saying 'Sort List Into Alphbetical Order'. <<<<<<NOTE>>>>>> PhoneBook will automatically sort your list when you start up the program.
+
+
+Errors
+There are no know errors that occur that have not been fixed, but please, if you come across any, please report them by email: vkcommodore@excite.com                                                                                                                    It is quite possible that there is some printing ones, as I could not really test these. Thanks!
+
+
+Known Bugs
+There are actually no know bugs! There was bugs in earlier versions, but I have completely looked at every possible tpye of bug that could occur and have fixed them. However, please, if you find some, or have any suggestions for future versions of PhoneBook, then please email me at vkcommodore@excite.com      GO ON RY AND FIND ONE!!!!
