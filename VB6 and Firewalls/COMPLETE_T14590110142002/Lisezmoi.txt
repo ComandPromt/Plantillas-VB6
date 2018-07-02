@@ -1,0 +1,36 @@
+===============
+=  Crack80 !  =
+===============
+
+Crack80 est un ensemble d'utilitaires permettant de tester vos sécurités informatiques !
+
+
+Les options sont les suivantes :
+
+- Scan CGI : Ceci permet de scanner un serveur et d'en trouver les failles CGI.
+Vous avez la possibilité de faire une simple recherche en entrant un serveur, un port et un CGI à tester. Il suffit ensuite de cliquer sur connecte et sur envoi.
+Le retour s'affiche alors dans la partie droite de l'écran.
+L'option "faille possible ou certaine" définit le type de recherche :
+	possible = code retour différent de 404 (Not Found)
+	certaine = code retour de 200 (Found)
+
+Vous pouvez lancer une recherche totale basée sur le contenu du fichier crack80.dat en sélectionnant un serveur, un port et en cliquant sur Total.
+Les failles testées s'affichent dans la partie droite de l'écran et les failles possibles dans la partie gauche. En double cliquant sur une faille possible, vous vous retrouvez dans le cas d'une simple recherche et vous pouvez alors afficher le détail.
+
+- Scan des ports : Ceci liste les ports réseaux ouverts sur une machine.
+Il faut sélectionner un serveur, un port de début et un port de fin puis cliquer sur Go!
+
+- WinShare : Recherche les ressources partagées (Windows) et permet d'y accéder.
+		Remarque : si votre connexion internet est trop lente,
+		vous ne verez rien apparaitre. Ceci est du à un probleme
+		de l'API Micro$oft...
+
+- Ping : envoie un echo ICMP (ping) vers une machine.
+
+- Whois : Interroge le service Whois (renseignements sur un serveur : DNS,...).
+
+- Finger : Interroge le service Finger d'un serveur (personnes connectées).
+
+- Mail : envoie de Mail anonyme.
+
+- Irc : permet de se connecter a un serveur IRC

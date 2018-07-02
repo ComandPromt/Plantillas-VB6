@@ -1,0 +1,36 @@
+Correspondance code/chiffre pour les IP sur le chat wanadoo
+
+Code	Chiffre
+A	0
+3	1
+B	2
+4	3
+U	4
+I	5
+8	6
+p	7
+0	8
+z	9
+
+s	.
+
+
+
+Exemple (abonné NON wanadoo)
+buckrogers@fuQsB34s48s00s3p.ppp.libertysurf.fr
+
+adresse réelle : 213.36.88.17
+adresse codée  : B34s48s00s3p
+
+~w522@38p.76.242.195.infosources.fr
+~w588@fuQsB34s48s3ABsB4p.ppp.libertysurf.fr
+
+Exemple Wanadoo
+~w616@XocsY7im7GQrs3A4sBs3BI.abo.wanadoo.fr
+~w894@XocsNMy9Wn7iyGs33AsBUU.abo.wanadoo.fr
+~v794@CQMrGsaovrs3ABs3UA.abo.wanadoo.fr
+~v558@Xocstommrs3AIs3s40.abo.wanadoo.fr
+~w678@XocstrX9QWsBAUsBs83.abo.wanadoo.fr
+
+~w674@Xocse7im7Qs3A3sB3p.abo.wanadoo.fr  193.250.14.217
+~w862@CQMrGsaovrs3ABsBA0.abo.wanadoo.fr  193.250.211.208

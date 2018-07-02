@@ -1,0 +1,125 @@
+[Root]
+Most Recent Package=Logiciel d'installation standard 1
+
+
+[Package|Logiciel d'installation standard 1|Root]
+SubWizProgID=PDWizard.SetupPkgSubWiz
+BuildFolder=C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Package
+
+[Package|Logiciel d'installation standard 1|Configure DAO ISAMs]
+Applicable=No
+
+[Package|Logiciel d'installation standard 1|Configure DAO ODBC]
+JetWorkspace=
+ODBCDirect=
+
+[Package|Logiciel d'installation standard 1|Files Found]
+
+[Package|Logiciel d'installation standard 1|Files Released]
+
+[Package|Logiciel d'installation standard 1|Missing Dependency Information]
+
+[Package|Logiciel d'installation standard 1|Out-of-Date Dependency Information]
+
+[Package|Logiciel d'installation standard 1|Files Added]
+c:\local\home\me01022\visualbasic\crack80\crack80.dat=
+c:\local\home\me01022\visualbasic\crack80\http.txt=
+c:\local\home\me01022\visualbasic\crack80\lisezmoi.txt=
+c:\local\home\me01022\visualbasic\crack80\ports.txt=
+c:\local\home\me01022\visualbasic\crack80\pupucgi.txt=
+
+[Package|Logiciel d'installation standard 1|Files Removed]
+
+[Package|Logiciel d'installation standard 1|Files In Project]
+C:\WINNT\system32\MSVBVM60.DLL=Yes
+C:\WINNT\system32\OLEAUT32.DLL=Yes
+C:\WINNT\system32\OLEPRO32.DLL=Yes
+C:\WINNT\system32\ASYCFILT.DLL=Yes
+C:\WINNT\system32\STDOLE2.TLB=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=Yes
+C:\WINNT\system32\VB6FR.DLL=Yes
+C:\WINNT\system32\MSWINSCK.OCX=Yes
+C:\WINNT\system32\WINSKFR.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=Yes
+C:\WINNT\system32\VB6STKIT.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=Yes
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Crack80.exe=Yes
+C:\WINNT\system32\MSSTDFMT.DLL=Yes
+C:\WINNT\system32\STDFTFR.DLL=Yes
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Crack80.dat=Yes
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Http.txt=Yes
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Lisezmoi.txt=Yes
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\PORTS.TXT=Yes
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\PUPUCGI.TXT=Yes
+
+[Package|Logiciel d'installation standard 1|Configure Registry Files]
+Applicable=No
+
+[Package|Logiciel d'installation standard 1|Configure Remote Servers]
+Applicable=No
+
+[Package|Logiciel d'installation standard 1|Install Locations]
+C:\LOCAL\HOME\ME01022\VisualBasic\Blaireau\Crack80_v2\Crack80.exe=$(AppPath)
+C:\WINNT\system32\MSVBVM60.DLL=$(WinSysPathSysFile)
+C:\WINNT\system32\OLEAUT32.DLL=$(WinSysPathSysFile)
+C:\WINNT\system32\OLEPRO32.DLL=$(WinSysPathSysFile)
+C:\WINNT\system32\ASYCFILT.DLL=$(WinSysPathSysFile)
+C:\WINNT\system32\STDOLE2.TLB=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\WINNT\system32\VB6FR.DLL=$(WinSysPath)
+C:\WINNT\system32\MSWINSCK.OCX=$(WinSysPath)
+C:\WINNT\system32\WINSKFR.DLL=$(WinSysPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\WINNT\system32\VB6STKIT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Crack80.exe=$(AppPath)
+C:\WINNT\system32\MSSTDFMT.DLL=$(WinSysPath)
+C:\WINNT\system32\STDFTFR.DLL=$(WinSysPath)
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Crack80.dat=$(AppPath)
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Http.txt=$(AppPath)
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Lisezmoi.txt=$(AppPath)
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\PORTS.TXT=$(AppPath)
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\PUPUCGI.TXT=$(AppPath)
+
+[Package|Logiciel d'installation standard 1|Configure Shared Files]
+Applicable=Yes
+C:\LOCAL\HOME\ME01022\VisualBasic\Blaireau\Crack80_v2\Crack80.exe=No
+C:\WINNT\system32\VB6FR.DLL=Yes
+C:\WINNT\system32\MSWINSCK.OCX=Yes
+C:\WINNT\system32\WINSKFR.DLL=Yes
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Crack80.exe=No
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Crack80.dat=No
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Http.txt=No
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Lisezmoi.txt=No
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\PORTS.TXT=No
+C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\PUPUCGI.TXT=No
+
+[Package|Logiciel d'installation standard 1|Distribution]
+Type=multi
+Size=1.44 MB
+Title=Crack80
+
+[Package|Logiciel d'installation standard 1|IconGroups]
+Group0=Crack80
+PrivateGroup0=Faux
+Parent0=$(Programs)
+
+[Package|Logiciel d'installation standard 1|Crack80]
+Icon1=Crack80.exe
+Title1=Crack80
+StartIn1=$(AppPath)
+Key1=Icon1
+
+[Package|Logiciel d'installation standard 1|Package]
+PackageFolder=C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Package
+ProjectFolder=C:\LOCAL\HOME\Me01022\VisualBasic\Crack80
+ServerSideCab=
+File1=C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Package\setup.exe
+File2=C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Package\Setup.Lst
+File3=C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Package\crack81.CAB
+File4=C:\LOCAL\HOME\ME01022\VisualBasic\Crack80\Package\crack82.CAB
+Handler1=PDWizard.FloppyDplySubWiz
+Handler2=PDWizard.FolderDplySubWiz
+Handler3=PDWizard.WebPostDplySubWiz

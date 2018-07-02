@@ -1,0 +1,78 @@
+/cgi-bin/handler;Handler remote r00t
+/cgi-bin/test-cgi;Remote dir browsing
+/cgi-bin/nph-test-cgi;Remote dir browsing
+/cgi-bin/phf;Classic remote r00t
+/cgi-bin/phf.pp;Classic remote r00t
+/cgi-bin/phf.cgi;Classic remote r00t
+/cgi-bin/websendmail;'passwd' retrieve
+/cgi-bin/php.cgi;PHP CGI gate code exec
+/cgi-bin/php;PHP CGI gate code exec
+/cgi-bin/perl.exe;if the admin was a lamer
+/cgi-bin/wwwboard.pl;Matt Wright board w/tags
+/cgi-bin/www-sql;CC's database gate
+/cgi-bin/view-source;any file downloading/viewing
+/cgi-bin/AT-admin.cgi;search engine soupervisor
+/cgi-bin/wwwadmin.pl;Matt Wright board admin
+/cgi-bin/formmail.pl;@ny file retrieval
+/cgi-bin/sendform.cgi;@ny file retrieval
+/cgi-bin/maillist.pl;@ny file retrieval
+/iisadmpwd/achg.htr;IIS web password change
+/iisadmpwd/aexp.htr;IIS web password change
+/iisadmpwd/aexp2.htr;IIS web password change
+/iisadmpwd/aexp2b.htr;IIS web password change
+/iisadmpwd/aexp3.htr;IIS web password change
+/iisadmpwd/aexp4.htr;IIS web password change
+/iisadmpwd/aexp4b.htr;IIS web password change
+/iisadmpwd/anot.htr;IIS web password change
+/iisadmpwd/anot3.htr;IIS web password change
+/msadc/Samples/SELECTOR/showcode.asp;IIS file view
+/_AuthChangeUrl?;IIS acdg.htr mapping
+/_AuthChangeUrl?;IIS acdg.htr mapping
+/....../autoexec.bat;PWS under Winnows95/98
+/_AuthChangeUrl?;IIS acdg.htr mapping
+/scripts/fpcount.exe;IIS coutner d.o.s.
+/scripts/cgimail.exe;NT sam._ retrieval
+/scripts/tools/newdsn.exe;IIS remote file creation
+/scripts/tools/getdrvs.exe;IIS remote file creation
+/cgi-bin/bnbform.cgi;any phile reading
+/cgi-bin/survey.cgi;code execution on server
+/domcfg.nsf/?open;Lot0us n0utes config change
+/cgi-bin/count.cgi;remote execution of code
+/cgi-bin/guestbook.cgi;SSI code exec
+/cgi-bin/aglimpse;exec code with http rights
+/cgi-bin/finger?@localhost;User data retrieval
+/cgi-bin/jj;escape to shell
+/cgi-bin/man.sh;remote code exec and data retrieving
+/cgi-bin/webdist.cgi;IRIX remote exec
+/cgi-bin/wrap.cgi;IRIX remote exec
+/cgi-bin/handler.cgi;IRIX remote exec
+/cgi-bin/day5datacopier.cgi;IRIX remote exec
+/cgi-bin/day5datanotifier.cgi;IRIX remote exec
+/cgi-bin/pfdisplay.cgi;IRIX file reading
+/perl/files.pl;Nowell WS 3,4.x file reading
+/scripts/convert.bas;Nowell WS remote file reading
+/cgi-bin/dumpenv.pl;Sambar envo reading
+/cgi-bin/upload.pl;Sambar server upload explo
+/session/adminlogin?RCpage=/sysadmin/index.stm;Sambar r00ting
+/cgi-bin/campas;remote file reading
+/cgi-bin/textcounter.pl;Command execution as httpd
+/cgi-bin/view-source;any file reading
+/cgi-bin/webgais;any command execution
+/cgi-bin/htmlscript;any file reading
+/cgi-win/uploader.exe;Website 1.x classic
+/cgi-win/uploader.exe;Website 1.x classic
+/cgi-dos/args.cmd;Website 1.x CMD exec
+/cgi-dos/args.bat;Website 1.x CMD exec
+/cgi-bin/nph-publish;File modification
+/cgi-bin/faxsurvey;Command execution
+/~root;If admin is a lamer
+/_vti_pvt/users.pwd;FrontPage extention
+/_vti_pvt/administrators.pwd;FrontPage extention
+/_vti_pvt/shtml.dll;FrontPage extention
+/_vti_pvt/shtml.exe;FrontPage extention
+/cfdocs/expelval/openfile.cfm;ColdFusion vulnerability
+/cfdocs/expelval/exprcalc.cfm;ColdFusion vulnerability
+/cfdocs/expelval/displayopenedfile.cfm;ColdFusion vulnerability
+/cfdocs/expelval/sendmail.cfm;Any file retrieving from CF
+/search97.vts;Any file reading
+/?PageServices;From Surgeon
