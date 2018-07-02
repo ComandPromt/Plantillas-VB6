@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<HTML>
+	<HEAD>
+		<TITLE></TITLE>
+		<META NAME="GENERATOR" Content="Microsoft Visual Studio 7.0">
+		<script id="clientEventHandlersJS" language="javascript">
+<!--
+
+function btnInvokeMath_onclick() {
+	// initialize proxy object
+	proxy.useService("http://localhost/mathservice/math.asmx?wsdl", "MathService");
+	// invoke a math operation
+	proxy.MathService.callService(mathResultHandler, selOperation.value, txtX.value, txtY.value);
+}
+
+function mathResultHandler(result)
+{
+	// harvest result
+	txtResult.value = result.value;
+}
+
+//-->
+		</script>
+	</HEAD>
+	<BODY style="FONT-FAMILY:verdana">
+		<H1>Calculator</H1>
+		<table cellpadding="5" border="0" cellspacing="0">
+			<tr>
+				<td>x:</td>
+				<td><input type="text" size="50" ID="txtX" NAME="txtX"></td>
+			</tr>
+			<tr>
+				<td>y:</td>
+				<td><input type="text" size="50" ID="txtY" NAME="txtY"></td>
+			</tr>
+			<tr>
+				<td><SELECT id="selOperation" name="selOperation">
+						<OPTION selected value="Add">+</OPTION>
+						<OPTION value="Sub">-</OPTION>
+						<OPTION value="Mul">*</OPTION>
+						<OPTION value="Div">/</OPTION>
+						<OPTION value="Mod">%</OPTION>
+						<OPTION value=""></OPTION>
+					</SELECT></td>
+				<td><input type="submit" value="Invoke" ID="btnInvokeMath" NAME="btnInvokeMath" onclick="return btnInvokeMath_onclick()"></td>
+			</tr>
+			<tr>
+				<td colspan="2"><hr>
+				</td>
+			</tr>
+			<TR>
+				<TD>result:</TD>
+				<TD><INPUT id="txtResult" style="BACKGROUND: silver" readOnly type="text" size="50" name="txtResult"></TD>
+			</TR>
+		</table>
+		<div id="proxy" style="behavior:url(webservice.htc)"></div>
+	</BODY>
+</HTML>

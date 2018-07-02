@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MfcWinFormsHost", "MfcWinFormsHost.vcproj", "{329EEA11-2763-4A28-B3D8-E7CBF21254F7}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "anotherMfcTest", "anotherMfcTest\anotherMfcTest.vcproj", "{ECFE7C69-BCDD-45A5-8668-683B21B95A63}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{329EEA11-2763-4A28-B3D8-E7CBF21254F7}.Debug.ActiveCfg = Debug|Win32
+		{329EEA11-2763-4A28-B3D8-E7CBF21254F7}.Debug.Build.0 = Debug|Win32
+		{329EEA11-2763-4A28-B3D8-E7CBF21254F7}.Release.ActiveCfg = Release|Win32
+		{329EEA11-2763-4A28-B3D8-E7CBF21254F7}.Release.Build.0 = Release|Win32
+		{ECFE7C69-BCDD-45A5-8668-683B21B95A63}.Debug.ActiveCfg = Debug|Win32
+		{ECFE7C69-BCDD-45A5-8668-683B21B95A63}.Debug.Build.0 = Debug|Win32
+		{ECFE7C69-BCDD-45A5-8668-683B21B95A63}.Release.ActiveCfg = Release|Win32
+		{ECFE7C69-BCDD-45A5-8668-683B21B95A63}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

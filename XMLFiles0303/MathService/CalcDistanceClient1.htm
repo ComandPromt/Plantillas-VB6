@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<HTML>
+	<HEAD>
+		<TITLE></TITLE>
+		<META NAME="GENERATOR" Content="Microsoft Visual Studio 7.0">
+		<script id="clientEventHandlersJS" language="javascript">
+<!--
+
+function getSoapRequestMessage(origX, origY, destX, destY)
+{
+	return "<soap:Envelope xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'>" +
+	       "  <soap:Body>" +
+	       "    <CalcDistance xmlns='http://example.org/math'>" +
+	       "      <orig>" + 
+	       "        <x>" + origX + "</x>" + 
+	       "        <y>" + origY + "</y>" + 
+		   "      </orig>" + 
+	       "      <dest>" + 
+	       "        <x>" + destX + "</x>" + 
+	       "        <y>" + destY + "</y>" + 
+		   "      </dest>" + 
+		   "    </CalcDistance>" +
+		   "  </soap:Body>" +
+		   "</soap:Envelope>";
+}
+
+function btnInvoke_onclick() {
+	var req = new ActiveXObject("MSXML2.XMLHttp.4.0");
+	var url = "http://localhost/mathservice/math.asmx";
+	req.open("POST", url, false);
+	req.setRequestHeader("Content-Type", "text/xml");
+	req.setRequestHeader("SOAPAction", "http://example.org/math/CalcDistance");
+	req.send(getSoapRequestMessage(txtOrigX.value, txtOrigY.value, txtDestX.value, txtDestY.value));
+	txtResult.value = req.responseXML.text;
+	alert(req.responseXML.xml);
+}
+
+//-->
+		</script>
+	</HEAD>
+	<BODY style="FONT-FAMILY:verdana">
+		<H1>Calculate Distance</H1>
+		<P>
+			<TABLE id="Table1" cellSpacing="0" cellPadding="5" border="0">
+				<TR>
+					<TD width="65" colSpan="2"><STRONG>Origin</STRONG></TD>
+				</TR>
+				<TR>
+					<TD width="65">x:</TD>
+					<TD>
+						<INPUT id="txtOrigX" type="text" size="50" name="txtOrigX"></TD>
+				</TR>
+				<TR>
+					<TD width="65">y:</TD>
+					<TD>
+						<INPUT id="txtOrigY" type="text" size="50" name="txtOrigY"></TD>
+				</TR>
+				<TR>
+					<TD width="65" colSpan="2"><STRONG>Destination</STRONG></TD>
+				</TR>
+				<TR>
+					<TD width="65">x:</TD>
+					<TD>
+						<INPUT id="txtDestX" type="text" size="50" name="txtDestX"></TD>
+				</TR>
+				<TR>
+					<TD width="65">y:</TD>
+					<TD>
+						<INPUT id="txtDestY" type="text" size="50" name="txtDestY"></TD>
+				</TR>
+				<TR>
+					<TD width="65"></TD>
+					<TD>
+						<INPUT id="btInvoke" onclick="return btnInvoke_onclick()" type="submit" value="Invoke" name="btnInvoke"></TD>
+				</TR>
+				<TR>
+					<TD colSpan="2">
+						<HR>
+					</TD>
+				</TR>
+				<TR>
+					<TD width="65">result:</TD>
+					<TD>
+						<INPUT id="txtResult" style="BACKGROUND: silver" readOnly type="text" size="50" name="txtResult"></TD>
+				</TR>
+			</TABLE>
+		</P>
+	</BODY>
+</HTML>
