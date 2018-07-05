@@ -1,0 +1,52 @@
+Attribute VB_Name = "API_GetSystemMetrics"
+Option Explicit
+
+Public Const SM_CMETRICS = 44
+Public Const SM_CMOUSEBUTTONS = 43
+Public Const SM_CXBORDER = 5
+Public Const SM_CXCURSOR = 13
+Public Const SM_CXDLGFRAME = 7
+Public Const SM_CXDOUBLECLK = 36
+Public Const SM_CXFRAME = 32
+Public Const SM_CXFULLSCREEN = 16
+Public Const SM_CXHSCROLL = 21
+Public Const SM_CXHTHUMB = 10
+Public Const SM_CXICON = 11
+Public Const SM_CXICONSPACING = 38
+Public Const SM_CXMIN = 28
+Public Const SM_CXMINTRACK = 34
+Public Const SM_CXSCREEN = 0
+Public Const SM_CXSIZE = 30
+Public Const SM_CXVSCROLL = 2
+Public Const SM_CYBORDER = 6
+Public Const SM_CYCAPTION = 4
+Public Const SM_CYCURSOR = 14
+Public Const SM_CYDLGFRAME = 8
+Public Const SM_CYDOUBLECLK = 37
+Public Const SM_CYFRAME = 33
+Public Const SM_CYFULLSCREEN = 17
+Public Const SM_CYHSCROLL = 3
+Public Const SM_CYICON = 12
+Public Const SM_CYICONSPACING = 39
+Public Const SM_CYKANJIWINDOW = 18
+Public Const SM_CYMENU = 15
+Public Const SM_CYMIN = 29
+Public Const SM_CYMINTRACK = 35
+Public Const SM_CYSCREEN = 1
+Public Const SM_CYSIZE = 31
+Public Const SM_CYVSCROLL = 20
+Public Const SM_CYVTHUMB = 9
+Public Const SM_DBCSENABLED = 42
+Public Const SM_DEBUG = 22
+Public Const SM_MENUDROPALIGNMENT = 40
+Public Const SM_MOUSEPRESENT = 19
+Public Const SM_PENWINDOWS = 41
+Public Const SM_RESERVED1 = 24
+Public Const SM_RESERVED2 = 25
+Public Const SM_RESERVED3 = 26
+Public Const SM_RESERVED4 = 27
+Public Const SM_SWAPBUTTON = 23
+Public Const SM_CXMAXIMIZED = 61
+Public Const SM_CYMAXIMIZED = 62
+
+Declare Function GetSystemMetrics Lib "user32" (ByVal nIndex As Long) As Long

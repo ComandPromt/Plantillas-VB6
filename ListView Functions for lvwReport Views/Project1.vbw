@@ -1,0 +1,8 @@
+Form1 = 44, 44, 578, 535, C, 22, 22, 556, 513, C
+ListViewFuncs = 88, 88, 622, 579, 
+frmListViewImages = 0, 0, 0, 0, C, 66, 66, 623, 590, C
+API_TYPEPOINTAPI = 110, 110, 713, 722, 
+APITYPE_RECT = 66, 66, 669, 678, 
+API_SendMessage = 110, 110, 667, 634, 
+APITYPE_HDITEM = 88, 88, 691, 700, 
+API_GetSystemMetrics = 154, 154, 711, 678, 
