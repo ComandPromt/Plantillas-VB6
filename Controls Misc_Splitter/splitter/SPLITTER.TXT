@@ -1,0 +1,103 @@
+                      Splitter Bar Classes
+
+The Splitter project illustrates using splitter bars to split list
+boxes, text boxes, picture boxes, and other controls. Two classes,
+HSplit.Cls and VSplit.Cls, encapsulate the splitter code so that you
+can add a splitter bar to any project with just a few lines of client
+code.
+
+Here's how you add a horizontal splitter bar to separate two text
+boxes, giving an effect similar to the split editing window in Visual
+Basic's editor. First, you put two TextBox controls on a Form or
+PictureBox. (You can use any control that has Left, Top, Width, and
+Height properties and that isn't a lightweight control such as Image.)
+Unlike most classes, CHSplitter and CVSplitter have no properties.
+Instead, you pass information to their Create methods through optional
+named arguments.
+
+Dim split As New CHSplitter
+
+Private Sub Form_Load()
+    If Not split.Create(vTopControl:=txtTop, _
+                        vBottomControl:=txtBottom, _
+                        vBorderPixels:=4, _
+                        vAutoBorder:=False, _
+                        vResizeable:=True) Then
+        MsgBox "Can't create splitter"
+        Unload Me
+    End If
+End Sub
+
+The first two required arguments are the two controls to be split. The
+next three specify how the control will be split. If vAutoBorder is
+True, the border size of the controls is determined by the initial
+position of the left control. This is handy if you have a toolbar or
+other item around the border. Otherwise vBorderPixels determines the
+border size. You can also control whether the controls are resized
+when their container is resized. The sample program lets you change
+the arguments to test different effects.
+
+You must also assign the splitter's Mouse_Down, Mouse_Move, Mouse_Up,
+and Resize methods to the corresponding container properties:
+
+Private Sub Form_MouseDown(Button As Integer, Shift As Integer, _
+                           X As Single, Y As Single)
+    split.HSplitter_MouseDown Button, Shift, X, Y
+End Sub
+
+Private Sub Form_MouseMove(Button As Integer, Shift As Integer, _
+                           X As Single, Y As Single)
+    split.HSplitter_MouseMove Button, Shift, X, Y
+End Sub
+
+Private Sub Form_MouseUp(Button As Integer, Shift As Integer, _
+                         X As Single, Y As Single)
+    split.HSplitter_MouseUp Button, Shift, X, Y
+End Sub
+
+Private Sub Form_Resize()
+    split.HSplitter_Resize
+End Sub
+
+The only thing I couldn't make modular is the mouse cursor. There's no
+way to insert a cursor or other picture into a class, and the normal
+cursor you use for dragging a splitter isn't one of the standard
+values for the MousePointer property. The splitter classes handle this
+by assuming anything in the MouseIcon property is the appropriate drag
+cursor. Normally you should put the standard splitting cursors in the
+MouseIcon property of the container. (HO_SPLIT.CUR and VE_SPLIT.CUR
+are included in the zip file for your convenience.) When the splitter
+is active, the MousePointer is set to 99 (custom icon) and the
+splitter cursor is used. When the splitter is inactive, MouseIcon is
+restored to its previous value.
+
+The code for splitting controls is not particularly unusual or
+difficult. The interesting part of this project is how the splitter
+code is encapsulated in classes, making it completely (well, almost
+completely) modular. You can use similar techniques to make your own
+code modular. The book Hardcore Visual Basic has many more examples of
+enhancing controls by encapsulating them within classes. For example:
+
+  - The CEditor class turns a TextBox control into an editor with
+    search and replace, file loading and saving, undo, and many other
+    standard editing features.
+
+  - The CSortedListBox class turns a ListBox control into a
+    SortedListBox that can be sorted in ascending or descending
+    order, and by text or numeric value.
+
+  - The CGetColor class turns a PictureBox control into a color
+    palette selector much like the one you see when you click on
+    Visual Basic's BackColor property.
+
+  - The CPictureGlass class turns a PictureBox control into a
+    transparent picture (like an icon, but of any size) that you can
+    move over any background surface.
+
+Thanks to Benjamin Bourderon who provided the original control-
+splitting algorithm and to Bryce Ferguson who helped polish the class
+code.
+
+Bruce McKinney
+Hardcore Visual Basic
+brucem_MS@msn.com
