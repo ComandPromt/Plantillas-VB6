@@ -1,0 +1,13 @@
+Line 13: Class ComctlLib.ImageList of control ImageList1 was not a loaded control class.
+Line 39: Class ComctlLib.ImageCombo of control ImageCombo1 was not a loaded control class.
+Line 16: The property name _ExtentX in ImageList1 is invalid.
+Line 17: The property name _ExtentY in ImageList1 is invalid.
+Line 19: The property name ImageWidth in ImageList1 is invalid.
+Line 20: The property name ImageHeight in ImageList1 is invalid.
+Line 21: The property name MaskColor in ImageList1 is invalid.
+Line 22: The property name _Version in ImageList1 is invalid.
+Line 37: The property name Images in ImageList1 is invalid.
+Line 45: The property name _ExtentX in ImageCombo1 is invalid.
+Line 46: The property name _ExtentY in ImageCombo1 is invalid.
+Line 47: The property name _Version in ImageCombo1 is invalid.
+Line 50: The property name Text in ImageCombo1 is invalid.

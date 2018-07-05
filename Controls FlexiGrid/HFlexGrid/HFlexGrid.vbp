@@ -1,0 +1,35 @@
+Type=Exe
+Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINNT\System32\STDOLE2.TLB#OLE Automation
+Form=frmMain.frm
+Object={67397AA1-7FB1-11D0-B148-00A0C922E820}#6.0#0; MSADODC.OCX
+Reference=*\G{00000200-0000-0010-8000-00AA006D2EA4}#2.0#0#C:\Program Files\Common Files\system\ado\MSADO15.DLL#Microsoft ActiveX Data Objects 2.0 Library
+Object={0ECD9B60-23AA-11D0-B351-00A0C9055D8E}#6.0#0; MSHFLXGD.OCX
+Reference=*\G{3D5C6BF0-69A3-11D0-B393-00A0C9055D8E}#1.0#0#C:\Program Files\Common Files\designer\MSDERUN.DLL#Microsoft Data Environment Instance 1.0
+Startup="frmMain"
+Command32=""
+Name="HFlexGrid"
+HelpContextID="0"
+CompatibleMode="0"
+MajorVer=1
+MinorVer=0
+RevisionVer=0
+AutoIncrementVer=0
+ServerSupportFiles=0
+CompilationType=0
+OptimizationType=0
+FavorPentiumPro(tm)=0
+CodeViewDebugInfo=0
+NoAliasing=0
+BoundsCheck=0
+OverflowCheck=0
+FlPointCheck=0
+FDIVCheck=0
+UnroundedFP=0
+StartMode=0
+Unattended=0
+Retained=0
+ThreadPerObject=0
+MaxNumberOfThreads=1
+
+[RVB]
+DeleteClass1=DataEnvironment1

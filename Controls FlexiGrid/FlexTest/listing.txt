@@ -1,0 +1,39 @@
+
+Listing 1 (VB6):
+
+Private Sub Form_Load()
+'frmData
+    Dim i As Integer
+    With MSHFlexGrid1
+	.Redraw = False
+         ' set grid's column widths (-1 = default width)
+        .ColWidth(0) = -1
+        .ColWidth(1) = 2800         'company name
+        .ColWidth(2) = -1
+        .ColWidth(3) = -1
+        .ColWidth(4) = -1
+
+        ' set grid's column merging and sorting
+        .MergeCells = flexMergeFree
+        For i = 0 To .Cols - 1
+            .MergeCol(i) = True
+        Next I
+
+	' set grid's style
+	.Sort = flexSortGenericAscending
+        .AllowBigSelection = True
+        .FillStyle = flexFillRepeat
+
+        ' make header line with field names bold
+        .Row = 0
+        .Col = 0
+        .RowSel = .FixedRows - 1
+        .ColSel = .Cols - 1
+        .CellFontBold = True
+
+        .AllowBigSelection = False
+        .FillStyle = flexFillSingle
+        .Redraw = True
+    End With
+End Sub
+
