@@ -1,0 +1,15 @@
+Line 132: Class vbpKRScroll.KRScroll of control krsHorz was not a loaded control class.
+Line 149: Class vbpKRScroll.KRScroll of control krsVert was not a loaded control class.
+Line 139: The property name _ExtentX in krsHorz is invalid.
+Line 140: The property name _ExtentY in krsHorz is invalid.
+Line 141: The property name AutoSystemResize in krsHorz is invalid.
+Line 142: The property name Orientation in krsHorz is invalid.
+Line 143: The property name OverlapPosition in krsHorz is invalid.
+Line 144: The property name OverlapTwips in krsHorz is invalid.
+Line 146: The property name FocusRect in krsHorz is invalid.
+Line 147: The property name MouseWheel in krsHorz is invalid.
+Line 156: The property name _ExtentX in krsVert is invalid.
+Line 157: The property name _ExtentY in krsVert is invalid.
+Line 158: The property name AutoSystemResize in krsVert is invalid.
+Line 160: The property name FocusRect in krsVert is invalid.
+Line 161: The property name MouseWheel in krsVert is invalid.

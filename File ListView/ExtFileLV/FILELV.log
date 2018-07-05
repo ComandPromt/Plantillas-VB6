@@ -1,0 +1,13 @@
+Line 10: Class MSComctlLib.ImageList of control imgSMALL was not a loaded control class.
+Line 19: Class MSComctlLib.ListView of control lvLIST was not a loaded control class.
+Line 13: The property name _ExtentX in imgSMALL is invalid.
+Line 14: The property name _ExtentY in imgSMALL is invalid.
+Line 16: The property name MaskColor in imgSMALL is invalid.
+Line 17: The property name _Version in imgSMALL is invalid.
+Line 25: The property name _ExtentX in lvLIST is invalid.
+Line 26: The property name _ExtentY in lvLIST is invalid.
+Line 27: The property name View in lvLIST is invalid.
+Line 28: The property name LabelWrap in lvLIST is invalid.
+Line 29: The property name HideSelection in lvLIST is invalid.
+Line 30: The property name _Version in lvLIST is invalid.
+Line 44: The property name NumItems in lvLIST is invalid.

@@ -1,0 +1,91 @@
+[Root]
+Most Recent Package=Standard Setup Package 1
+
+
+[Package|Standard Setup Package 1|Root]
+SubWizProgID=PDWizard.SetupPkgSubWiz
+BuildFolder=E:\Program Files\Microsoft Visual Studio\VB98\Projects\ActiveX\File_View2\New Folder
+Controls Design-Time Support=No
+
+[Package|Standard Setup Package 1|Configure DAO ISAMs]
+Applicable=No
+
+[Package|Standard Setup Package 1|Configure DAO ODBC]
+JetWorkspace=
+ODBCDirect=
+
+[Package|Standard Setup Package 1|Files Found]
+
+[Package|Standard Setup Package 1|Files Released]
+
+[Package|Standard Setup Package 1|Missing Dependency Information]
+C:\WINNT\system32\shlwapi.dll=
+
+[Package|Standard Setup Package 1|Out-of-Date Dependency Information]
+C:\WINNT\system32\scrrun.dll=
+
+[Package|Standard Setup Package 1|Files Added]
+C:\WINNT\System32\MsStkPrp.dll=This file is needed for usercontrol design-time support.
+
+[Package|Standard Setup Package 1|Files Removed]
+c:\winnt\system32\msstkprp.dll=
+
+[Package|Standard Setup Package 1|Files In Project]
+E:\Program Files\Microsoft Visual Studio\VB98\Projects\ActiveX\File_View2\AdvFileList.ocx=Yes
+C:\WINNT\system32\msvbvm60.dll=Yes
+C:\WINNT\system32\oleaut32.dll=Yes
+C:\WINNT\system32\olepro32.dll=Yes
+C:\WINNT\system32\asycfilt.dll=Yes
+C:\WINNT\system32\stdole2.tlb=Yes
+E:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=Yes
+C:\WINNT\system32\shlwapi.dll=Yes
+C:\WINNT\system32\scrrun.dll=Yes
+C:\WINNT\system32\msvcrt.dll=Yes
+C:\WINNT\system32\MSCOMCTL.OCX=Yes
+E:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=Yes
+E:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=Yes
+C:\WINNT\system32\VB6STKIT.DLL=Yes
+E:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=Yes
+C:\WINNT\system32\MSSTKPRP.DLL=No
+
+[Package|Standard Setup Package 1|Configure Registry Files]
+Applicable=No
+
+[Package|Standard Setup Package 1|Configure Remote Servers]
+Applicable=No
+
+[Package|Standard Setup Package 1|Install Locations]
+E:\Program Files\Microsoft Visual Studio\VB98\Projects\ActiveX\File_View2\AdvFileList.ocx=$(AppPath)
+C:\WINNT\system32\msvbvm60.dll=$(WinSysPathSysFile)
+C:\WINNT\system32\oleaut32.dll=$(WinSysPathSysFile)
+C:\WINNT\system32\olepro32.dll=$(WinSysPathSysFile)
+C:\WINNT\system32\asycfilt.dll=$(WinSysPathSysFile)
+C:\WINNT\system32\stdole2.tlb=$(WinSysPathSysFile)
+E:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\WINNT\system32\shlwapi.dll=$(WinSysPath)
+C:\WINNT\system32\scrrun.dll=$(WinSysPath)
+C:\WINNT\system32\msvcrt.dll=$(WinSysPathSysFile)
+C:\WINNT\system32\MSCOMCTL.OCX=$(WinSysPath)
+E:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+E:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\WINNT\system32\VB6STKIT.DLL=$(WinSysPathSysFile)
+E:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+
+[Package|Standard Setup Package 1|Configure Shared Files]
+Applicable=Yes
+E:\Program Files\Microsoft Visual Studio\VB98\Projects\ActiveX\File_View2\AdvFileList.ocx=Yes
+
+[Package|Standard Setup Package 1|Distribution]
+Type=single
+Size=
+Title=AdvFileList
+
+[Package|Standard Setup Package 1|Package]
+PackageFolder=E:\Program Files\Microsoft Visual Studio\VB98\Projects\ActiveX\File_View2\New Folder
+ProjectFolder=E:\Program Files\Microsoft Visual Studio\VB98\Projects\ActiveX\File_View2
+ServerSideCab=
+File1=E:\Program Files\Microsoft Visual Studio\VB98\Projects\ActiveX\File_View2\New Folder\setup.exe
+File2=E:\Program Files\Microsoft Visual Studio\VB98\Projects\ActiveX\File_View2\New Folder\Setup.Lst
+File3=E:\Program Files\Microsoft Visual Studio\VB98\Projects\ActiveX\File_View2\New Folder\AdvFileList.CAB
+Handler1=PDWizard.FolderDplySubWiz
+Handler2=PDWizard.WebPostDplySubWiz

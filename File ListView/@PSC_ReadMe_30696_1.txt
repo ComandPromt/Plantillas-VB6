@@ -1,0 +1,6 @@
+Title: File ListView
+Description: A little while ago somebody posted a listview that will automatically display a file listing for you. I thought this was a good idea and downloaded it. While it was nice, it had some bugs. Instead of just fixing that code, today I decided to make one myself. 90% of it was made simply using the Active X Control Wizard. I then added some code to read the icons for the files to dispaly in the ListView and few other tweaks to what the wizard made. In the end I have this control for you. While it is functional and easy to understand, you may wish to add/alter the code a bit to make it a bit more robust for all needs. Have fun with it. Simply set the Path property to a full path you wish to display files of and presto. On ItemClick or DblClick you can check and read the ItemType property to determine if the user clicked or double clicked on a Folder or a File ListItem and perform the logic you desire.
+This file came from Planet-Source-Code.com...the home millions of lines of source code
+You can view comments on this code/and or vote on it at: http://www.Planet-Source-Code.com/vb/scripts/ShowCode.asp?txtCodeId=30696&lngWId=1
+
+The author may have retained certain copyrights to this code...please observe their request and the law by reviewing all copyright conditions at the above URL.

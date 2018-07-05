@@ -1,0 +1,3 @@
+VBGROUP 5.0
+Project=ExtFileLV.vbp
+StartupProject=TestProject\ExtFileLVTest.vbp
