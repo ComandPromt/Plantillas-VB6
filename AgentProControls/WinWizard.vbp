@@ -1,0 +1,39 @@
+Type=Exe
+Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#..\..\..\..\..\SYSTEM\stdole2.tlb#OLE Automation
+Reference=*\G{00025E01-0000-0000-C000-000000000046}#4.0#0#..\..\..\..\..\..\PROGRAM FILES\COMMON FILES\MICROSOFT SHARED\DAO\DAO350.DLL#Microsoft DAO 3.5 Object Library
+Form=frmReminderList.frm
+Object={A9F7C2F4-F19E-11D1-94FF-0000F8013E66}#1.0#0; AGENTPROCONTROLS.OCX
+Object={00028C01-0000-0000-0000-000000000046}#1.0#0; DBGRID32.OCX
+Startup="frmReminderList"
+ExeName32="WinWizard.exe"
+Command32=""
+Name="WinWizard"
+HelpContextID="0"
+CompatibleMode="0"
+MajorVer=1
+MinorVer=0
+RevisionVer=0
+AutoIncrementVer=0
+ServerSupportFiles=0
+VersionCompanyName="Sanford C. Bernstein & Co., Inc."
+CompilationType=0
+OptimizationType=0
+FavorPentiumPro(tm)=0
+CodeViewDebugInfo=0
+NoAliasing=0
+BoundsCheck=0
+OverflowCheck=0
+FlPointCheck=0
+FDIVCheck=0
+UnroundedFP=0
+StartMode=0
+Unattended=0
+Retained=0
+ThreadPerObject=0
+MaxNumberOfThreads=1
+
+[MS Transaction Server]
+AutoRefresh=1
+
+[RVB]
+DeleteClass1=Form1

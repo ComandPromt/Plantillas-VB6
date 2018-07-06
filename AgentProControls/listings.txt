@@ -1,0 +1,205 @@
+This document includes the listings for John Moody's August article, "Create an Animated Desktop Assistant." 
+
+Listing 1
+
+Sub Command1_Click()
+Private CenterX as Long
+Private CenterY as Long
+Merlin.Play "Announce"
+Merlin.Speak "Hello! | Hi there! Howdy! | Greetings!"
+Merlin.Play "AnnounceReturn"
+With Screen
+	CenterX = Int((.Width / .TwipsPerPixelX) / 2)
+	CenterY = Int((.Height / .TwipsPerPixelY) / 2)
+End With
+Merlin.MoveTo CenterX, CenterY
+Merlin.Speak "How's that?"
+End Sub
+
+
+
+Listing 2
+
+Sub Form_Load()
+Private CharPath as String
+CharPath = "c:\program files\" & "microsoft agent" _
+	& " \characters\"
+ctlAgent.Characters.Load "Merlin", CharPath & _
+	"merlinsfx.acs"
+Set Merlin = ctlAgent.Characters("Merlin")
+Merlin.Show
+Merlin.Speak "Hello!"
+Merlin.Commands.Add "center", _
+	"Center on Screen", "...center...", True, True
+Merlin.Commands.Add "joke", "Tell Joke", _
+	"...joke...", True, True
+Merlin.Commands.Add "magic", "Do Magic", _
+	"...magic...", True, True
+End Sub
+
+Sub ctlAgent_Command(ByVal UserInput as Object)
+Select Case UserInput.Name
+	Case "center":
+		Dim x as Long, y as Long
+	x = Int((Screen.Width / Screen.TwipsPerPixelX) / 2)
+	y = Int(Screen.Height / Screen.TwipsPerPixelY) / 2)
+	Merlin.MoveTo x, y
+	Case "joke": Merlin.Speak "Why did the chicken " & _
+		"cross the road?"
+	Case "magic":
+		Merlin.Play "DoMagic"
+		Merlin.Speak "Abracadabra!"
+	Case Else:
+		Merlin.Play "Confused"
+		Merlin.Play "ConfusedReturn"
+End Select
+End Sub
+
+Sub Form_Unload()
+	Set Merlin = Nothing
+End Sub
+
+Listing 3
+
+Private mCharacterID As String
+Private mCharacterFile As String
+Private mCharacterObject As IAgentCtlCharacter
+
+Property Let ID(newID As String)
+	'Must unload and reload under new ID if changed
+	If mCharacterObject Is Nothing Then
+		mCharacterID = newID
+	Else
+		Set mCharacterObject = Nothing
+		MyControl.AgentObject.Characters.Unload _
+			CharacterID
+		MyControl.AgentObject.Characters.Load newID, _
+			mCharacterFile
+		mCharacterID = newID
+		Set mCharacterObject = _
+			MyControl.AgentObject.Characters(CharacterID)
+	End If
+End Property
+
+Property Get ID() As String
+	ID = mCharacterID
+End Property
+
+Public Function Load(CharacterID As String, LoadKey As _
+	String)
+	MyControl.AgentObject.Characters.Load CharacterID, _
+		LoadKey
+	mCharacterID = CharacterID
+	mCharacterFile = LoadKey
+	Set mCharacterObject = _
+		MyControl.AgentObject.Characters(CharacterID)
+End Function
+
+Private Sub Class_Terminate()
+	MyControl.AgentObject.Characters.Unload mCharacterID
+	Set mCharacterObject = Nothing
+End Sub
+
+
+Listing 4
+
+Private mCol As Collection
+
+Public Function Add(ByVal CharacterID As String, ByVal _
+	CharacterFile As String, ByRef ParentControl As _
+	SecretAgent) As clsCharacter
+	'create a new object
+	Dim objNewMember As clsCharacter
+	Set objNewMember = New clsCharacter
+	'Load the character of the underlying control
+	objNewMember.Load CharacterID, CharacterFile
+	mCol.Add objNewMember, CharacterID
+	'return the object created
+	Set Add = objNewMember
+	Set objNewMember = Nothing
+End Function
+
+Public Property Get Item(CharacterID As String) As _
+	clsCharacter
+	Set Item = mCol(CharacterID)
+End Property
+
+Public Property Get Count() As Long
+	Count = mCol.Count
+End Property
+
+Public Sub Remove(CharacterID As String)
+	mCol.Remove vntIndexKey
+End Sub
+
+Public Property Get NewEnum() As IUnknown
+	Set NewEnum = mCol.[_NewEnum]
+End Property
+
+Private Sub Class_Initialize()
+	Set mCol = New Collection
+End Sub
+
+Private Sub Class_Terminate()
+	Set mCol = Nothing
+End Sub
+
+
+Listing 5
+
+Declare Function GetWindowRect Lib "user32" (ByVal hwnd _
+	As Long, lpRect As RECT) As Long
+
+Type RECT
+	Left As Long
+	Top As Long
+	Right As Long
+	Bottom As Long
+End Type
+
+Public Function ToPixelsX(twipsX as Long) as Long
+	ToPixelsX = Int(twipsX / Screen.TwipsPerPixelX * .5)
+End Function
+
+Public Function ToPixelsY(twipsY as Long) as Long
+	ToPixelsY = Int(twipsY / Screen.TwipsPerPixelY * .5)
+End Function
+
+
+Listing 6
+
+Sub Timer1_Timer()
+	Dim Sql As String, RS As Recordset, Another As Boolean
+	Timer1.Enabled = False
+	Another = False
+	Sql = "SELECT * FROM Reminders ORDER BY _
+		RemindDateTime"
+	Set RS = DB.OpenRecordset(Sql, dbOpenDynaset)
+	If RS.RecordCount > 0 Then
+		RS.MoveFirst
+		Do While Not RS.EOF
+			If RS!RemindDateTime < Now() Then
+				myChar.Play "GetAttention"
+				myChar.Play "GetAttentionReturn"
+				myChar.Speak "I have " & IIf( _
+					Another, "another", "a") _
+					& " reminder for you."
+				myChar.Speak RS!VoiceText
+				Another = True
+				RS.Delete
+				If RS.EOF Then Exit Do
+			End If
+			RS.MoveNext
+		Loop
+		If Another Then
+			myChar.Speak "That's all the reminders" & _
+				" I have for you right now."
+			Me.Data1.UpdateControls
+			Me.DBGrid1.Refresh
+		End If
+	End If
+	RS.Close
+	Set RS = Nothing
+	Timer1.Enabled = True
+End Sub
+
