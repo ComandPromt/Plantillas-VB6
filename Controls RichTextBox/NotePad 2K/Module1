@@ -1,0 +1,261 @@
+Attribute VB_Name = "Module1"
+Option Explicit
+Public Declare Function SendMessageLong Lib "user32" Alias "SendMessageA" (ByVal hWnd As Long, ByVal wMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hWnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
+Public Const EM_UNDO = &HC7
+Public Const EM_CANUNDO = &HC6
+Public Const WM_COPY& = &H301
+Public Const WM_CUT& = &H300
+Public Const WM_PASTE& = &H302
+
+
+Public Const MIIM_STATE = &H1
+Public Const MIIM_ID = &H2
+Public Const MIIM_SUBMENU = &H4
+Public Const MIIM_CHECKMARKS = &H8
+Public Const MIIM_TYPE = &H10
+Public Const MIIM_DATA = &H20
+Public Const MF_BYCOMMAND = &H0&
+Public Const MF_BYPOSITION = &H400&
+Public Const MF_STRING = &H0&
+Public Const WM_COMMAND = &H111
+Public Const WM_SYSCOMMAND = &H112
+
+
+Public OldProc As Long
+Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hWnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
+Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hWnd As Long, ByVal nIndex As Long) As Long
+Public Const GWL_WNDPROC = (-4)
+Declare Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Long, ByVal hWnd As Long, ByVal msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+'The message that we are going to monitor
+Public Const WM_CONTEXTMENU = &H7B&
+
+Public Changed As Boolean
+
+
+'stuff
+'Public Declare Function AppendMenu Lib "user32" Alias "AppendMenuA" (ByVal hMenu As Long, ByVal wFlags As Long, ByVal wIDNewItem As Long, ByVal lpNewItem As Any) As Long
+'Public Declare Function GetSystemMenu Lib "user32" (ByVal hwnd As Long, ByVal bRevert As Long) As Long
+'Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
+'Declare Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Long, ByVal hwnd As Long, ByVal msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+
+'bitmap stuff
+
+' Menu Item Info Mask constants
+
+'Public Declare Function GetMenuItemInfo Lib "user32" Alias "GetMenuItemInfoA" (ByVal HMenu As Long, ByVal un As Long, ByVal b As Boolean, lpmii As MENUITEMINFO) As Long
+'Public Declare Function SetMenuItemInfo Lib "user32" Alias "SetMenuItemInfoA" (ByVal HMenu As Long, ByVal un As Long, ByVal bool As Boolean, lpcMenuItemInfo As MENUITEMINFO) As Long
+'Public Declare Function DrawMenuBar Lib "user32" (ByVal hwnd As Long) As Long
+'Public Declare Function SetTextColor Lib "gdi32" (ByVal hdc As Long, ByVal crColor As Long) As Long
+
+'Bitmap Stuff
+
+Type POINTAPI
+        x As Long
+        y As Long
+End Type
+Declare Function GetMenu Lib "user32" (ByVal hWnd As Long) As Long
+Declare Function GetSubMenu Lib "user32" (ByVal hMenu As Long, ByVal nPos As Long) As Long
+Declare Function TrackPopupMenu Lib "user32.dll" (ByVal hMenu As Long, ByVal uFlags As Long, ByVal x As Long, ByVal y As Long, ByVal nReserved As Long, ByVal hWnd As Long, ByVal prcRect As Long) As Long
+Declare Function TrackPopupMenuBynum Lib "user32" Alias "TrackPopupMenu" (ByVal hMenu As Long, ByVal wFlags As Long, ByVal x As Long, ByVal y As Long, ByVal nReserved As Long, ByVal hWnd As Long, ByVal lprc As Long) As Long
+Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
+
+Public Const TPM_LEFTBUTTON = &H0
+Public Const TPM_RIGHTBUTTON = &H2
+Public Const TPM_LEFTALIGN = &H0
+Public Const TPM_CENTERALIGN = &H4
+Public Const TPM_RIGHTALIGN = &H8
+'end stuff
+
+
+Public fMainForm As frmMain
+
+'Declare Function ShowCursor Lib "user32.dll" (ByVal bShow As Long) As Long
+'Declare Function SwapMouseButton Lib "user32.dll" (ByVal bSwap As Long) As Long
+Public Enum BYTEVALUES
+    Kilobyte = 1024
+    MegaByte = 1024
+    GigaByte = 1024
+    'MegaByte = 1048576
+    'GigaByte = 107374182
+End Enum
+
+'Type SYSTEMTIME
+'  wYear As Integer
+'  wMonth As Integer
+'  wDayOfWeek As Integer
+'  wDay As Integer
+'  wHour As Integer
+'  wMinute As Integer
+'  wSecond As Integer
+'  wMilliseconds As Integer
+'End TypePrivate
+
+'Declare Function GetUserName Lib "advapi32.dll" Alias "GetUserNameA" (ByVal lpBuffer As String, nSize As Long) As Long
+'Declare Sub GetLocalTime Lib "kernel32.dll" (lpSystemTime As SYSTEMTIME)
+'Public Declare Function SetLocalTime Lib "kernel32" (lpSystemTime As SYSTEMTIME) As Long
+
+Public Declare Function GetOpenFileName Lib "comdlg32.dll" Alias "GetOpenFileNameA" (pOpenfilename As OPENFILENAME) As Long
+Public Declare Function GetSaveFileName Lib "comdlg32.dll" Alias "GetSaveFileNameA" (pOpenfilename As OPENFILENAME) As Long
+Public Const OFN_ALLOWMULTISELECT = &H200
+Public Const OFN_OVERWRITEPROMPT = &H2
+Public Const OFN_EXPLORER = &H80000
+Public Const OFN_EXTENSIONDIFFERENT = &H400
+Public Const OFN_NOREADONLYRETURN = &H8000
+
+Public Type OPENFILENAME
+    lStructSize As Long
+    hwndOwner As Long
+    hInstance As Long
+    lpstrFilter As String
+    lpstrCustomFilter As String
+    nMaxCustFilter As Long
+    nFilterIndex As Long
+    lpstrFile As String
+    nMaxFile As Long
+    lpstrFileTitle As String
+    nMaxFileTitle As Long
+    lpstrInitialDir As String
+    lpstrTitle As String
+    flags As Long
+    nFileOffset As Integer
+    nFileExtension As Integer
+    lpstrDefExt As String
+    lCustData As Long
+    lpfnHook As Long
+    lpTemplateName As String
+End Type
+
+
+'Declare Function GetCursorPos Lib "user32.dll" (lpPoint As POINTAPI) As Long
+'Declare Function SetCursorPos Lib "user32.dll" (ByVal X As Long, ByVal Y As Long) As Long
+
+Public Declare Function GetMenuItemID Lib "user32" (ByVal hMenu As Long, ByVal nPos As Long) As Long
+Public Declare Function SetMenuItemBitmaps Lib "user32" (ByVal hMenu As Long, ByVal nPosition As Long, ByVal wFlags As Long, ByVal hBitmapUnchecked As Long, ByVal hBitmapChecked As Long) As Long
+
+Sub Main()
+    'App.TaskVisible = False
+    Set fMainForm = New frmMain
+    fMainForm.Show
+End Sub
+
+Sub CommandLineParam()
+    Dim strCommand As String
+    Dim strThisParam As String
+    Dim blnQuotes As Boolean
+    Dim n As Long: n = 1
+    strCommand = Trim$(Command$)
+
+
+    Do While Mid$(strCommand, n, 1) = "/" Or Mid$(strCommand, n, 1) = "-"
+
+
+        For n = n + 1 To Len(strCommand)
+
+
+            If Mid$(strCommand, n + 1, 1) = " " Or n = Len(strCommand) - 1 Then
+                strThisParam = Left$(strCommand, n + 1)
+                strThisParam = Trim(strThisParam)
+                'MsgBox "Param:" & vbCrLf & strThisParam
+                strCommand = Right$(strCommand, Len(strCommand) - n - 1)
+                n = 1
+                Exit For
+            End If
+        Next n
+    Loop
+    n = InStr(1, strCommand, ":")
+    If Not n = 2 And Not n = 3 Then Exit Sub
+
+
+    Do Until strCommand = ""
+        blnQuotes = (Left$(strCommand, 1) = """")
+        n = InStr(4, strCommand, ":")
+
+
+        If n = 0 Then
+
+
+            If blnQuotes Then
+                strThisParam = Mid$(strCommand, 2, Len(strCommand) - 2)
+            Else
+                strThisParam = strCommand
+            End If
+            If Right$(strThisParam, 1) = """" Then strThisParam = Left$(strThisParam, Len(strThisParam) - 1)
+            strCommand = ""
+        Else
+            strThisParam = Trim$(Left$(strCommand, n - 3))
+
+
+            If blnQuotes Then
+                strThisParam = Mid$(strThisParam, 2, Len(strThisParam) - 2)
+            End If
+            If Right$(strThisParam, 1) = """" Then strThisParam = Left$(strThisParam, Len(strThisParam) - 1)
+            strCommand = Trim$(Right$(strCommand, Len(strCommand) - n + 2 - blnQuotes))
+        End If
+        ' ''''''''''''''''''''''''
+        'MsgBox "File: " & vbCrLf & strThisParam
+        ' ''''''''''''''''''''''''
+    Loop
+    fMainForm.OpenDragNDropFile strThisParam, False, True
+    
+End Sub
+Public Function CutDecimal(Number As String, ByPlace As Byte) As String
+    Dim Dec As Byte
+    Dec = InStr(1, Number, ".", vbBinaryCompare) ' find the Decimal
+
+
+    If Dec = 0 Then
+        CutDecimal = Number 'if there is no decimal Then dont do anything
+        Exit Function
+    End If
+    CutDecimal = Mid(Number, 1, Dec + ByPlace) 'How many places you want after the decimal point
+End Function
+
+
+Function GiveByteValues(Bytes As Double) As String
+
+
+    If Bytes < BYTEVALUES.Kilobyte Then
+        GiveByteValues = Bytes & " Bytes"
+    ElseIf Bytes >= BYTEVALUES.GigaByte Then
+        GiveByteValues = CutDecimal(Bytes / BYTEVALUES.GigaByte, 2) & " Gigabytes"
+    ElseIf Bytes >= BYTEVALUES.MegaByte Then
+        GiveByteValues = CutDecimal(Bytes / BYTEVALUES.MegaByte, 2) & " Megabytes"
+    ElseIf Bytes >= BYTEVALUES.Kilobyte Then
+        GiveByteValues = CutDecimal(Bytes / BYTEVALUES.Kilobyte, 2) & " Kilobytes"
+    End If
+End Function
+
+
+
+
+
+
+
+
+'Menu
+'Public Function SysMenuHandler(ByVal hWnd As Long, ByVal iMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+'    If iMsg = WM_SYSCOMMAND Then
+'        If wParam = IDM_TRAY Then
+'            ShowIcon
+'            Exit Function
+'        End If
+'    End If
+'    SysMenuHandler = CallWindowProc(lProcOld, hWnd, iMsg, wParam, lParam)
+'End Function
+'End Menu
+
+
+Public Function WndProc(ByVal hWnd As Long, ByVal wMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+    If wMsg = WM_CONTEXTMENU Then
+        '// Handle this message and call our
+        '// popup routine
+        WndProc = 0
+        fMainForm.MyMenu
+        Exit Function
+    End If
+
+    '// Pass on all the other unhandled messages
+    WndProc = CallWindowProc(OldProc, hWnd, wMsg, wParam, lParam)
+
+End Function

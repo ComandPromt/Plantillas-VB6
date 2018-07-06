@@ -1,0 +1,2329 @@
+VERSION 5.00
+Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "RICHTX32.OCX"
+Begin VB.Form frmMain 
+   AutoRedraw      =   -1  'True
+   BackColor       =   &H00C0C0C0&
+   Caption         =   "Notepad 2K"
+   ClientHeight    =   6750
+   ClientLeft      =   165
+   ClientTop       =   450
+   ClientWidth     =   8235
+   ClipControls    =   0   'False
+   Icon            =   "New.frx":0000
+   LinkTopic       =   "Form1"
+   PaletteMode     =   2  'Custom
+   ScaleHeight     =   6750
+   ScaleWidth      =   8235
+   StartUpPosition =   2  'CenterScreen
+   Begin VB.PictureBox Picture1 
+      Appearance      =   0  'Flat
+      BackColor       =   &H80000018&
+      CausesValidation=   0   'False
+      ClipControls    =   0   'False
+      ForeColor       =   &H80000008&
+      Height          =   615
+      Left            =   2640
+      ScaleHeight     =   585
+      ScaleWidth      =   4305
+      TabIndex        =   8
+      TabStop         =   0   'False
+      Top             =   840
+      Visible         =   0   'False
+      Width           =   4335
+      Begin VB.Label Label1 
+         AutoSize        =   -1  'True
+         BackColor       =   &H80000018&
+         Caption         =   "AaBbCcDdEeFfGg"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   24
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   555
+         Left            =   0
+         TabIndex        =   9
+         Top             =   0
+         Width           =   4155
+      End
+   End
+   Begin VB.Timer Timer2 
+      Enabled         =   0   'False
+      Interval        =   20
+      Left            =   2160
+      Top             =   2280
+   End
+   Begin MSComDlg.CommonDialog CommonDialog2 
+      Left            =   3480
+      Top             =   2040
+      _ExtentX        =   847
+      _ExtentY        =   847
+      _Version        =   393216
+      CancelError     =   -1  'True
+   End
+   Begin VB.ComboBox ColorB 
+      Height          =   315
+      Left            =   6120
+      TabIndex        =   3
+      TabStop         =   0   'False
+      ToolTipText     =   "Background Color"
+      Top             =   480
+      Width           =   1335
+   End
+   Begin VB.ComboBox ColorL 
+      Height          =   315
+      ItemData        =   "New.frx":0442
+      Left            =   4080
+      List            =   "New.frx":0444
+      TabIndex        =   2
+      TabStop         =   0   'False
+      ToolTipText     =   "Font Color"
+      Top             =   480
+      Width           =   1455
+   End
+   Begin VB.ComboBox list2 
+      CausesValidation=   0   'False
+      BeginProperty DataFormat 
+         Type            =   1
+         Format          =   "0"
+         HaveTrueFalseNull=   0
+         FirstDayOfWeek  =   0
+         FirstWeekOfYear =   0
+         LCID            =   1033
+         SubFormatType   =   1
+      EndProperty
+      Height          =   315
+      ItemData        =   "New.frx":0446
+      Left            =   2640
+      List            =   "New.frx":0448
+      TabIndex        =   1
+      TabStop         =   0   'False
+      Top             =   480
+      Width           =   975
+   End
+   Begin VB.ComboBox list1 
+      CausesValidation=   0   'False
+      Height          =   315
+      Left            =   0
+      Sorted          =   -1  'True
+      Style           =   2  'Dropdown List
+      TabIndex        =   0
+      TabStop         =   0   'False
+      Top             =   480
+      Width           =   2535
+   End
+   Begin MSComctlLib.StatusBar sbStatusBar 
+      Align           =   2  'Align Bottom
+      Height          =   270
+      Left            =   0
+      TabIndex        =   4
+      Top             =   6480
+      Width           =   8235
+      _ExtentX        =   14526
+      _ExtentY        =   476
+      _Version        =   393216
+      BeginProperty Panels {8E3867A5-8586-11D1-B16A-00C0F0283628} 
+         NumPanels       =   5
+         BeginProperty Panel1 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
+            AutoSize        =   1
+            Object.Width           =   5284
+            MinWidth        =   4940
+            Text            =   "Not Saved"
+            TextSave        =   "Not Saved"
+         EndProperty
+         BeginProperty Panel2 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
+            Alignment       =   1
+            Object.Width           =   2823
+            MinWidth        =   2823
+            Text            =   "Line : 1   Col : 1"
+            TextSave        =   "Line : 1   Col : 1"
+         EndProperty
+         BeginProperty Panel3 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
+            Style           =   6
+            AutoSize        =   2
+            Object.Width           =   1402
+            MinWidth        =   1412
+            TextSave        =   "8/22/00"
+         EndProperty
+         BeginProperty Panel4 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
+            Style           =   5
+            AutoSize        =   2
+            Object.Width           =   1402
+            MinWidth        =   1413
+            TextSave        =   "4:48 PM"
+         EndProperty
+         BeginProperty Panel5 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
+            Alignment       =   1
+            Object.Width           =   2998
+            MinWidth        =   2998
+         EndProperty
+      EndProperty
+   End
+   Begin MSComDlg.CommonDialog CommonDialog1 
+      Left            =   960
+      Top             =   1560
+      _ExtentX        =   847
+      _ExtentY        =   847
+      _Version        =   393216
+      CancelError     =   -1  'True
+   End
+   Begin MSComctlLib.ImageList imlToolbarIcons 
+      Left            =   240
+      Top             =   1320
+      _ExtentX        =   1005
+      _ExtentY        =   1005
+      BackColor       =   -2147483643
+      ImageWidth      =   16
+      ImageHeight     =   16
+      MaskColor       =   12632256
+      _Version        =   393216
+      BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
+         NumListImages   =   25
+         BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":044A
+            Key             =   "New"
+            Object.Tag             =   "&New"
+         EndProperty
+         BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":055C
+            Key             =   "Open"
+            Object.Tag             =   "&Open"
+         EndProperty
+         BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":066E
+            Key             =   "Save"
+            Object.Tag             =   "&Save"
+         EndProperty
+         BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":0780
+            Key             =   "Cut"
+            Object.Tag             =   "Cu&t"
+         EndProperty
+         BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":0892
+            Key             =   "Copy"
+            Object.Tag             =   "&Copy"
+         EndProperty
+         BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":09A4
+            Key             =   "Paste"
+            Object.Tag             =   "&Paste"
+         EndProperty
+         BeginProperty ListImage7 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":0AB6
+            Key             =   "Bold"
+            Object.Tag             =   "&Bold"
+         EndProperty
+         BeginProperty ListImage8 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":0BC8
+            Key             =   "Italic"
+            Object.Tag             =   "&Italic"
+         EndProperty
+         BeginProperty ListImage9 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":0CDA
+            Key             =   "Underline"
+            Object.Tag             =   "&Underline"
+         EndProperty
+         BeginProperty ListImage10 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":0DEC
+            Key             =   "Align Left"
+            Object.Tag             =   "&Align Left"
+         EndProperty
+         BeginProperty ListImage11 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":0EFE
+            Key             =   "Center"
+            Object.Tag             =   "&Center"
+         EndProperty
+         BeginProperty ListImage12 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":1010
+            Key             =   "Align Right"
+            Object.Tag             =   "&Align Right"
+         EndProperty
+         BeginProperty ListImage13 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":1124
+            Key             =   "Find"
+            Object.Tag             =   "&Find"
+         EndProperty
+         BeginProperty ListImage14 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":1238
+            Key             =   "Encrypt"
+            Object.Tag             =   "&Encrypt"
+         EndProperty
+         BeginProperty ListImage15 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":13D4
+            Key             =   ""
+            Object.Tag             =   "C&ase"
+         EndProperty
+         BeginProperty ListImage16 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":14E8
+            Key             =   "Color"
+            Object.Tag             =   "C&olor"
+         EndProperty
+         BeginProperty ListImage17 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":1684
+            Key             =   "Misc"
+            Object.Tag             =   "&Misc"
+         EndProperty
+         BeginProperty ListImage18 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":1798
+            Key             =   ""
+            Object.Tag             =   "Column"
+         EndProperty
+         BeginProperty ListImage19 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":18AC
+            Key             =   ""
+            Object.Tag             =   "Bullet"
+         EndProperty
+         BeginProperty ListImage20 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":19C0
+            Key             =   ""
+            Object.Tag             =   "Unknown"
+         EndProperty
+         BeginProperty ListImage21 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":1AD4
+            Key             =   ""
+            Object.Tag             =   "Unknown2"
+         EndProperty
+         BeginProperty ListImage22 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":1BE8
+            Key             =   ""
+            Object.Tag             =   "&Print"
+         EndProperty
+         BeginProperty ListImage23 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":212C
+            Key             =   ""
+            Object.Tag             =   "&Undo"
+         EndProperty
+         BeginProperty ListImage24 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":2670
+            Key             =   ""
+            Object.Tag             =   "Redo"
+         EndProperty
+         BeginProperty ListImage25 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "New.frx":2BB4
+            Key             =   ""
+            Object.Tag             =   "C&lear"
+         EndProperty
+      EndProperty
+   End
+   Begin RichTextLib.RichTextBox Text1 
+      Bindings        =   "New.frx":2D5C
+      Height          =   5655
+      Left            =   0
+      TabIndex        =   5
+      Top             =   840
+      Width           =   8175
+      _ExtentX        =   14420
+      _ExtentY        =   9975
+      _Version        =   393217
+      BackColor       =   16777215
+      Enabled         =   -1  'True
+      HideSelection   =   0   'False
+      ScrollBars      =   3
+      BulletIndent    =   0.5
+      OLEDropMode     =   1
+      TextRTF         =   $"New.frx":2D67
+      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+         Name            =   "Fixedsys"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+   End
+   Begin VB.ListBox lstDragDrop 
+      Height          =   255
+      Left            =   1800
+      TabIndex        =   6
+      Top             =   3360
+      Visible         =   0   'False
+      Width           =   2895
+   End
+   Begin MSComctlLib.Toolbar tbToolBar 
+      Align           =   1  'Align Top
+      Height          =   420
+      Left            =   0
+      Negotiate       =   -1  'True
+      TabIndex        =   10
+      Top             =   0
+      Width           =   8235
+      _ExtentX        =   14526
+      _ExtentY        =   741
+      ButtonWidth     =   609
+      ButtonHeight    =   582
+      AllowCustomize  =   0   'False
+      Wrappable       =   0   'False
+      Appearance      =   1
+      ImageList       =   "imlToolbarIcons"
+      _Version        =   393216
+      BeginProperty Buttons {66833FE8-8583-11D1-B16A-00C0F0283628} 
+         NumButtons      =   25
+         BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "New"
+            Object.ToolTipText     =   "New"
+            ImageIndex      =   1
+         EndProperty
+         BeginProperty Button2 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Open"
+            Object.ToolTipText     =   "Open"
+            ImageIndex      =   2
+         EndProperty
+         BeginProperty Button3 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Save"
+            Object.ToolTipText     =   "Save"
+            ImageIndex      =   3
+         EndProperty
+         BeginProperty Button4 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Print"
+            Object.ToolTipText     =   "Print"
+            ImageIndex      =   22
+         EndProperty
+         BeginProperty Button5 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Style           =   3
+         EndProperty
+         BeginProperty Button6 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Cut"
+            Object.ToolTipText     =   "Cut"
+            ImageIndex      =   4
+         EndProperty
+         BeginProperty Button7 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Copy"
+            Object.ToolTipText     =   "Copy"
+            ImageIndex      =   5
+         EndProperty
+         BeginProperty Button8 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Paste"
+            Object.ToolTipText     =   "Paste"
+            ImageIndex      =   6
+         EndProperty
+         BeginProperty Button9 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Style           =   3
+         EndProperty
+         BeginProperty Button10 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Bold"
+            Object.ToolTipText     =   "Bold"
+            ImageIndex      =   7
+         EndProperty
+         BeginProperty Button11 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Italic"
+            Object.ToolTipText     =   "Italic"
+            ImageIndex      =   8
+         EndProperty
+         BeginProperty Button12 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Underline"
+            Object.ToolTipText     =   "Underline"
+            ImageIndex      =   9
+         EndProperty
+         BeginProperty Button13 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Style           =   3
+         EndProperty
+         BeginProperty Button14 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Misc"
+            Object.ToolTipText     =   "Misc"
+            ImageIndex      =   17
+         EndProperty
+         BeginProperty Button15 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Bullet"
+            Object.ToolTipText     =   "Bullets"
+            ImageIndex      =   19
+         EndProperty
+         BeginProperty Button16 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Style           =   3
+         EndProperty
+         BeginProperty Button17 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Find"
+            Object.ToolTipText     =   "Find"
+            ImageIndex      =   13
+         EndProperty
+         BeginProperty Button18 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Caps"
+            Object.ToolTipText     =   "Change Case"
+            ImageIndex      =   15
+            BeginProperty ButtonMenus {66833FEC-8583-11D1-B16A-00C0F0283628} 
+               NumButtonMenus  =   3
+               BeginProperty ButtonMenu1 {66833FEE-8583-11D1-B16A-00C0F0283628} 
+                  Key             =   "Up"
+                  Text            =   "Uppercase"
+               EndProperty
+               BeginProperty ButtonMenu2 {66833FEE-8583-11D1-B16A-00C0F0283628} 
+                  Key             =   "Low"
+                  Text            =   "Lowercase"
+               EndProperty
+               BeginProperty ButtonMenu3 {66833FEE-8583-11D1-B16A-00C0F0283628} 
+                  Key             =   "Diff"
+                  Text            =   "Opposite case"
+               EndProperty
+            EndProperty
+         EndProperty
+         BeginProperty Button19 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Color"
+            Object.ToolTipText     =   "Change Color"
+            ImageIndex      =   16
+         EndProperty
+         BeginProperty Button20 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Style           =   3
+         EndProperty
+         BeginProperty Button21 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Left"
+            Object.ToolTipText     =   "Align Left"
+            ImageIndex      =   10
+            Style           =   2
+         EndProperty
+         BeginProperty Button22 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Center"
+            Object.ToolTipText     =   "Align Center"
+            ImageIndex      =   11
+            Style           =   2
+         EndProperty
+         BeginProperty Button23 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Right"
+            Object.ToolTipText     =   "Align Right"
+            ImageIndex      =   12
+            Style           =   2
+         EndProperty
+         BeginProperty Button24 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Style           =   3
+         EndProperty
+         BeginProperty Button25 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "Encrypt"
+            Object.ToolTipText     =   "Encryption"
+            ImageIndex      =   14
+         EndProperty
+      EndProperty
+   End
+   Begin VB.OLE OLE1 
+      AutoActivate    =   3  'Automatic
+      AutoVerbMenu    =   0   'False
+      Height          =   135
+      Left            =   7320
+      SizeMode        =   3  'Zoom
+      TabIndex        =   7
+      TabStop         =   0   'False
+      Top             =   840
+      Visible         =   0   'False
+      Width           =   135
+   End
+   Begin VB.Menu mnuFile 
+      Caption         =   "&File"
+      NegotiatePosition=   1  'Left
+      Begin VB.Menu mnuFileNew 
+         Caption         =   "|Creates new file|&New"
+         Shortcut        =   ^N
+      End
+      Begin VB.Menu mnuFileOpen 
+         Caption         =   "|Open an existing file|&Open..."
+      End
+      Begin VB.Menu mnuFilebar0 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnuFileSave 
+         Caption         =   "|Save the current file|&Save"
+         Shortcut        =   ^S
+      End
+      Begin VB.Menu mnuFileSaveAs 
+         Caption         =   "|Save the current file As|Save &As..."
+      End
+      Begin VB.Menu mnuFIlebar1 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnuFilePrint 
+         Caption         =   "|Prints Current Doc|&Print"
+         Shortcut        =   ^P
+      End
+      Begin VB.Menu mnuFIlebar2 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnuFileExit 
+         Caption         =   "|Quit NotePad 2K|E&xit"
+      End
+      Begin VB.Menu mnuFilebar3 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnuFileRecent 
+         Caption         =   ""
+         Index           =   1
+         Visible         =   0   'False
+      End
+      Begin VB.Menu mnuFileRecent 
+         Caption         =   ""
+         Index           =   2
+         Visible         =   0   'False
+      End
+      Begin VB.Menu mnuFileRecent 
+         Caption         =   ""
+         Index           =   3
+         Visible         =   0   'False
+      End
+      Begin VB.Menu mnuFileRecent 
+         Caption         =   ""
+         Index           =   4
+         Visible         =   0   'False
+      End
+   End
+   Begin VB.Menu mnuEdit 
+      Caption         =   "&Edit"
+      Begin VB.Menu mnuEditUndo 
+         Caption         =   "|Undo|&Undo"
+      End
+      Begin VB.Menu mnuEditSelect 
+         Caption         =   "|Select all the text|&Select All"
+         Shortcut        =   ^A
+      End
+      Begin VB.Menu mnuEditBar0 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnuEditCut 
+         Caption         =   "|Cuts Selected Text|Cu&t"
+         Shortcut        =   ^X
+      End
+      Begin VB.Menu mnuEditCopy 
+         Caption         =   "|Copies Selected Text|&Copy"
+         Shortcut        =   ^C
+      End
+      Begin VB.Menu mnuEditPasteFormat 
+         Caption         =   "|Paste Formated Text|&Paste"
+      End
+      Begin VB.Menu mnuEditPasteText 
+         Caption         =   "|Paste Plain Text|Paste &Text"
+      End
+      Begin VB.Menu mnuEditBar5 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnuEditClear 
+         Caption         =   "|Clears Selected Text|C&lear"
+      End
+      Begin VB.Menu mnuEditWordWrap 
+         Caption         =   "#|Toggles Word Wrap|&Word Wrap"
+         Checked         =   -1  'True
+      End
+      Begin VB.Menu mnuEditFind 
+         Caption         =   "|Find Selected Text|&Find"
+         Shortcut        =   {F3}
+      End
+   End
+   Begin VB.Menu mnuView 
+      Caption         =   "&View"
+      Begin VB.Menu mnuviewToolbar 
+         Caption         =   "#|Toggle Toolbar|Tool&bar"
+         Checked         =   -1  'True
+      End
+      Begin VB.Menu mnuViewStatusBar 
+         Caption         =   "#|Toggle Status Bar|&Status Bar"
+         Checked         =   -1  'True
+      End
+      Begin VB.Menu mnuviewFormat 
+         Caption         =   "#|Toggle Text bar|&Text Format"
+         Checked         =   -1  'True
+      End
+      Begin VB.Menu mnuViewWeb 
+         Caption         =   "&Web Broswer"
+         Visible         =   0   'False
+      End
+   End
+   Begin VB.Menu mnuInsert 
+      Caption         =   "&Insert"
+      Begin VB.Menu mnuInsertDate 
+         Caption         =   "|Insert Date/Time|&Date/Time"
+      End
+      Begin VB.Menu mnuInsertFile 
+         Caption         =   "|Insert File|&File"
+      End
+      Begin VB.Menu mnuInsertPicture 
+         Caption         =   "|Insert Picture|&Picture"
+      End
+      Begin VB.Menu mnuInsertObject 
+         Caption         =   "|Insert Object|&Object"
+      End
+   End
+   Begin VB.Menu mnuFont 
+      Caption         =   "&Font"
+      Begin VB.Menu mnuFontFormat 
+         Caption         =   "|Format Font|&Format"
+      End
+      Begin VB.Menu mnuFontColor 
+         Caption         =   "|Format Font Color|C&olor"
+      End
+      Begin VB.Menu mnuFontBold 
+         Caption         =   "|Bold selected text|&Bold"
+         Shortcut        =   ^B
+      End
+      Begin VB.Menu mnuFontItalic 
+         Caption         =   "|Italic selected text|&Italic"
+         Shortcut        =   ^I
+      End
+      Begin VB.Menu mnuFontUnderline 
+         Caption         =   "|Underline selected text|&Underline"
+         Shortcut        =   ^U
+      End
+      Begin VB.Menu mnuFontMisc 
+         Caption         =   "|Misc Stuff|&Misc"
+         Begin VB.Menu mnuFontMiscStrike 
+            Caption         =   "#|Strikeout Selected Text|Strike&out"
+         End
+         Begin VB.Menu mnuFontMiscScript 
+            Caption         =   "*|No Script|&No Script"
+            Index           =   0
+         End
+         Begin VB.Menu mnuFontMiscScript 
+            Caption         =   "*|SuperScript|&Superscript"
+            Index           =   1
+         End
+         Begin VB.Menu mnuFontMiscScript 
+            Caption         =   "*|Sub Script|S&ub Script"
+            Index           =   2
+         End
+      End
+      Begin VB.Menu mnuFontCase 
+         Caption         =   "|Case|C&ase"
+         Begin VB.Menu mnuFontCaseLow 
+            Caption         =   "|Make Selected Text Lower Case|&Lower Case"
+         End
+         Begin VB.Menu mnuFontCaseUp 
+            Caption         =   "|Make Selected Text Upper Case|&Upper Case"
+         End
+         Begin VB.Menu mnuFontCaselnvert 
+            Caption         =   "|Make Selected Text Inverted|&Invert Selected"
+         End
+      End
+   End
+   Begin VB.Menu mnuOption 
+      Caption         =   "&Options"
+      Begin VB.Menu mnuOptionFormat 
+         Caption         =   "#|Save Format(Colors, Font size etc..)|Save &Format"
+         Checked         =   -1  'True
+      End
+      Begin VB.Menu mnuOptionPreviewfont 
+         Caption         =   "#|Allows you to Preview Font|&Preview Font"
+         Checked         =   -1  'True
+      End
+      Begin VB.Menu mnuOptionSetFont 
+         Caption         =   "|Change the Default Font|Set &Font"
+         Visible         =   0   'False
+      End
+      Begin VB.Menu mnuOptionMenucolor 
+         Caption         =   "&Menu Color"
+         Begin VB.Menu mnuOptionMenucolorFull 
+            Caption         =   "#|Draws a Full Selection Bar|&Full Selection"
+            Checked         =   -1  'True
+         End
+         Begin VB.Menu mnuoptionMenucolorbar0 
+            Caption         =   "-Color selection"
+         End
+         Begin VB.Menu mnuoptionMenucolorSet 
+            Caption         =   "*|Set the color to red|&Red"
+            Index           =   0
+         End
+         Begin VB.Menu mnuoptionMenucolorSet 
+            Caption         =   "*|Set the color to green|&Green"
+            Index           =   1
+         End
+         Begin VB.Menu mnuoptionMenucolorSet 
+            Caption         =   "*|Set the color to blue|&Blue"
+            Index           =   2
+         End
+         Begin VB.Menu mnuoptionMenucolorSet 
+            Caption         =   "*|Set the color to black|Blac&k"
+            Index           =   3
+         End
+         Begin VB.Menu mnuoptionMenucolorbar1 
+            Caption         =   "-Apply color..."
+         End
+         Begin VB.Menu mnuoptionMenucolorSel 
+            Caption         =   "*|Will apply the next selected color to the menu font|... to menu caption"
+            Checked         =   -1  'True
+            Index           =   0
+         End
+         Begin VB.Menu mnuoptionMenucolorSel 
+            Caption         =   "*|Will apply the next selected color to the menu selection|... to menu selection"
+            Index           =   1
+         End
+      End
+      Begin VB.Menu mnuOptionEncryption 
+         Caption         =   "|Encrypt Text|&Encryption"
+      End
+      Begin VB.Menu mnuOptionAdvanced 
+         Caption         =   "||&Advanced"
+         Visible         =   0   'False
+         Begin VB.Menu mnuOptionAdvancedReg 
+            Caption         =   "|Clear Registry Entry and Ends Program|&Clear Registry"
+            Visible         =   0   'False
+         End
+         Begin VB.Menu mnuOptionAdvancedDefault 
+            Caption         =   "||&Default Notepad"
+            Begin VB.Menu mnuOptionAdvancedDefaultSet 
+               Caption         =   "|Makes this Default|&Set as Default"
+            End
+            Begin VB.Menu mnuOptionAdvancedDefaultRestore 
+               Caption         =   "|Restore Notepad.exe|&Restore Default"
+            End
+         End
+      End
+      Begin VB.Menu mnuOptionDrag 
+         Caption         =   "|Allows Draging images or files|Drag &Support"
+         Begin VB.Menu mnuOptionDragTextfile 
+            Caption         =   "*|Drag Textfile|Drag &Textfile"
+            Checked         =   -1  'True
+         End
+         Begin VB.Menu mnuOptionDragImage 
+            Caption         =   "*|Drag Image File or Icon|Drag &Image"
+         End
+      End
+   End
+   Begin VB.Menu mnuHelp 
+      Caption         =   "&Help"
+      Begin VB.Menu mnuHelpAbout 
+         Caption         =   "|About The Program|&About "
+      End
+   End
+   Begin VB.Menu mnuText 
+      Caption         =   "Text"
+      Visible         =   0   'False
+      Begin VB.Menu mnuTextUndo 
+         Caption         =   "|Undo|&Undo"
+      End
+      Begin VB.Menu mnuTextbar0 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnuTextCut 
+         Caption         =   "|Cuts Selected Text|Cu&t"
+      End
+      Begin VB.Menu mnuTextCopy 
+         Caption         =   "|Copies Selected Text|&Copy"
+      End
+      Begin VB.Menu mnuTextPaste 
+         Caption         =   "|Paste Clipboard Text|&Paste"
+      End
+      Begin VB.Menu mnuTextbar1 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnuTextSelect 
+         Caption         =   "|Select All|&Select All"
+      End
+      Begin VB.Menu mnuTextbar2 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnuTextClear 
+         Caption         =   "|Clears Selected Text|C&lear"
+      End
+      Begin VB.Menu mnuTextbar3 
+         Caption         =   "-Font"
+      End
+      Begin VB.Menu mnuTextFormat 
+         Caption         =   "|Change Font Colors, Size etc..|&Format"
+      End
+      Begin VB.Menu mnuTextColor 
+         Caption         =   "|Change Font Color|C&olor"
+      End
+      Begin VB.Menu mnuTextBold 
+         Caption         =   "|Bold selected text|&Bold"
+      End
+      Begin VB.Menu mnuTextItalic 
+         Caption         =   "|Italic selected text|&Italic"
+      End
+      Begin VB.Menu mnuTextUnderline 
+         Caption         =   "|Underline selected text|&Underline"
+      End
+      Begin VB.Menu mnuTextMisc 
+         Caption         =   "|Misc Stuff|&Misc"
+         Begin VB.Menu mnuTextMiscStrike 
+            Caption         =   "#|Strikeout Selected|Strike&out"
+         End
+         Begin VB.Menu mnuTextMiscScript 
+            Caption         =   "*|No Script|&No Script"
+            Index           =   0
+         End
+         Begin VB.Menu mnuTextMiscScript 
+            Caption         =   "*|Super Script|&Super Script"
+            Index           =   1
+         End
+         Begin VB.Menu mnuTextMiscScript 
+            Caption         =   "*|Sub Script|S&ub Script"
+            Index           =   2
+         End
+      End
+      Begin VB.Menu mnuTextCase 
+         Caption         =   "|Case|C&ase"
+         Begin VB.Menu mnuTextCaseLower 
+            Caption         =   "|Make Selected Text Lower Case|&Lower Case"
+         End
+         Begin VB.Menu mnuTextCaseUpper 
+            Caption         =   "|Make Selected Text Upper Case|&Upper Case"
+         End
+         Begin VB.Menu mnuTextCaseInvert 
+            Caption         =   "|Make Selected Text Inverted|&Invert Selected"
+         End
+      End
+      Begin VB.Menu mnuTextInsert 
+         Caption         =   "|Insert Things|I&nsert"
+         Begin VB.Menu mnuTextInsertDate 
+            Caption         =   "|Insert Time/Date|&Time/Date"
+         End
+         Begin VB.Menu mnuTextInsertFile 
+            Caption         =   "|Insert File|&Text File"
+         End
+         Begin VB.Menu mnuTextInsertPicture 
+            Caption         =   "|Insert Picture|&Picture"
+         End
+         Begin VB.Menu mnuTextInsertObject 
+            Caption         =   "|Insert Object|&Object"
+         End
+      End
+   End
+End
+Attribute VB_Name = "frmMain"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Option Explicit
+Dim iIndex As Integer, TheFilename As String
+Dim ColorIndex(1, 15)
+Dim OpenOnce As Integer
+Dim MenuColorFont As Long, MenuColorSelection As Long
+Dim Color(2, 7)
+Private Const GWL_WNDPROC = (-4)
+Private WithEvents HelpObj As HelpCallBack
+Attribute HelpObj.VB_VarHelpID = -1
+Private Const EM_LINEINDEX = &HBB
+Private Declare Sub SHAddToRecentDocs Lib "shell32.dll" (ByVal uFlags As Long, ByVal pv As String)
+Private Declare Function Message Lib "user32" Alias "SendMessageA" (ByVal hWnd As Long, ByVal wMsg As Long, ByVal wParam As Long, ByVal lParam As Any) As Long
+Public Sub ChangeLists()
+    On Error Resume Next
+    Dim i
+    If Len(Text1.Text) > 0 Then
+        tbToolBar.Buttons(17).Enabled = True
+        mnuEditFind.Enabled = True
+    Else
+        tbToolBar.Buttons(17).Enabled = False
+        mnuEditFind.Enabled = False
+    End If
+    If Text1.SelFontName <> fMainForm.List1.Text Then
+        For i = 1 To List1.ListCount - 1
+            If Text1.SelFontName = List1.List(i) Then
+                List1.ListIndex = i
+                Exit For
+            End If
+        Next i
+    End If
+    If Text1.SelFontSize <> Val(list2.Text) Then
+        For i = 1 To list2.ListCount - 1
+            If Text1.SelFontSize = Val(list2.List(i)) Then
+                list2.ListIndex = i
+                Exit For
+            End If
+        Next i
+    End If
+    For i = 0 To 15
+        If Text1.SelColor = ColorIndex(1, i) Then
+            ColorL.Text = ColorIndex(0, i)
+            Exit For
+        Else
+            ColorL.Text = Text1.SelColor
+        End If
+    Next i
+    If Text1.SelCharOffset = -55 Then
+        mnuFontMiscScript(0).Checked = False
+        mnuFontMiscScript(1).Checked = False
+        mnuFontMiscScript(2).Checked = True
+        mnuTextMiscScript(0).Checked = False
+        mnuTextMiscScript(1).Checked = False
+        mnuTextMiscScript(2).Checked = True
+    ElseIf Text1.SelCharOffset = 55 Then
+        mnuFontMiscScript(0).Checked = False
+        mnuFontMiscScript(1).Checked = True
+        mnuFontMiscScript(2).Checked = False
+        mnuTextMiscScript(0).Checked = False
+        mnuTextMiscScript(1).Checked = True
+        mnuTextMiscScript(2).Checked = False
+    ElseIf Text1.SelCharOffset = 0 Then
+        mnuFontMiscScript(0).Checked = True
+        mnuFontMiscScript(1).Checked = False
+        mnuFontMiscScript(2).Checked = False
+        mnuTextMiscScript(0).Checked = True
+        mnuTextMiscScript(1).Checked = False
+        mnuTextMiscScript(2).Checked = False
+    End If
+    If Text1.SelStrikeThru = True Then
+        mnuFontMiscStrike.Checked = True
+        mnuTextMiscStrike.Checked = True
+    Else
+        mnuFontMiscStrike.Checked = False
+        mnuTextMiscStrike.Checked = False
+    End If
+    If Text1.SelBold = True Then
+        tbToolBar.Buttons.Item(10).Value = tbrPressed
+        mnuFontBold.Checked = True
+        mnuTextBold.Checked = True
+    Else
+        tbToolBar.Buttons.Item(10).Value = tbrUnpressed
+        mnuFontBold.Checked = False
+        mnuTextBold.Checked = False
+    End If
+    If Text1.SelItalic = True Then
+        tbToolBar.Buttons.Item(11).Value = tbrPressed
+        mnuFontItalic.Checked = True
+        mnuTextItalic.Checked = True
+    Else
+        tbToolBar.Buttons.Item(11).Value = tbrUnpressed
+        mnuFontItalic.Checked = False
+        mnuTextItalic.Checked = False
+    End If
+    If Text1.SelUnderline = True Then
+        tbToolBar.Buttons.Item(12).Value = tbrPressed
+        mnuFontUnderline.Checked = True
+        mnuTextUnderline.Checked = True
+    Else
+        tbToolBar.Buttons.Item(12).Value = tbrUnpressed
+        mnuFontUnderline.Checked = False
+        mnuTextUnderline.Checked = False
+    End If
+    If Text1.SelAlignment = 0 Then 'Left
+        tbToolBar.Buttons.Item(21).Value = tbrPressed
+    ElseIf Text1.SelAlignment = 1 Then 'Right
+        tbToolBar.Buttons.Item(23).Value = tbrPressed
+    ElseIf Text1.SelAlignment = 2 Then 'Center
+        tbToolBar.Buttons.Item(22).Value = tbrPressed
+    End If
+    If Text1.SelBullet = True Then
+        tbToolBar.Buttons.Item(15).Value = tbrPressed
+    Else
+        tbToolBar.Buttons.Item(15).Value = tbrUnpressed
+    End If
+    Dim lNumber, CPosition
+    lNumber = Text1.GetLineFromChar(Text1.SelStart) + 1
+    CPosition = Text1.SelStart - Message(Text1.hWnd, EM_LINEINDEX, Text1.GetLineFromChar(Text1.SelStart), vbNull) + 1
+    sbStatusBar.Panels(2).Text = "Line : " & lNumber & "   Col : " & CPosition
+    If Text1.SelText = vbNullString Then
+        fMainForm.tbToolBar.Buttons(6).Enabled = False
+        fMainForm.tbToolBar.Buttons(7).Enabled = False
+        fMainForm.tbToolBar.Buttons(18).Enabled = False
+        fMainForm.mnuEditCut.Enabled = False
+        fMainForm.mnuEditClear.Enabled = False
+        fMainForm.mnuEditCopy.Enabled = False
+        fMainForm.mnuFontCase.Enabled = False
+        fMainForm.mnuTextCut.Enabled = False
+        fMainForm.mnuTextClear.Enabled = False
+        fMainForm.mnuTextCopy.Enabled = False
+        fMainForm.mnuTextCase.Enabled = False
+    Else
+        fMainForm.tbToolBar.Buttons(6).Enabled = True
+        fMainForm.tbToolBar.Buttons(7).Enabled = True
+        fMainForm.tbToolBar.Buttons(18).Enabled = True
+        fMainForm.mnuEditCut.Enabled = True
+        fMainForm.mnuEditClear.Enabled = True
+        fMainForm.mnuEditCopy.Enabled = True
+        fMainForm.mnuFontCase.Enabled = True
+        fMainForm.mnuTextCut.Enabled = True
+        fMainForm.mnuTextClear.Enabled = True
+        fMainForm.mnuTextCopy.Enabled = True
+        fMainForm.mnuTextCase.Enabled = True
+    End If
+    If Len(Text1.Text) > 1024 Then
+        If mnuOptionFormat.Checked = True Then
+            sbStatusBar.Panels(5).Text = Format(Len(fMainForm.Text1.TextRTF) / 1024, "##.##" & " KB")
+        Else
+            sbStatusBar.Panels(5).Text = Format(Len(fMainForm.Text1.Text) / 1024, "##.##" & " KB")
+        End If
+        If Text1.SelText <> "" Then sbStatusBar.Panels(5).Text = Len(Text1.SelText) & " Selected."
+        Exit Sub
+    End If
+    
+    If Text1.Text = "" Then
+        sbStatusBar.Panels(5).Text = "0 Bytes"
+        Exit Sub
+    End If
+    If mnuOptionFormat.Checked = True Then
+        sbStatusBar.Panels(5).Text = Len(Text1.TextRTF) & " Bytes"
+    Else
+        sbStatusBar.Panels(5).Text = Len(Text1.Text) & " Bytes"
+    End If
+    If Text1.SelText <> "" Then sbStatusBar.Panels(5).Text = sbStatusBar.Panels(5).Text & ", " & Len(Text1.SelText) & " Selected" '" Character(s) Selected."
+End Sub
+
+Public Sub MyMenu()
+    On Error Resume Next
+    Dim TextMenu&
+    Dim pt As POINTAPI
+    Dim topmenuhnd&
+    mnuTextUndo.Enabled = SendMessage(Text1.hWnd, EM_CANUNDO, vbNull, vbNull)
+    mnuTextPaste.Enabled = tbToolBar.Buttons(8).Enabled
+
+
+    mnuText.Caption = ""
+    mnuText.Visible = True
+    topmenuhnd = GetMenu(fMainForm.hWnd)
+    TextMenu = GetSubMenu(topmenuhnd, 7)
+    Text1.SetFocus
+    GetCursorPos pt
+    'PopupMenu mnuText, &H0 Or &H2, x, y
+    ' Must have "&h2" or "&h4" or "&h8" to make
+    'menu come up more than once with right click
+    'hit in a row
+    TrackPopupMenuBynum TextMenu, &H0 Or &H2, pt.X, pt.Y, 0, fMainForm.hWnd, 0&
+    mnuText.Visible = False
+    'TrackPopupMenu mnuText, TPM_LEFTALIGN, x, y, 0, Text1.hwnd, 0&
+End Sub
+
+Sub OpenDragNDropFile(xFile As String, PreviewOntop As Boolean, InsertDocMenu As Boolean)
+    On Error Resume Next
+    With CommonDialog1
+        .Filename = xFile
+        .InitDir = .Filename
+        OpenOnce = 1
+    End With
+    Open fMainForm.CommonDialog1.Filename For Input As #1
+    If Err Then
+        MsgBox "Error:" + Chr(10) + Chr(10) + Err.Description + " " + Chr(10) + CommonDialog1.Filename, vbExclamation + vbOKOnly, App.Title
+        Close #1
+        Exit Sub
+    End If
+    Close #1
+    On Error GoTo error:
+    Dim i
+    i = FreeFile
+    Dim Buffersize, FileLength, Progress, Kilobytes
+    Buffersize = 2048
+    
+    Open fMainForm.CommonDialog1.Filename For Binary Access Read As #1
+    If LOF(i) = 0 Then GoTo Done
+    FileLength = LOF(i)
+    If FileLength / 1000 > 2000 Then
+        If MsgBox("This file's size exceeds 2MB. Opening it may take a long time. Do you wish to continue?", 36, "Really open file?") = vbNo Then
+            Exit Sub
+        End If
+    End If
+    If PreviewOntop = False Then frmSplash.Show Else frmSplash.Show , fMainForm
+
+    Screen.MousePointer = vbHourglass
+    'If mnuOptionFormat.Checked = True Then
+    '    Text1.LoadFile fMainForm.CommonDialog1.Filename, 1
+    'Else
+    '    Text1.LoadFile fMainForm.CommonDialog1.Filename, 0
+    'End If
+    Progress = 0
+    Kilobytes = GiveByteValues(LOF(1))
+    frmSplash.ProgressBar1.Max = Round(Val(Kilobytes)) / 2
+    Dim J As String, sText As String, Percentage
+    Do While Not EOF(i): DoEvents
+        If FileLength - Loc(i) < Buffersize Then
+            Let Buffersize = FileLength - Loc(i)
+            If Buffersize = 0 Then GoTo Done
+        End If
+        J$ = Space(Buffersize)
+        Get #i, , J$
+        sText = sText & J$
+        DoEvents
+        Progress = (Progress + 1) Mod frmSplash.ProgressBar1.Max
+        If frmSplash.ProgressBar1.Value < frmSplash.ProgressBar1.Max - 2 Then
+            Percentage = Round(frmSplash.ProgressBar1.Value / frmSplash.ProgressBar1.Max, 2)
+            If frmSplash.Percent.Caption <> "100%" Then
+                If Percentage = 1 Then
+                    frmSplash.Percent.Caption = "100%"
+                Else
+                    If Mid(Right(Percentage, 2), 1, 1) = "." Then
+                        frmSplash.Percent.Caption = Mid(Percentage, 3, 1) & "0%"
+                    Else
+                        frmSplash.Percent.Caption = Right(Percentage, 2) & "%"
+                    End If
+                End If
+               frmSplash.ProgressBar1.Value = Progress
+            End If
+        End If
+
+    Loop
+Done:
+    Screen.MousePointer = vbDefault
+    fMainForm.Text1.TextRTF = sText
+    Close #1
+    fMainForm.Caption = App.Title & " - " & fMainForm.CommonDialog1.Filename
+    frmSplash.Hide
+    Changed = False
+    frmSplash.ProgressBar1.Value = 0
+    If InsertDocMenu = True Then Call SHAddToRecentDocs(2, CommonDialog1.Filename)
+    Call fMainForm.ChangeRecent(fMainForm.CommonDialog1.Filename)
+    Exit Sub
+error:
+    frmSplash.Hide
+    Screen.MousePointer = vbDefault
+    MsgBox "Error:" + Chr(10) + Chr(10) + Err.Description + " " + Chr(10) + CommonDialog1.Filename, vbExclamation + vbOKOnly, App.Title
+End Sub
+
+Public Sub ChangeRecent(MoveFile As String)
+    Dim i, k
+    For i = 1 To 4 Step 1
+        If mnuFileRecent(i).Caption = MoveFile Then
+            If i = 1 Then GoTo skip
+            For k = i To 2 Step -1
+                mnuFileRecent(k).Caption = mnuFileRecent(k - 1).Caption
+            Next k
+            
+            GoTo skip
+        End If
+    Next i
+    
+    For i = 4 To 2 Step -1
+        mnuFileRecent(i).Caption = mnuFileRecent(i - 1).Caption
+    Next i
+skip:
+    mnuFileRecent(1).Caption = MoveFile
+    For i = 1 To 4
+        If mnuFileRecent(i).Caption <> "" Then
+            mnuFileRecent(i).Visible = True
+        Else
+            mnuFileRecent(i).Visible = False
+        End If
+    Next i
+End Sub
+
+Public Sub MoveFormatStuff()
+    On Error Resume Next
+    If mnuviewFormat.Checked = False Then
+        List1.Visible = False: list2.Visible = False
+        ColorB.Visible = False: ColorL.Visible = False
+        Text1.Top = Text1.Top - 420: Text1.Height = Text1.Height + 420
+    Else
+        List1.Visible = True:  list2.Visible = True
+        ColorB.Visible = True: ColorL.Visible = True
+        Text1.Top = Text1.Top + 420: Text1.Height = Text1.Height - 420
+    End If
+End Sub
+Public Sub MoveToolBar()
+    On Error Resume Next
+    tbToolBar.Visible = mnuviewToolbar.Checked
+    If tbToolBar.Visible = False Then
+        Text1.Top = Text1.Top - 420: Text1.Height = Text1.Height + 420
+        List1.Top = List1.Top - 420: list2.Top = list2.Top - 420
+        ColorB.Top = ColorB.Top - 420: ColorL.Top = ColorL.Top - 420
+    Else
+        Text1.Top = Text1.Top + 420: Text1.Height = Text1.Height - 420
+        List1.Top = List1.Top + 420: list2.Top = list2.Top + 420
+        ColorB.Top = ColorB.Top + 420: ColorL.Top = ColorL.Top + 420
+    End If
+
+End Sub
+Public Sub MoveStatusBar()
+    On Error Resume Next
+    sbStatusBar.Visible = mnuViewStatusBar.Checked
+    If sbStatusBar.Visible = False Then
+        Text1.Height = Text1.Height + 270
+    Else
+        Text1.Height = Text1.Height - 270
+    End If
+End Sub
+
+Private Sub ColorB_Click()
+    On Error GoTo Bottom
+    fMainForm.Text1.BackColor = ColorIndex(1, ColorB.ListIndex)
+    fMainForm.Text1.SetFocus
+Bottom:
+End Sub
+
+Private Sub ColorB_LostFocus()
+    On Error GoTo Bottom
+    fMainForm.Text1.SelColor = ColorIndex(1, ColorL.ListIndex)
+Bottom:
+End Sub
+
+Private Sub ColorL_Click()
+    On Error Resume Next
+    fMainForm.Text1.SelColor = ColorIndex(1, ColorL.ListIndex)
+    fMainForm.Text1.SetFocus
+End Sub
+
+Private Sub ColorL_KeyPress(KeyAscii As Integer)
+    On Error Resume Next
+    If KeyAscii = 13 Then
+        On Error GoTo Bottom
+        fMainForm.Text1.SelColor = ColorIndex(1, ColorL.ListIndex)
+        fMainForm.Text1.SetFocus
+    End If
+Bottom:
+End Sub
+
+Private Sub ColorL_LostFocus()
+    On Error GoTo Bottom
+    fMainForm.Text1.SelColor = ColorIndex(1, ColorL.ListIndex)
+Bottom:
+End Sub
+
+Private Sub Form_Activate()
+    If mnuviewFormat.Checked = False Then
+        List1.Visible = False: list2.Visible = False
+        ColorB.Visible = False: ColorL.Visible = False
+        Text1.Top = Text1.Top - 420: Text1.Height = Text1.Height + 420
+    End If
+    If mnuViewStatusBar.Checked = False Then
+        Text1.Height = Text1.Height + 270
+    End If
+    If mnuviewToolbar.Checked = False Then
+        Text1.Top = Text1.Top - 420: Text1.Height = Text1.Height + 420
+        List1.Top = List1.Top - 420: list2.Top = list2.Top - 420
+        ColorB.Top = ColorB.Top - 420: ColorL.Top = ColorL.Top - 420
+    End If
+End Sub
+
+Private Sub Form_Load()
+    On Error Resume Next
+
+    Set HelpObj = New HelpCallBack
+    Call mCoolMenu.Install(Me.hWnd, HelpObj, imlToolbarIcons, True, True)
+    
+
+    Dim i
+    For i = 1 To 4
+        mnuFileRecent(i).Caption = GetSetting(App.Title, "Recent File", "mnuFileRecent" & i, "")
+        If mnuFileRecent(i).Caption <> "" Then mnuFileRecent(i).Visible = True
+    Next i
+    fMainForm.WindowState = GetSetting(App.Title, "Settings", "WindowState", 0)
+    
+    Dim MenuColor1 As Long, MenuColor2 As Long
+    mnuOptionMenucolorFull.Checked = GetSetting(App.Title, "Colors", "Full Selection", True)
+    Call mCoolMenu.FullSelect(Me.hWnd, mnuOptionMenucolorFull.Checked)
+
+    MenuColorFont = GetSetting(App.Title, "Colors", "MenuColorSet", 3)
+    MenuColor1 = CLng("&H80" + String(MenuColorFont * 2, "0"))
+    mCoolMenu.ForeColor Me.hWnd, MenuColor1&
+    
+    mnuoptionMenucolorSet(MenuColorFont).Checked = True
+    
+    MenuColorSelection = GetSetting(App.Title, "Colors", "MenuColorSel", 2)
+    MenuColor2 = CLng("&H80" + String(MenuColorSelection * 2, "0"))
+    mCoolMenu.SelectColor Me.hWnd, MenuColor2&
+    
+    Me.Left = GetSetting(App.Title, "Settings", "MainLeft", 1950)
+    Me.Top = GetSetting(App.Title, "Settings", "MainTop", 330)
+    Me.Width = GetSetting(App.Title, "Settings", "MainWidth", 8355)
+    Me.Height = GetSetting(App.Title, "Settings", "MainHeight", 7440)
+    
+    'If WState = 2 Then
+    '    fMainForm.WindowState = 2 'vbMaximized
+    'Else
+    '    fMainForm.WindowState = vbNormal
+        'fMainForm.Left = (Screen.Width - fMainForm.Width) / 2
+        'fMainForm.Top = (Screen.Height - fMainForm.Height) / 2
+    'End If
+    
+    mnuOptionDragTextfile.Checked = GetSetting(App.Title, "Drag", "Textfile", True)
+    mnuOptionDragImage.Checked = GetSetting(App.Title, "Drag", "Image", False)
+    If mnuOptionDragImage.Checked Then Call mnuOptionDragImage_Click
+    mnuviewToolbar.Checked = GetSetting(App.Title, "Check", "Toolbar", True)
+    mnuViewStatusBar.Checked = GetSetting(App.Title, "Check", "Statusbar", True)
+    mnuviewFormat.Checked = GetSetting(App.Title, "Check", "Format Stuff", True)
+    mnuOptionFormat.Checked = GetSetting(App.Title, "Check", "Format", True)
+    mnuOptionPreviewfont.Checked = GetSetting(App.Title, "Check", "Preview", True)
+    mnuEditWordWrap.Checked = GetSetting(App.Title, "Check", "Wrap", True)
+    If mnuEditWordWrap.Checked = False Then fMainForm.Text1.RightMargin = 1000000
+    
+    sbStatusBar.Visible = mnuViewStatusBar.Checked
+    tbToolBar.Visible = mnuviewToolbar.Checked
+    
+    fMainForm.Caption = App.Title
+    
+    'Colors
+    ColorIndex(0, 0) = "Black"
+    ColorIndex(0, 1) = "Marron"
+    ColorIndex(0, 2) = "Green"
+    ColorIndex(0, 3) = "Olive"
+    ColorIndex(0, 4) = "Navy"
+    ColorIndex(0, 5) = "Purple"
+    ColorIndex(0, 6) = "Teal"
+    ColorIndex(0, 7) = "Gray"
+    ColorIndex(0, 8) = "Silver"
+    ColorIndex(0, 9) = "Red"
+    ColorIndex(0, 10) = "Lime"
+    ColorIndex(0, 11) = "Yellow"
+    ColorIndex(0, 12) = "Blue"
+    ColorIndex(0, 13) = "Fuchsia"
+    ColorIndex(0, 14) = "Aqua"
+    ColorIndex(0, 15) = "White"
+    
+    ColorIndex(1, 0) = RGB(0, 0, 0)
+    ColorIndex(1, 1) = RGB(128, 0, 0)
+    ColorIndex(1, 2) = RGB(0, 128, 0)
+    ColorIndex(1, 3) = RGB(128, 128, 0)
+    ColorIndex(1, 4) = RGB(0, 0, 128)
+    ColorIndex(1, 5) = RGB(128, 0, 128)
+    ColorIndex(1, 6) = RGB(0, 128, 128)
+    ColorIndex(1, 7) = RGB(128, 128, 128)
+    ColorIndex(1, 8) = RGB(192, 192, 192)
+    ColorIndex(1, 9) = RGB(255, 0, 0)
+    ColorIndex(1, 10) = RGB(0, 255, 0)
+    ColorIndex(1, 11) = RGB(255, 255, 0)
+    ColorIndex(1, 12) = RGB(0, 0, 255)
+    ColorIndex(1, 13) = RGB(255, 0, 255)
+    ColorIndex(1, 14) = RGB(0, 255, 255)
+    ColorIndex(1, 15) = RGB(255, 255, 255)
+    Dim X, fname, fsize
+    'End Fontcolors
+    For X = 1 To Screen.FontCount
+        If Screen.Fonts(X) = "" Then GoTo next1
+        List1.AddItem Screen.Fonts(X)
+next1:
+    Next
+    For X = 5 To 72
+        list2.AddItem Str$(X)
+    Next
+    
+    For i = 0 To 15
+        ColorL.AddItem ColorIndex(0, i)
+        ColorB.AddItem ColorIndex(0, i)
+    Next i
+    fname = GetSetting(App.Title, "Font Setting", "Font", "Arial")
+    fsize = GetSetting(App.Title, "Font Setting", "Size", "10")
+    For X = 0 To List1.ListCount - 1
+        If fname = List1.List(X) Then
+            List1.ListIndex = X
+            'Text1.Font = fname
+            Exit For
+        End If
+    Next
+    For X = 0 To list2.ListCount - 1
+        If Round(Val(fsize), 0) = Round(Val(list2.List(X)), 0) Then
+            list2.ListIndex = X
+            Exit For
+        End If
+        If X = list2.ListCount - 1 Then list2.Text = Round(Val(fsize), 0)
+    Next
+    CommandLineParam
+    Call ChangeLists
+    ColorB.Text = "White"
+    ColorL.Text = "Black"
+    Picture1.Visible = False
+    Changed = False
+    OldProc = GetWindowLong(Text1.hWnd, GWL_WNDPROC)
+    SetWindowLong Text1.hWnd, GWL_WNDPROC, AddressOf WndProc
+End Sub
+
+Private Sub Form_Resize()
+    On Error GoTo Bottom
+    If fMainForm.Height > 1800 Or fMainForm.Width > 120 Then
+        Text1.Height = fMainForm.Height - 1800
+        Text1.Width = fMainForm.Width - 120
+    End If
+Bottom:
+End Sub
+
+Private Sub Form_Unload(Cancel As Integer)
+    On Error Resume Next
+    If Changed = True Then
+        If CommonDialog1.Filename = "" Then CommonDialog1.Filename = "Untitled.txt"
+        Select Case MsgBox("The text in your file has changed!" & Chr(13) & "Do you want to save changes to " + Chr(10) + CommonDialog1.Filename, vbExclamation + vbYesNoCancel, App.Title)
+            Case vbYes
+                If CommonDialog1.Filename = "Untitled.txt" Then CommonDialog1.Filename = vbNullString
+                Call mnuFileSave_Click
+            Case vbCancel
+                Cancel = 1
+                Text1.SetFocus
+                If CommonDialog1.Filename = "Untitled.txt" Then CommonDialog1.Filename = vbNullString
+                Exit Sub
+        End Select
+    End If
+    SetWindowLong Text1.hWnd, GWL_WNDPROC, OldProc
+    
+    Call mCoolMenu.Uninstall(Me.hWnd)
+
+    Set HelpObj = Nothing
+    'SetWindowLong Me.hWnd, GWL_WNDPROC, lProcOld
+    Dim i As Integer
+    For i = 1 To 4
+        SaveSetting App.Title, "Recent File", "mnuFileRecent" & i, mnuFileRecent(i).Caption
+    Next i
+    SaveSetting App.Title, "Colors", "Full Selection", mnuOptionMenucolorFull.Checked
+    SaveSetting App.Title, "Colors", "MenuColorSet", MenuColorFont
+    SaveSetting App.Title, "Colors", "MenuColorSel", MenuColorSelection
+
+    
+    SaveSetting App.Title, "Drag", "Textfile", mnuOptionDragTextfile.Checked
+    SaveSetting App.Title, "Drag", "Image", mnuOptionDragImage.Checked
+    
+    SaveSetting App.Title, "Check", "Format", fMainForm.mnuOptionFormat.Checked
+    SaveSetting App.Title, "Check", "Format Stuff", fMainForm.mnuviewFormat.Checked
+    SaveSetting App.Title, "Check", "Toolbar", fMainForm.mnuviewToolbar.Checked
+    SaveSetting App.Title, "Check", "Statusbar", fMainForm.mnuViewStatusBar.Checked
+    
+    SaveSetting App.Title, "Check", "Wrap", fMainForm.mnuEditWordWrap.Checked
+    SaveSetting App.Title, "Check", "Preview", mnuOptionPreviewfont.Checked
+    SaveSetting App.Title, "Font Setting", "Font", List1.Text
+    SaveSetting App.Title, "Font Setting", "Size", Trim(Str(list2.Text))
+    On Error GoTo Bottom
+    'close all sub forms
+    For i = Forms.Count - 1 To 1 Step -1
+        Unload Forms(i)
+    Next i
+    If Me.WindowState <> vbMinimized Then
+        SaveSetting App.Title, "Settings", "WindowState", Me.WindowState
+        If Me.WindowState <> vbMaximized Then
+            SaveSetting App.Title, "Settings", "MainLeft", Me.Left
+            SaveSetting App.Title, "Settings", "MainTop", Me.Top
+            SaveSetting App.Title, "Settings", "MainWidth", Me.Width
+            SaveSetting App.Title, "Settings", "MainHeight", Me.Height
+        End If
+    End If
+Bottom:
+
+End Sub
+
+Private Sub HelpObj_MenuHelp(ByVal MenuText As String, ByVal MenuHelp As String, ByVal Enabled As Boolean)
+On Error Resume Next
+  If Enabled Then
+    sbStatusBar.Panels(1).Text = MenuHelp$
+  Else
+    sbStatusBar.Panels(1).Text = ""
+  End If
+End Sub
+
+Private Sub list1_Change()
+    On Error Resume Next
+    fMainForm.Label1.FontName = List1.Text
+End Sub
+
+Private Sub list1_Click()
+    On Error GoTo Bottom
+    fMainForm.Text1.SelFontName = List1.List(List1.ListIndex)
+    Text1.SelFontSize = Val(list2.Text)
+    fMainForm.Label1.FontSize = 24
+    fMainForm.Label1.FontName = List1.Text
+    'fmainform.Text1.SetFocus
+Bottom:
+End Sub
+
+Private Sub list1_GotFocus()
+    On Error Resume Next
+    If mnuOptionPreviewfont.Checked = True Then
+        Timer2.Enabled = True
+        Picture1.Visible = True
+    End If
+    Label1.ForeColor = Text1.SelColor
+    Label1.FontBold = Text1.SelBold
+    Label1.FontItalic = Text1.SelItalic
+    Label1.FontUnderline = Text1.SelUnderline
+    Label1.FontStrikethru = Text1.SelStrikeThru
+    Picture1.Height = fMainForm.Label1.Height + 50
+    Picture1.Width = fMainForm.Label1.Width + 100
+    Label1.FontSize = 24
+    Label1.FontName = List1.Text
+End Sub
+
+Private Sub list1_KeyDown(KeyCode As Integer, Shift As Integer)
+    On Error Resume Next
+    fMainForm.Label1.FontName = List1.Text
+End Sub
+
+Private Sub list1_KeyPress(KeyAscii As Integer)
+    On Error GoTo Bottom
+    If KeyAscii = 13 Then
+        fMainForm.Text1.SelFontName = List1.Text
+        Text1.SelFontSize = list2.Text
+        fMainForm.Text1.SetFocus
+    End If
+Bottom:
+End Sub
+
+Private Sub list1_LostFocus()
+    On Error GoTo Bottom
+    Timer2.Enabled = False
+    fMainForm.Picture1.Visible = False
+    fMainForm.Text1.SelFontName = List1.List(List1.ListIndex)
+    Text1.SelFontSize = list2.Text
+Bottom:
+End Sub
+
+Private Sub list2_Click()
+    On Error GoTo Bottom
+    fMainForm.Text1.SelFontSize = list2.List(list2.ListIndex)
+    'fmainform.Text1.SetFocus
+Bottom:
+End Sub
+
+Private Sub list2_KeyPress(KeyAscii As Integer)
+    On Error Resume Next
+    If KeyAscii = 13 Then
+        fMainForm.Text1.SelFontSize = list2.Text
+        fMainForm.Text1.SetFocus
+    End If
+End Sub
+
+Private Sub list2_LostFocus()
+    On Error Resume Next
+    fMainForm.Text1.SelFontSize = list2.Text
+End Sub
+
+Private Sub list2_Scroll()
+    On Error Resume Next
+    fMainForm.Label1.FontName = List1.Text
+End Sub
+
+Private Sub list2_Validate(Cancel As Boolean)
+    On Error Resume Next
+    fMainForm.Label1.FontName = List1.Text
+End Sub
+
+Private Sub mnuEdit_Click()
+    On Error Resume Next
+    mnuEditUndo.Enabled = SendMessage(Text1.hWnd, EM_CANUNDO, vbNull, vbNull)
+    If Clipboard.GetText(ccCFText) <> "" Then mnuEditPasteText.Enabled = True Else mnuEditPasteText.Enabled = False
+    mnuEditPasteFormat.Enabled = tbToolBar.Buttons(8).Enabled
+End Sub
+
+Private Sub mnuEditCopy_Click()
+    On Error Resume Next
+    Clipboard.Clear
+    SendMessage Text1.hWnd, WM_COPY, vbNull, vbNull
+    'If mnuOptionCopyText.Checked = True Then
+    '    Clipboard.SetText fMainForm.Text1.SelText, ccCFText
+    'Else
+    '    Clipboard.SetText fMainForm.Text1.SelRTF, ccCFRTF
+    'End If
+    ChangeLists
+End Sub
+
+Private Sub mnuEditCut_Click()
+    On Error Resume Next
+    Clipboard.Clear
+    SendMessage Text1.hWnd, WM_CUT, vbNull, vbNull
+    'If mnuOptionCopyText.Checked = True Then
+    '    Clipboard.SetText fMainForm.Text1.SelText, ccCFText
+    'Else
+    '    Clipboard.SetText fMainForm.Text1.SelRTF, ccCFRTF
+    'End If
+    fMainForm.Text1.SelText = vbNullString
+    ChangeLists
+End Sub
+
+Private Sub mnuEditClear_Click()
+   On Error GoTo Bottom
+    fMainForm.Text1.SelText = vbNullString
+Bottom:
+    ChangeLists
+End Sub
+
+Private Sub mnuEditFind_Click()
+    On Error Resume Next
+    Form1.Show , fMainForm
+    If Len(Text1.SelText) > 0 Then Form1.FindStuff.Text = fMainForm.Text1.SelText
+    Form1.Label3 = "Status"
+    If Form1.Text2.Text <> "" Then
+        Form1.Text2.SetFocus
+    Else
+        Form1.FindStuff.SetFocus
+    End If
+End Sub
+
+Private Sub mnuEditPasteFormat_Click()
+    On Error GoTo Bottom
+    SendMessage Text1.hWnd, WM_PASTE, vbNull, vbNull
+    'If Clipboard.GetFormat(ccCFRTF) = True Then
+    '    fMainForm.Text1.SelRTF = Clipboard.GetText(ccCFRTF)
+    'Else
+    '    fMainForm.Text1.SelText = Clipboard.GetText(ccCFText)
+    'End If
+Bottom:
+End Sub
+
+Private Sub mnuEditPasteText_Click()
+    On Error GoTo Bottom
+    fMainForm.Text1.SelText = Clipboard.GetText(ccCFText)
+    ChangeLists
+Bottom:
+End Sub
+
+Private Sub mnuEditSelect_Click()
+   On Error GoTo Bottom
+    Text1.SelStart = 0
+    Text1.SelLength = Len(fMainForm.Text1.Text)
+Bottom:
+End Sub
+
+Private Sub mnuEditUndo_Click()
+    On Error Resume Next
+    SendMessage fMainForm.Text1.hWnd, EM_UNDO, vbNull, vbNull
+    fMainForm.Text1.SetFocus
+    ChangeLists
+End Sub
+
+Private Sub mnuEditWordWrap_Click()
+    On Error GoTo Bottom
+    mnuEditWordWrap.Checked = Not mnuEditWordWrap.Checked
+    If mnuEditWordWrap.Checked = True Then
+        fMainForm.Text1.RightMargin = 0
+    Else
+        fMainForm.Text1.RightMargin = 1000000
+    End If
+    ChangeLists
+Bottom:
+End Sub
+
+Private Sub mnuFileNew_Click()
+    On Error Resume Next
+    If MsgBox("Do you wish to continue?", vbOKCancel, "New File") = vbOK Then
+        CommonDialog1.Filename = vbNullString
+        Text1.Text = vbNullString
+        Changed = False
+    End If
+'    DocumentCount = DocumentCount + 1
+'    Set fMainForm = New frmMain
+'    fMainForm.Caption = "Document" & DocumentCount
+'    fMainForm.Show
+End Sub
+
+Private Sub mnuFileOpen_Click()
+    On Error GoTo Help
+    Static Progress As Double
+    With fMainForm.CommonDialog1
+        If OpenOnce = 0 Then
+            .InitDir = App.Path
+            OpenOnce = 1
+        Else
+            .InitDir = .Filename
+            .Filename = Space(255)
+        End If
+        .CancelError = True
+        .flags = cdlOFNHideReadOnly Or cdlOFNFileMustExist
+        .Filter = "Rich Text Format(*.rtf)|*.rtf|Text Files(*.txt)|*.txt|HTML Files(*.htm,*.html,*.asp,*.js,*.css)|*.htm;*.html;*.asp;*.js;*.css|Dat Files(*.Dat)|*.dat|All Files(*.*)|*.*"
+        .ShowOpen
+    End With
+    Call OpenDragNDropFile(CommonDialog1.Filename, True, False)
+Help:
+End Sub
+
+Private Sub mnuFilePrint_Click()
+    On Error GoTo printcancel
+    fMainForm.CommonDialog1.CancelError = True
+    fMainForm.CommonDialog1.flags = cdlPDHidePrintToFile
+    fMainForm.CommonDialog1.ShowPrinter
+    fMainForm.Text1.SelPrint (Printer.hdc)
+printcancel:
+End Sub
+
+Private Sub mnuFileRecent_Click(Index As Integer)
+    On Error Resume Next
+    Call OpenDragNDropFile(mnuFileRecent(Index).Caption, True, True)
+End Sub
+
+Private Sub mnuFileSave_Click()
+    On Error GoTo errors
+    Open fMainForm.CommonDialog1.Filename For Output As #1
+    If fMainForm.mnuOptionFormat.Checked = True Then
+        Print #1, fMainForm.Text1.TextRTF
+    Else
+        Print #1, fMainForm.Text1.Text
+    End If
+    Changed = False
+    Close #1
+    Exit Sub
+errors:
+    Call mnuFileSaveAs_Click
+
+End Sub
+
+Private Sub mnuFileSaveAs_Click()
+    On Error GoTo Help
+    Dim OFN As OPENFILENAME
+    Static Once As Integer
+'    With fMainForm.CommonDialog1
+'        .flags = cdlOFNExplorer Or cdlOFNOverwritePrompt Or cdlOFNExtensionDifferent 'or cdlOFNHideReadOnly
+'        .Filter = "Rich Text Format(*.rtf)|*.rtf|Text Files(*.txt)|*.txt|HTML Document(*.htm;*.html)|*.htm;*.html|Dat Files(*.Dat)|*.dat|All Files(*.*)|*.*"
+'        .InitDir = App.Path
+'        .ShowSave
+'    End With
+    
+    With OFN
+        .lStructSize = Len(OFN)
+        .hwndOwner = fMainForm.hWnd
+        .hInstance = App.hInstance
+        .flags = 4 + OFN_EXPLORER Or OFN_OVERWRITEPROMPT Or OFN_EXTENSIONDIFFERENT 'Or OFN_NOREADONLYRETURN
+        .lpstrFilter = "Rich Text Format(*.rtf)" + Chr$(0) + "*.rtf" + Chr$(0) + "Text Files(*.txt)" + Chr$(0) + "*.txt" + Chr$(0) + "HTML Document(*.htm;*.html)" + Chr$(0) + "*.htm;*.html" + Chr$(0) + "Dat Files(*.Dat)" + Chr$(0) + "*.dat" + Chr$(0) + "All Files(*.*)" + Chr$(0) + "*.*"
+        If Once = 0 Then
+            Once = 1
+            .lpstrInitialDir = App.Path
+        End If
+        .lpstrDefExt = "rtf"
+        .lpstrFile = Space$(254)
+        .nFilterIndex = iIndex
+        .lpstrTitle = "Save documet as"
+        .nMaxFile = 260
+    End With
+    TheFilename = GetSaveFileName(OFN)
+    If TheFilename = 0 Then Exit Sub
+    CommonDialog1.Filename = OFN.lpstrFile
+    Open CommonDialog1.Filename For Output As #1
+        If mnuOptionFormat.Checked = True Then
+            'Text1.SaveFile CommonDialog1.FileName, 1
+            Print #1, fMainForm.Text1.TextRTF
+        Else
+            'Text1.SaveFile CommonDialog1.FileName, 0
+            Print #1, fMainForm.Text1.Text
+        End If
+    Close #1
+    Changed = False
+    fMainForm.Caption = App.Title & " - " & CommonDialog1.Filename
+    Call ChangeRecent(CommonDialog1.Filename)
+Help:
+End Sub
+
+Private Sub mnuFileExit_Click()
+    On Error Resume Next
+    Unload Me
+End Sub
+
+Private Sub mnuFontBold_Click()
+    On Error Resume Next
+    fMainForm.Text1.SelBold = Not fMainForm.Text1.SelBold
+End Sub
+
+Private Sub mnuFontCaselnvert_Click()
+    On Error Resume Next
+    Dim letter, Done, Begin, i, Finish, ChanText As String
+    ChanText = fMainForm.Text1.SelText
+    Finish = fMainForm.Text1.SelLength
+    Begin = fMainForm.Text1.SelStart
+    Done = ""
+    For i = 1 To Len(ChanText) Step 1
+        letter = Mid(ChanText, i, 1)
+        If letter = UCase(letter) Then
+            letter = LCase(letter)
+        Else
+            letter = UCase(letter)
+        End If
+        Done = Done + letter
+    Next i
+    fMainForm.Text1.SelText = Done
+    fMainForm.Text1.SelStart = Begin
+    fMainForm.Text1.SelLength = Finish
+End Sub
+
+Private Sub mnuFontCaseLow_Click()
+    On Error Resume Next
+    Dim Finish, Begin
+    Finish = fMainForm.Text1.SelLength
+    Begin = fMainForm.Text1.SelStart
+    fMainForm.Text1.SelText = LCase(fMainForm.Text1.SelText)
+    fMainForm.Text1.SelStart = Begin
+    fMainForm.Text1.SelLength = Finish
+End Sub
+
+Private Sub mnuFontCaseUp_Click()
+    On Error Resume Next
+    Dim Finish, Begin
+    Finish = fMainForm.Text1.SelLength
+    Begin = fMainForm.Text1.SelStart
+    fMainForm.Text1.SelText = UCase(fMainForm.Text1.SelText)
+    fMainForm.Text1.SelStart = Begin
+    fMainForm.Text1.SelLength = Finish
+End Sub
+
+Private Sub mnuFontColor_Click()
+    On Error GoTo Bottom
+    fMainForm.CommonDialog1.Color = fMainForm.Text1.SelColor
+    fMainForm.CommonDialog1.flags = 0 'cdlCCFullOpen
+    fMainForm.CommonDialog1.ShowColor
+    fMainForm.Text1.SelColor = fMainForm.CommonDialog1.Color
+    fMainForm.ColorL.Text = fMainForm.CommonDialog1.Color
+    ChangeLists
+Bottom:
+End Sub
+
+Private Sub mnuFontFormat_Click()
+    On Error GoTo skip
+    With fMainForm.CommonDialog1
+        .flags = cdlCFBoth Or cdlCFEffects Or cdlCFApply
+        .FontName = fMainForm.Text1.SelFontName
+        .FontSize = fMainForm.Text1.SelFontSize
+        .FontItalic = fMainForm.Text1.SelItalic
+        .FontBold = fMainForm.Text1.SelBold
+        .FontUnderline = fMainForm.Text1.SelUnderline
+        .FontStrikethru = fMainForm.Text1.SelStrikeThru
+        .Color = Text1.SelColor
+        .ShowFont
+    End With
+    With fMainForm.Text1
+        .SelColor = fMainForm.CommonDialog1.Color
+        .SelFontName = fMainForm.CommonDialog1.FontName
+        .SelFontSize = fMainForm.CommonDialog1.FontSize
+        .SelStrikeThru = fMainForm.CommonDialog1.FontStrikethru
+        .SelUnderline = fMainForm.CommonDialog1.FontUnderline
+        .SelBold = fMainForm.CommonDialog1.FontBold
+        .SelItalic = fMainForm.CommonDialog1.FontItalic
+    End With
+    List1.Text = fMainForm.CommonDialog1.FontName
+    list2.Text = fMainForm.CommonDialog1.FontSize
+    If fMainForm.CommonDialog1.FontUnderline = True Then
+        tbToolBar.Buttons.Item(12).Value = tbrPressed
+    Else
+        tbToolBar.Buttons.Item(12).Value = tbrUnpressed
+    End If
+    If fMainForm.CommonDialog1.FontItalic = True Then
+        tbToolBar.Buttons.Item(11).Value = tbrPressed
+    Else
+        tbToolBar.Buttons.Item(11).Value = tbrUnpressed
+
+    End If
+    If fMainForm.CommonDialog1.FontBold = True Then
+        tbToolBar.Buttons.Item(10).Value = tbrPressed
+    Else
+        tbToolBar.Buttons.Item(10).Value = tbrUnpressed
+    End If
+    ChangeLists
+skip:
+End Sub
+
+Private Sub mnuFontItalic_Click()
+    On Error Resume Next
+    fMainForm.Text1.SelItalic = Not fMainForm.Text1.SelItalic
+End Sub
+
+Private Sub mnuFontMiscScript_Click(Index As Integer)
+    On Error Resume Next
+    Select Case Index
+        Case 0
+            fMainForm.Text1.SelCharOffset = 0
+        Case 1
+            fMainForm.Text1.SelCharOffset = 55
+        Case 2
+            fMainForm.Text1.SelCharOffset = -55
+    End Select
+    ChangeLists
+End Sub
+
+Private Sub mnuFontMiscStrike_Click()
+    On Error Resume Next
+    fMainForm.Text1.SelStrikeThru = Not fMainForm.Text1.SelStrikeThru
+End Sub
+
+Private Sub mnuFontUnderline_Click()
+    On Error Resume Next
+    fMainForm.Text1.SelUnderline = Not fMainForm.Text1.SelUnderline
+End Sub
+
+Private Sub mnuHelpAbout_Click()
+    On Error Resume Next
+    frmAbout.Show , fMainForm
+End Sub
+
+Private Sub mnuInsertDate_Click()
+    On Error Resume Next
+    Dialog1.Show , fMainForm
+End Sub
+
+Private Sub mnuInsertFile_Click()
+    On Error GoTo Help
+    Dim Once As Integer, Buffersize, FileLength As Integer
+    Dim Progress As Double, Kilobytes As String
+    With fMainForm.CommonDialog2
+        .Filter = "Rich Text Format(*.rtf)|*.rtf|Text Files(*.txt)|*.txt|HTML Files(*.htm,*.html,*.asp,*.js,*.css)|*.htm;*.html;*.asp;*.js;*.css|Dat Files(*.Dat)|*.dat|All Files(*.*)|*.*"
+        .flags = cdlOFNHideReadOnly Or cdlOFNFileMustExist
+        If Once = 0 Then
+            .InitDir = App.Path
+            Once = 1
+        Else
+            .InitDir = .Filename
+            .Filename = Space(255)
+        End If
+        .ShowOpen
+    End With
+    Buffersize = 2048
+    Open fMainForm.CommonDialog2.Filename For Binary Access Read As #1
+    FileLength = LOF(1)
+    If FileLength / 1000 > 2000 Then
+        If MsgBox("This file's size exceeds 2MB. Opening it may take a long time. Do you wish to continue?", 36, "Really open file?") = vbNo Then
+            Exit Sub
+        End If
+    End If
+    Screen.MousePointer = vbHourglass
+    Progress = 0
+    Kilobytes = GiveByteValues(LOF(1))
+    frmSplash.Show , fMainForm
+    frmSplash.ProgressBar1.Max = Round(Val(Kilobytes)) / 2
+    Dim J As String, Percentage, sText
+    Do While Not EOF(1): DoEvents
+       
+        If FileLength - Loc(1) < Buffersize Then
+            Let Buffersize = FileLength - Loc(1)
+            If Buffersize = 0 Then GoTo Done
+        End If
+        J$ = Space(Buffersize)
+        Get #1, , J$
+        sText = sText & J$
+        DoEvents
+        Progress = (Progress + 1) Mod frmSplash.ProgressBar1.Max
+        If frmSplash.ProgressBar1.Value < frmSplash.ProgressBar1.Max - 2 Then
+            frmSplash.ProgressBar1.Value = Progress
+            Percentage = Round(frmSplash.ProgressBar1.Value / frmSplash.ProgressBar1.Max, 2)
+            If Percentage = 1 Then
+                frmSplash.Percent.Caption = "100%"
+            Else
+                If Mid(Right(Percentage, 2), 1, 1) = "." Then
+                    frmSplash.Percent.Caption = Mid(Percentage, 3, 1) & "0%"
+                Else
+                    frmSplash.Percent.Caption = Right(Percentage, 2) & "%"
+                End If
+            End If
+        End If
+    Loop
+Done:
+    fMainForm.Text1.SelRTF = sText
+    Call fMainForm.ChangeLists
+Help:
+    frmSplash.Hide
+    frmSplash.ProgressBar1.Value = 0
+    Screen.MousePointer = vbDefault
+    Close #1
+problem:
+End Sub
+
+Private Sub mnuInsertObject_Click()
+    On Error GoTo Bottom
+    fMainForm.OLE1.InsertObjDlg
+    If fMainForm.OLE1.OLEType = vbOLENone Then GoTo Bottom
+    Screen.MousePointer = vbHourglass
+    If fMainForm.OLE1.OLEType = vbOLEEmbedded Then
+        fMainForm.Text1.OLEObjects.Add , , , fMainForm.OLE1.Class
+    ElseIf fMainForm.OLE1.OLEType = vbOLELinked Then
+        fMainForm.Text1.OLEObjects.Add , , fMainForm.OLE1.SourceDoc, OLE1.Class
+    End If
+Bottom:
+    Screen.MousePointer = vbDefault
+End Sub
+
+Private Sub mnuInsertPicture_Click()
+    On Error GoTo Bottom
+    Static Once As Integer
+    With fMainForm.CommonDialog2
+        .flags = cdlOFNHideReadOnly Or cdlOFNFileMustExist
+        .Filter = "BMP;JPG FILES(*.BMP;*.JPG)|*.BMP;*.JPG|GIF FILES(*.GIF)|*.GIF|TIF FILES(*.TIF)|*.TIF|All Files(*.*)|*.*"
+        If Once = 0 Then
+            .InitDir = App.Path
+            Once = 1
+        End If
+        .ShowOpen
+    End With
+    Screen.MousePointer = vbHourglass
+    fMainForm.Text1.OLEObjects.Add , , fMainForm.CommonDialog2.Filename
+Bottom:
+    Screen.MousePointer = vbDefault
+End Sub
+
+Private Sub mnuOptionAdvancedDefaultRestore_Click()
+    On Error GoTo Help
+    FileSystem.FileCopy "C:\Windows\NotePad Backup.exe", "C:\Windows\NotePad.exe"
+    Kill "C:\Windows\NotePad Backup.exe"
+    Exit Sub
+Help:
+    MsgBox Err.Description, 16, "Error"
+End Sub
+
+Private Sub mnuOptionAdvancedDefaultSet_Click()
+    On Error GoTo help2
+    If MsgBox("Notepad will be backup as 'NotePad Backup.exe', Continue?", vbYesNo, "NotePad 2K") = vbYes Then
+        FileSystem.FileCopy "C:\Windows\NotePad.exe", "C:\Windows\NotePad Backup.exe"
+        FileSystem.FileCopy "NotePad 2K.exe", "C:\Windows\NotePad.exe"
+    End If
+    Exit Sub
+help2:
+    MsgBox Err.Description, 16, "Error"
+End Sub
+
+Private Sub mnuOptionAdvancedReg_Click()
+    On Error Resume Next
+    If MsgBox("This will End the program to Clear the Registry" & Chr(13) & "Continue With this", vbExclamation + vbYesNo, "Error") = vbYes Then
+        DeleteSetting (App.Title)
+        End
+    End If
+End Sub
+
+Private Sub mnuOptionDragImage_Click()
+    On Error Resume Next
+    mnuOptionDragImage.Checked = Not mnuOptionDragImage.Checked
+    mnuOptionDragTextfile.Checked = Not mnuOptionDragImage.Checked
+    fMainForm.Text1.OLEDropMode = rtfOLEDropAutomatic
+End Sub
+
+Private Sub mnuOptionDragTextfile_Click()
+    On Error Resume Next
+    mnuOptionDragTextfile.Checked = Not mnuOptionDragTextfile.Checked
+    mnuOptionDragImage.Checked = Not mnuOptionDragTextfile.Checked
+    fMainForm.Text1.OLEDropMode = rtfOLEDropManual
+End Sub
+
+Private Sub mnuOptionEncryption_Click()
+    On Error Resume Next
+    Dialog.Show , fMainForm
+    ChangeLists
+End Sub
+
+Private Sub mnuOptionMenucolorFull_Click()
+  mnuOptionMenucolorFull.Checked = Not mnuOptionMenucolorFull.Checked
+  Call mCoolMenu.FullSelect(Me.hWnd, mnuOptionMenucolorFull.Checked)
+End Sub
+
+Private Sub mnuoptionMenucolorSel_Click(Index As Integer)
+    Dim i As Integer
+    For i = 0 To 1
+        mnuoptionMenucolorSel(i).Checked = (i = Index)
+    Next i
+    If Index = 0 Then
+        For i = 0 To 3
+            If i = MenuColorFont Then mnuoptionMenucolorSet(i).Checked = True _
+            Else mnuoptionMenucolorSet(i).Checked = False
+        Next i
+    End If
+    If Index = 1 Then
+        For i = 0 To 3
+            If i = MenuColorSelection Then mnuoptionMenucolorSet(i).Checked = True _
+            Else mnuoptionMenucolorSet(i).Checked = False
+        Next i
+    End If
+End Sub
+
+Private Sub mnuoptionMenucolorSet_Click(Index As Integer)
+    On Error Resume Next
+  
+    Dim i As Integer
+    For i = 0 To 3
+    mnuoptionMenucolorSet(i).Checked = (i = Index)
+    Next i
+    Dim Color As Long
+    Color = CLng("&H80" + String(Index * 2, "0"))
+  
+    If mnuoptionMenucolorSel(0).Checked = True Then
+        Call mCoolMenu.ForeColor(Me.hWnd, Color&)
+        MenuColorFont = Index
+    End If
+    If mnuoptionMenucolorSel(1).Checked = True Then
+        Call mCoolMenu.SelectColor(Me.hWnd, Color&)
+        MenuColorSelection = Index
+    End If
+End Sub
+
+Private Sub mnuOptionPreviewfont_Click()
+    On Error Resume Next
+    mnuOptionPreviewfont.Checked = Not mnuOptionPreviewfont.Checked
+End Sub
+
+Private Sub mnuOptionFormat_Click()
+    On Error Resume Next
+    mnuOptionFormat.Checked = Not mnuOptionFormat.Checked
+    ChangeLists
+End Sub
+
+Private Sub mnuTextBold_Click()
+    mnuFontBold_Click
+End Sub
+
+Private Sub mnuTextCaseInvert_Click()
+    mnuFontCaselnvert_Click
+End Sub
+
+Private Sub mnuTextCaseLower_Click()
+    mnuFontCaseLow_Click
+End Sub
+
+Private Sub mnuTextCaseUpper_Click()
+    mnuFontCaseUp_Click
+End Sub
+
+Private Sub mnuTextColor_Click()
+    mnuFontColor_Click
+End Sub
+
+Private Sub mnuTextCopy_Click()
+    mnuEditCopy_Click
+End Sub
+
+Private Sub mnuTextCut_Click()
+    mnuEditCut_Click
+End Sub
+
+Private Sub mnuTextClear_Click()
+    mnuEditClear_Click
+End Sub
+
+Private Sub mnuTextFormat_Click()
+    mnuFontFormat_Click
+End Sub
+
+Private Sub mnuTextInsertDate_Click()
+    mnuInsertDate_Click
+End Sub
+
+Private Sub mnuTextInsertFile_Click()
+    mnuInsertFile_Click
+End Sub
+
+Private Sub mnuTextInsertObject_Click()
+    mnuInsertObject_Click
+End Sub
+
+Private Sub mnuTextInsertPicture_Click()
+    mnuInsertPicture_Click
+End Sub
+
+Private Sub mnuTextItalic_Click()
+    mnuFontItalic_Click
+End Sub
+
+Private Sub mnuTextMiscScript_Click(Index As Integer)
+    mnuFontMiscScript_Click (Index)
+End Sub
+
+Private Sub mnuTextMiscStrike_Click()
+    mnuFontMiscStrike_Click
+End Sub
+
+Private Sub mnuTextPaste_Click()
+    mnuEditPasteFormat_Click
+End Sub
+
+Private Sub mnuTextSelect_Click()
+    mnuEditSelect_Click
+End Sub
+
+Private Sub mnuTextUnderline_Click()
+    mnuFontUnderline_Click
+End Sub
+
+Private Sub mnuTextUndo_Click()
+    mnuEditUndo_Click
+End Sub
+
+Private Sub mnuviewFormat_Click()
+    On Error Resume Next
+    mnuviewFormat.Checked = Not mnuviewFormat.Checked
+    Call MoveFormatStuff
+End Sub
+
+Private Sub mnuViewStatusBar_Click()
+    On Error Resume Next
+    mnuViewStatusBar.Checked = Not mnuViewStatusBar.Checked
+    sbStatusBar.Visible = mnuViewStatusBar.Checked
+    Call MoveStatusBar
+End Sub
+
+Private Sub mnuviewToolbar_Click()
+    On Error Resume Next
+    mnuviewToolbar.Checked = Not mnuviewToolbar.Checked
+    tbToolBar.Visible = mnuviewToolbar.Checked
+    Call MoveToolBar
+End Sub
+
+Private Sub tbToolBar_ButtonClick(ByVal Button As MSComctlLib.Button)
+    On Error Resume Next
+    Select Case Button.Key
+        Case "New"
+            Call mnuFileNew_Click
+        Case "Open"
+            Call mnuFileOpen_Click
+        Case "Save"
+            Call mnuFileSave_Click
+        Case "Print"
+            Call mnuFilePrint_Click
+        Case "Cut"
+            Call mnuEditCut_Click
+        Case "Copy"
+            Call mnuEditCopy_Click
+        Case "Paste"
+            Call mnuEditPasteFormat_Click
+        Case "Bold"
+            Call mnuFontBold_Click
+        Case "Italic"
+            Call mnuFontItalic_Click
+        Case "Underline"
+            Call mnuFontUnderline_Click
+        Case "Misc"
+            PopupMenu mnuFontMisc
+        Case "Bullet"
+            fMainForm.Text1.SelBullet = Not fMainForm.Text1.SelBullet
+        Case "Find"
+            Call mnuEditFind_Click
+        Case "Caps"
+            PopupMenu mnuFontCase
+        Case "Color"
+            Call mnuFontColor_Click
+        Case "Left"
+            fMainForm.Text1.SelAlignment = rtfLeft
+        Case "Center"
+            fMainForm.Text1.SelAlignment = rtfCenter
+        Case "Right"
+            fMainForm.Text1.SelAlignment = rtfRight
+        Case "Encrypt"
+            Call mnuOptionEncryption_Click
+    End Select
+
+End Sub
+
+Private Sub Text1_Change()
+    On Error Resume Next
+    Call ChangeLists
+    Changed = True
+End Sub
+
+Private Sub Text1_Click()
+    On Error Resume Next
+    Call ChangeLists
+End Sub
+
+Private Sub Text1_GotFocus()
+    On Error Resume Next
+    Call ChangeLists
+End Sub
+
+Private Sub Text1_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+    If Button = 2 Then
+        Call MyMenu
+    End If
+End Sub
+
+Private Sub Text1_OLEDragDrop(Data As RichTextLib.DataObject, Effect As Long, Button As Integer, Shift As Integer, X As Single, Y As Single)
+    On Error Resume Next
+    If Changed = True Then
+        If CommonDialog1.Filename = "" Then CommonDialog1.Filename = "Untitled.txt"
+        Select Case MsgBox("The text in your file has changed!" & Chr(13) & "Do you want to save changes to " + Chr(10) + CommonDialog1.Filename, vbExclamation + vbYesNoCancel, App.Title)
+            Case vbYes
+                If CommonDialog1.Filename = "Untitled.txt" Then CommonDialog1.Filename = vbNullString
+                Call mnuFileSave_Click
+            Case vbCancel
+                Text1.SetFocus
+                If CommonDialog1.Filename = "Untitled.txt" Then CommonDialog1.Filename = vbNullString
+                Exit Sub
+        End Select
+    End If
+    Dim numFiles As Integer
+    numFiles = Data.Files.Count
+    If numFiles > 1 Then MsgBox "You can only drop one file at a time.", 16 + vbExclamation, App.Title & " - Error!": Exit Sub
+    Dim i As Integer
+    If (GetAttr(Data.Files(1)) And vbDirectory) = vbDirectory Then
+        MsgBox "You cannot drop more than one file at a time.", 16, App.Title & " - Error!: Cannot open drag & drop file.": Exit Sub
+    Else
+        lstDragDrop.AddItem Data.Files(1)
+        OpenDragNDropFile Data.Files(1), True, True
+    End If
+    Changed = False
+End Sub
+
+Private Sub Text1_OLEDragOver(Data As RichTextLib.DataObject, Effect As Long, Button As Integer, Shift As Integer, X As Single, Y As Single, State As Integer)
+    On Error Resume Next
+    If Data.GetFormat(vbCFFiles) Then
+        Effect = vbDropEffectCopy
+    Else
+        Effect = vbDropEffectNone
+    End If
+End Sub
+
+Private Sub Text1_SelChange()
+    On Error Resume Next
+    Call ChangeLists
+End Sub
+
+Private Sub Timer2_Timer()
+    On Error Resume Next
+    Call list1_GotFocus
+End Sub
+
+

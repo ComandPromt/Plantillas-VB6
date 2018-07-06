@@ -1,0 +1,12 @@
+ExtendedRTFDemo = 45, 59, 793, 669, , 23, 30, 771, 640, C
+ExtendedRTFSupportMod = 1, 1, 749, 628, 
+ExtendedRTFNotSoUsefulMod = 22, 29, 637, 658, C
+ClsExtendedRTF = 45, 59, 793, 686, 
+ClsRTFFontPainter = 220, 290, 874, 919, 
+ClsAPIHighlight = 155, 204, 807, 831, 
+ClsAPIZoom = 132, 174, 786, 803, 
+ColourPanel = 23, 30, 675, 657, C, 1, 1, 653, 628, C
+TextLookPanel = 221, 291, 873, 918, , 177, 233, 829, 860, C
+ClsManifestation = 111, 146, 763, 773, 
+Form1 = 44, 58, 698, 687, C, 22, 29, 676, 641, C
+OLDbits1 = 22, 29, 811, 658, C
