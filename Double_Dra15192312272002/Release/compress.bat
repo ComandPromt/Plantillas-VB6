@@ -1,0 +1,1 @@
+upx -9 --compress-resources=no OutlookBar.ocx PropPages.ocx project2.exe

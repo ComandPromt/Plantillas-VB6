@@ -1,0 +1,79 @@
+Outlook Bar Control revisions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Version 1.0 
+~~~~~~~~~~~
+
+2002-07-04	- Initial implementation.
+
+
+Version 1.1
+~~~~~~~~~~~
+
+2002-07-21	- ADD: cButton prop Enabled and Visible.
+		- FIX: cMemDC func PaintDisabledBitmap incorrectly sized temp bitmaps
+			to objects dimensions effectively ignoring arguments.
+		- FIX: Property Pages incorrect painting effects. Image buttons are
+			sized to look better in small fonts display settings.
+
+2002-07-24	- ADD: source prepared for documentation generation.
+		- ADD: cGradientDef prop OffsetHue, PercentSaturation and PercentBrightness.
+
+Version 1.2
+~~~~~~~~~~~
+
+2002-07-29	- FIX: a bug in UserControl_MouseUp preventing currently selected
+			item from getting into whole view (EnsureVisible).
+		- ADD: cGradientDef: new gradient type ucsGrdAlphaBlend and new prop Alpha.
+		- REF: modfied default values for formats to use AlphaBlend and to fully
+			emulate Outlook XP appearance.
+		- ADD: prop UseSystemFont (default True). Queries OS for the Icons Font 
+			and set Control.Font to it.
+		- ADD: subclassing: monitoring for system settings change and responds 
+			to wheel mouse events.
+		- ADD: prop FlatScrollArrows (default True). Controls whether group scroll 
+			arrows appear like small XP buttons.
+
+2002-07-30	- ADD: prop WrapText (default False). Controls whether item captions are
+			wrapped on multiple lines if bigger then control's width.
+
+2002-08-09	- REF: moved methods from ctxOutlookBar to cMemDC.
+		- ADD: methods DrawFrameControl, CreateBrush, CreatePen and Rectangle.
+		- REF: Help updated.
+		- REF: bugfix in cFormatDef.Render effectively preventing BackColor and 
+			ForeColor values cascading from parent.
+		- ADD: cGradientDef: new gradient type ucsGrdStretchBitmap and new property 
+			Picture.
+
+Version 1.3
+~~~~~~~~~~~
+
+		- FIX: subclasser is GPF-ing under MS Office and VS.NET.
+		- ADD: new subclasser and windows hook thunk.
+		- FIX: drag'n'drop of currently selected item effectively deselects it.
+		- ADD: drag'n'drop of groups.
+		- FIX: invisibile items and groups are not accounted for upon drag'n'drop
+		- FIX: Key property of cButton class does not modify key in parent 
+			collection leading to inconsistencies.
+		- ADD: rename of items and groups.
+		- FIX: cMemDC: does not return current font size correctly.
+		- ADD: cGradientDef: new gradient type ucsGrdTileBitmap.
+		- FIX: any key pressed is scrolling current group items to the first one.
+
+Version 1.3.1
+~~~~~~~~~~~~~
+
+2002-11-12	- FIX: cMemDC.FillGradient degrades to manually filling the gradient
+			when the API function is not supported by the OS (NT 4.0/Win 95)
+
+Version 1.3.2
+~~~~~~~~~~~~~
+
+2002-12-26	- FIX: improperly painted tiled bitmaps.
+		- FIX: better mouse tracking. now in MS Office forms upon click focus 
+			is forwarded to containing form.
+		- ADD: cGradientDef: TileAbsolutePosition for tiled bitmaps.
+		- FIX: use ambient backcolor to cleanup control background before
+			painting control back gradient.
+		- REF: cascading styles rendering speed up.

@@ -1,0 +1,95 @@
+VERSION 5.00
+Begin VB.PropertyPage pagFormats 
+   Caption         =   "Formats"
+   ClientHeight    =   4560
+   ClientLeft      =   0
+   ClientTop       =   0
+   ClientWidth     =   6576
+   PaletteMode     =   0  'Halftone
+   ScaleHeight     =   4560
+   ScaleWidth      =   6576
+End
+Attribute VB_Name = "pagFormats"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = True
+'=========================================================================
+'
+'   You are free to use this source as long as this copyright message
+'     appears on your program's "About" dialog:
+'
+'   Outlook Bar Project
+'   Copyright (c) 2002 Vlad Vissoultchev (wqweto@myrealbox.com)
+'
+'=========================================================================
+Option Explicit
+Private Const MODULE_NAME As String = "pagFormats"
+
+'=========================================================================
+' Constants and member variables
+'=========================================================================
+
+Private Const STR_PAGE_CONTROL      As String = "ctxFormats"
+Private Const CAP_MSG               As String = "pagFormats"
+
+Private WithEvents m_oControl   As VBControlExtender
+Attribute m_oControl.VB_VarHelpID = -1
+
+'=========================================================================
+' Error handling
+'=========================================================================
+
+'Private Sub RaiseError(sFunc As String)
+'    PushError sFunc, MODULE_NAME
+'    PopRaiseError
+'End Sub
+
+Private Function ShowError(sFunc As String) As VbMsgBoxResult
+    PushError sFunc, MODULE_NAME
+    ShowError = PopShowError(CAP_MSG)
+End Function
+
+'=========================================================================
+' Base class events
+'=========================================================================
+
+Private Sub PropertyPage_SelectionChanged()
+    Const FUNC_NAME     As String = "PropertyPage_SelectionChanged"
+    
+    On Error GoTo EH
+    If m_oControl Is Nothing Then
+        Set m_oControl = Controls.Add(PROPPAGES_LIB_NAME & "." & STR_PAGE_CONTROL, "Control")
+        m_oControl.Move 0, 0, ScaleWidth, ScaleHeight
+    End If
+    Call m_oControl.object.SelectionChanged(SelectedControls)
+    DoEvents
+    m_oControl.Visible = True
+    Exit Sub
+EH:
+    Select Case ShowError(FUNC_NAME)
+    Case vbRetry: Resume
+    Case vbIgnore: Resume Next
+    End Select
+End Sub
+
+Private Sub PropertyPage_ApplyChanges()
+    Const FUNC_NAME     As String = "PropertyPage_ApplyChanges"
+    
+    On Error GoTo EH
+    Call m_oControl.object.ApplyChanges
+    Exit Sub
+EH:
+    Select Case ShowError(FUNC_NAME)
+    Case vbRetry: Resume
+    Case vbIgnore: Resume Next
+    End Select
+End Sub
+
+Private Sub m_oControl_ObjectEvent(Info As EventInfo)
+    If Info.Name = "Changed" Then
+        Changed = True
+    End If
+End Sub
+
+
