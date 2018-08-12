@@ -1,0 +1,117 @@
+[Root]
+Most Recent Package=Job TrackerSetup
+Most Recent Deploy=JobTrackerDeployment
+
+[Deploy|JobTrackerDeployment|Root]
+Package=Job TrackerSetup
+Handler=PDWizard.FolderDplySubWiz
+Folder=\\Newcomputer\c\JobTrackerSetup
+
+[Package|Job TrackerSetup|Root]
+SubWizProgID=PDWizard.SetupPkgSubWiz
+BuildFolder=C:\VisualBasic\JobTracker\Package
+
+[Package|Job TrackerSetup|Configure DAO ISAMs]
+Applicable=No
+
+[Package|Job TrackerSetup|Configure DAO ODBC]
+JetWorkspace=
+ODBCDirect=
+
+[Package|Job TrackerSetup|Files Found]
+
+[Package|Job TrackerSetup|Files Released]
+
+[Package|Job TrackerSetup|Missing Dependency Information]
+
+[Package|Job TrackerSetup|Out-of-Date Dependency Information]
+C:\WINDOWS\SYSTEM\MSCOMCTL.OCX=
+
+[Package|Job TrackerSetup|Files Added]
+c:\visualbasic\jobtracker\recruiter.mdb=
+C:\VisualBasic\JobTracker\hand.cur=
+
+[Package|Job TrackerSetup|Files Removed]
+
+[Package|Job TrackerSetup|Files In Project]
+C:\VisualBasic\JobTracker\JobTracker.exe=Yes
+C:\WINDOWS\SYSTEM\MSVBVM60.DLL=Yes
+C:\WINDOWS\SYSTEM\OLEAUT32.DLL=Yes
+C:\WINDOWS\SYSTEM\OLEPRO32.DLL=Yes
+C:\WINDOWS\SYSTEM\ASYCFILT.DLL=Yes
+C:\WINDOWS\SYSTEM\STDOLE2.TLB=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=Yes
+C:\Program Files\Common Files\designer\MSDERUN.DLL=Yes
+C:\WINDOWS\SYSTEM\MSBIND.DLL=Yes
+C:\WINDOWS\SYSTEM\MSSTDFMT.DLL=Yes
+C:\WINDOWS\SYSTEM\MSADODC.OCX=Yes
+C:\WINDOWS\SYSTEM\MSCOMCTL.OCX=Yes
+C:\WINDOWS\SYSTEM\MSDBRPTR.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=Yes
+C:\WINDOWS\SYSTEM\VB6STKIT.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=Yes
+C:\VisualBasic\JobTracker\Recruiter.mdb=Yes
+C:\VisualBasic\JobTracker\hand.cur=Yes
+
+[Package|Job TrackerSetup|Configure Registry Files]
+Applicable=No
+
+[Package|Job TrackerSetup|Configure Remote Servers]
+Applicable=No
+
+[Package|Job TrackerSetup|Install Locations]
+C:\VisualBasic\JobTracker\JobTracker.exe=$(AppPath)
+C:\WINDOWS\SYSTEM\MSVBVM60.DLL=$(WinSysPathSysFile)
+C:\WINDOWS\SYSTEM\OLEAUT32.DLL=$(WinSysPathSysFile)
+C:\WINDOWS\SYSTEM\OLEPRO32.DLL=$(WinSysPathSysFile)
+C:\WINDOWS\SYSTEM\ASYCFILT.DLL=$(WinSysPathSysFile)
+C:\WINDOWS\SYSTEM\STDOLE2.TLB=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Common Files\designer\MSDERUN.DLL=$(CommonFiles)\designer
+C:\WINDOWS\SYSTEM\MSBIND.DLL=$(WinSysPath)
+C:\WINDOWS\SYSTEM\MSSTDFMT.DLL=$(WinSysPath)
+C:\WINDOWS\SYSTEM\MSADODC.OCX=$(WinSysPath)
+C:\WINDOWS\SYSTEM\MSCOMCTL.OCX=$(WinSysPath)
+C:\WINDOWS\SYSTEM\MSDBRPTR.DLL=$(WinSysPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\WINDOWS\SYSTEM\VB6STKIT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+C:\VisualBasic\JobTracker\Recruiter.mdb=$(AppPath)
+C:\VisualBasic\JobTracker\hand.cur=$(AppPath)
+
+[Package|Job TrackerSetup|Configure Shared Files]
+Applicable=Yes
+C:\VisualBasic\JobTracker\JobTracker.exe=No
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=No
+C:\VisualBasic\JobTracker\Recruiter.mdb=No
+C:\VisualBasic\JobTracker\hand.cur=No
+
+[Package|Job TrackerSetup|Distribution]
+Type=single
+Size=
+Title=Job Tracker
+
+[Package|Job TrackerSetup|Package]
+PackageFolder=C:\VisualBasic\JobTracker\Package
+ProjectFolder=C:\VisualBasic\JobTracker
+ServerSideCab=
+File1=C:\VisualBasic\JobTracker\Package\setup.exe
+File2=C:\VisualBasic\JobTracker\Package\Setup.Lst
+File3=C:\VisualBasic\JobTracker\Package\JobTracker.CAB
+Handler1=PDWizard.FolderDplySubWiz
+Handler2=PDWizard.WebPostDplySubWiz
+
+[Package|Job TrackerSetup|IconGroups]
+Group0=Job Tracker
+PrivateGroup0=True
+Parent0=$(Programs)
+
+[Package|Job TrackerSetup|Job Tracker]
+Icon1=JobTracker.exe
+Title1=Job Tracker
+StartIn1=$(AppPath)
+Key1=Icon1

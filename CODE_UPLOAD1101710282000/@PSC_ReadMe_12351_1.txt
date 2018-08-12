@@ -1,0 +1,7 @@
+Title: database parser
+Description: This Parser is the most complete parser you've never seen. It parse a database and print a complete report with. In the "TAG" field, you put your constant, your text, your functions and your calculate fields. If it's a field, the parser search the value and do the mathematic operation, is it's a function, the parser execute the function and return the value, is it's a text, the value is the text and it do the same for constants. In the Field field, you put the name of your field and it will find the value and it will print it. All values will be print at the top, left, font size and font name you have put in the database...this parser use the printer object for print the report.
+Ce parser est le parser le plus complet que j'ai jamais vu, il imprime un rapport a partir d'une base de donnée, dans le champ tag, vous placez les fonctions mathématiques, les fonctions, les constantes et le texte. Dans le champ Champ, vous y placez le nom du champ et il va aller chercher la valeur et il va l'imprimer. Ce rapport parser utilise l'objet printer pour imprimer le rapport
+This file came from Planet-Source-Code.com...the home millions of lines of source code
+You can view comments on this code/and or vote on it at: http://www.Planet-Source-Code.com/vb/scripts/ShowCode.asp?txtCodeId=12351&lngWId=1
+
+The author may have retained certain copyrights to this code...please observe their request and the law by reviewing all copyright conditions at the above URL.
