@@ -1,0 +1,40 @@
+cTREEVIEW Class Wrapper v1.0.3 with ADO Code Example
+====================================================
+
+New features - Now cTREEVIEW class has 28 features! 
+
+New cTREEVIEW Features include: Flat border; IsChildNode; CopyNode with cancel option; Cut Icon state. ADO Example now supports: New Nodes/Records can be added; copy treeview node(s); Cut/Copy/Paste through right-click context menu; and functions are now benchmarked with results displayed.
+
+cTREEVIEW class fixes: If the destination or source node was not expanded during a Move operation, an error was raised - only happens if nodes are loaded on-demand.
+
+ADO Example fixes: Adjusted pExpandNode to handle group nodes without hidden nodes.
+
+A special thanks to Zhu Jinyong for his suggestions for the ADO Example including CopyNode, Cut/Copy/Paste plus finding the Exand Node error.
+
+
+
+cTREEVIEW Class Wrapper v1.0.2 with ADO Code Example
+====================================================
+
+New ADO example added now supporting: Load on demand; Find First/ Next/ Previous; Label Edit; Drag'n'Drop; Node & TreeView context menus; node specific Open/Closed/Drag icons. New cTREEVIEW class features: Scroll treeview Up/ Down/ PageUp/ PageDown/ Home/ End using code; Dragging with auto-scrolling (not supported by Microsoft in the TreeView control); NodeFirstViewable; & NodeLastViewable. 
+
+ADO Example fixes: Find Next/Previous didn't work if branches already loaded. cTREEVIEW class fixes: correct node drag icon displayed.
+
+Original features include: fast clear a treeview; extended Add/Rename/Delete nodes; move nodes through code &/or Drag'n'Drop including parent nodes onto child nodes (not normally possible!); find node using text and (optionally) key properties; check if a node is a parent of another; checks if a node is a root node; a safe get parent node text; right-click context menu (before/after click event); collapse/expand all nodes; collape/expand all child nodes; enable/disable redraw.
+
+This example shows how to:- work with multiple tables of data and load data on demand. As a bonus, I've included cDB class that encapsulates working with an Access Database using ADO. All code is heavily commented.
+
+If there are any routines that you feel are missing or code/bug-fixes that you wish to contribute, then please let me know and I'll add them in.
+
+
+
+cTREEVIEW Class Wrapper - First of its kind!
+============================================
+
+The Internet is a place of vast knowledge. But when it can time to find help with the TreeView control for a project that I was working on, very little information could be found.
+
+This is the first of two uploads (second example to follow in the near future with ADO code) that will show how to fast clear a treeview; extended Add/Rename/Delete nodes; move nodes through code &/or Drag'n'Drop including parent nodes onto child nodes (not normally possible!); find node using text and (optionally) key properties; check if a node is a parent of another; checks if a node is a root node; a safe get parent node text; right-click context menu (before/after click event); collapse/expand all nodes; collape/expand all child nodes; enable/disable redraw.
+
+All 16 TreeView features are wrapped into a simple to use class that can be added into any project. A sample program shows how to use all of the class wrapper routines plus all code is heavily documented. Help/tips has also been added for VB's Object Browser.
+
+If there are any routines that you feel are missing or code/bug-fixes that you wish to contribute, then please let me know and I'll add them in.
