@@ -1,0 +1,4 @@
+ICONEXTR.FRM
+ProjWinSize=141,475,238,349
+ProjWinShow=2
+Title="ICONEXT"

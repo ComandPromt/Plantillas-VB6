@@ -1,0 +1,6 @@
+--------------------------------------------------------
+ThumbNailSize = 100
+ThumbsPerPage = 9
+PagesNeeded   = 0
+Afbeeldingen  = 8
+
