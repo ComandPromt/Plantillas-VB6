@@ -1,0 +1,38 @@
+Tip 40: Calculating the Number of Bytes Used by Files Stored in a Directory
+Created: April 1, 1995
+
+Abstract
+This article explains how you can use the Visual Basic® Dir$, FileName, and FileLen functions to calculate the space used by files in a directory.
+
+When DiskSpaceFree Is Not Enough
+The DiskSpaceFree function found in SETUPKIT.DLL can tell you the amount of free space available on the specified disk drive. However, if you need to determine how much space is occupied by the files stored in a single directory, you will not be able to use this function.
+
+How, then, can you find out how much space is used by the files? One solution is to open each file in the directory and move the files pointer to the end of the file. Then you can find out how many bytes are stored in the file. This method, however, is far too slow because each file must be individually opened and closed.
+
+A better solution is to use the Dir$, FileName, and FileLen functions in Visual Basic® to scan the directory and keep a running total of the number of bytes in each file: 
+
+The Dir$ function retrieves the name of a file from a disk. To begin a search for all files in a directory, pass the name of the directory as the first argument to Dir$ and the filename pattern to search for as the second argument to Dir$. Because we want to retrieve the length of each individual file stored in the directory, we use a wildcard (*.*) filename. As each name is retrieved from disk, the file's length is added to the variable (in our example program below) FileSize. When no more files exist in the directory, Dir$ will return an empty (NULL) string 
+The FileLen function returns the total number of bytes used by the specified file. Using a Do-While loop to retrieve the name and length of each file found in the directory is quicker and less prone to disk errors than the other method described above. 
+Example Program
+The program below shows how you can use a Do-While loop to calculate how many bytes are occupied by all the files stored in a directory. The Directory variable is set to the path of the directory you want to work with. After the program has determined the length of all files stored in the directory, it displays the result in the Text Box. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. 
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+     Dim FileName As String
+     Dim FileSize As Currency
+     Dim Directory As String
+
+     Directory = "c:\windows\system\"
+     FileName = Dir$(Directory & "*.*")
+     FileSize = 0
+
+     Do While FileName <> ""
+            FileSize = FileSize + FileLen(Directory & FileName)
+            FileName = Dir$
+     Loop
+
+     Text1.Text = "Total bytes used = " + Str$(FileSize)
+End Sub
+

@@ -1,0 +1,60 @@
+Option Explicit
+
+Private Const SW_SHOW = 5
+Private Const SEE_MASK_INVOKEIDLIST = &HC
+Private Type SHELLEXECUTEINFO
+    cbSize As Long
+    fMask As Long
+    hwnd As Long
+    lpVerb As String
+    lpFile As String
+    lpParameters As String
+    lpDirectory As String
+    nShow As Long
+    hInstApp As Long
+    ' optional fields
+    lpIDList As Long
+    lpClass As String
+    hkeyClass As Long
+    dwHotKey As Long
+    hIcon As Long
+    hProcess As Long
+End Type
+
+Private Declare Function ShellExecuteEx Lib "shell32.dll" (ByRef s As SHELLEXECUTEINFO) As Long
+
+Public Sub DisplayFileProperties(ByVal sFullFileAndPathName As String)
+    Dim shInfo As SHELLEXECUTEINFO
+    
+    With shInfo
+        .cbSize = LenB(shInfo)
+        .lpFile = sFullFileAndPathName
+        .nShow = SW_SHOW
+        .fMask = SEE_MASK_INVOKEIDLIST
+        .lpVerb = "properties"
+    End With
+    
+    ShellExecuteEx shInfo
+End Sub
+
+Private Sub Command1_Click()
+On Error GoTo Error_Handler
+    Dim sFileName As String
+    
+    sFileName = InputBox("Enter Full Path/Name of file to view Properties for :", "Show File Properties", "c:\autoexec.bat")
+    If Len(sFileName) = 0 Then
+        MsgBox "You must enter a filename"
+        Exit Sub
+    End If
+    
+    If Len(Dir(sFileName)) = 0 Then
+        MsgBox "File : " & sFileName & " cannot be found"
+        Exit Sub
+    End If
+    
+    DisplayFileProperties sFileName
+Exit Sub
+Error_Handler:
+'othewise "if structure" doesn't work properly.
+Resume Next
+End Sub

@@ -1,0 +1,65 @@
+Tip 199: Saving the Contents of the List Box Control to Disk in Visual Basic 4.0
+December 5, 1995
+
+Abstract
+This article explains how to save and later retrieve the contents of the Microsoft® Visual Basic® version 4.0 List Box control to and from a file on disk.
+
+Using Arrays with the List Box Control
+The Microsoft® Visual Basic® version 4.0 List Box control lets you display a list of items, such as employee names, to your user. In your Visual Basic application, you may allow your user to add new items to the control. Before you quit your application, however, you need to save the entries in the List Box control to a file on disk. Then, when your application is run at a later time, you can retrieve the items to the List Box control from the data file's contents.
+
+You can save the contents of a List Box control to a sequential file on disk by first saving each entry in the control to an array. To do this, you would run the following code fragment:
+
+For i = 0 To List1.ListCount - 1
+        A(i) = List1.List(i)
+Next I
+
+The total number of items stored in the List Box control is retrieved from the ListCount property. Next, the array A(i) is created, where the i variable holds a count of the current item being processed. As each item is retrieved from the List Box control, it is saved in the array.
+
+At this point, you use the Visual Basic Write # statement to save each item in the array to a disk file. Similarly, when you reload the items from the disk file to the List Box control, you use the Input # statement.
+
+Example Program
+This program shows how to save the contents of a List Box control to a file on disk. In addition, you are shown how to retrieve the same items from the data file to the List Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1: 
+Dim A(50) As String
+Dim ItemCount As Integer
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    For x = 1 To 20
+        List1.AddItem "This is item #" & x
+    Next x
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    For i = 0 To List1.ListCount - 1
+        A(i) = List1.List(i)
+    Next i
+    ItemCount = List1.ListCount
+    Open "c:\temp.txt" For Output As #1
+    For i = 0 To ItemCount - 1
+        Write #1, A(i)
+    Next i
+    Close #1
+    MsgBox "Data has been saved"
+
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. 
+Add the following code to the Click event for Command2: 
+Private Sub Command2_Click()
+    List1.Clear
+    Open "c:\temp.txt" For Input As #1
+    Do Until EOF(1)
+        Input #1, b$
+        List1.AddItem b$
+    Loop
+    Close #1
+
+End Sub
+
+Run the example program by pressing F5. The program displays twenty items in the List Box control. Click the first Command Button control. The contents of the List Box control are saved to a file on disk. Click the second Command Button control. The contents of the file on disk are retrieved into the List Box control.

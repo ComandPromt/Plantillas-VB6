@@ -1,0 +1,50 @@
+Tip 172: Extracting the Directory Name and the Filename from the Path
+December 5, 1995
+
+Abstract
+This article explains how to extract the directory name and the filename from a path when working with files and directories in your Microsoft® Visual Basic® application.
+
+Using the Len, Mid$, and Right$ Functions
+When working with files and directories in Microsoft® Visual Basic®, you may need to isolate one or more elements from a full path. A path consists of the drive letter, directory name, and filename. Each element of a path is separated by a backslash character (\).
+
+When you need to extract the filename element from a complete path, you need to search for the last backslash character in the path string. To do this, you must first calculate the length of the path. This can be done using the Visual Basic Len function. The Len function returns the number of characters found in the specified string.
+
+When you know the actual length of the path string, you can check each character, beginning with the last character in the path string, to see whether it is a backslash character. The Visual Basic Mid$ function can be used to perform this character comparison. When you finally locate the backslash character, you know that this signals the beginning of the filename stored within the path. You then use the Visual Basic Right$ function to extract the filename from the longer string.
+
+This same technique can be used to extract the directory name from the path. In this case, however, the comparison routine starts from the beginning of the path string.
+
+Example Program
+This program shows how to extract both the directory name and the filename from a path. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a second Text Box control to Form1. Text2 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim PathName As String
+
+    PathName = "c:\eudora\wintips.exe"
+    Text1.Text = ExtractFileName(PathName)
+    Text2.Text = ExtractDirName(PathName)
+End Sub
+
+Create a new function called ExtractDirName. Add the following code to this function: 
+Function ExtractDirName(PathName As String) As String
+    Dim X As Integer
+        For X = Len(PathName) To 1 Step -1
+            If Mid$(PathName, X, 1) = "\" Then Exit For
+        Next
+        ExtractDirName = Left$(PathName, X - 1)
+End Function
+
+Create a new function called ExtractFileName. Add the following code to this function: 
+Function ExtractFileName(PathName As String) As String
+    Dim X As Integer
+    For X = Len(PathName) To 1 Step -1
+        If Mid$(PathName, X, 1) = "\" Then Exit For
+    Next
+    ExtractFileName = Right$(PathName, Len(PathName) - X)
+End Function
+
+Run the example program by pressing F5. Click the Command Button control. The filename appears in the first Text Box control, and the directory name appears in the second Text Box control

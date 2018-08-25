@@ -1,0 +1,41 @@
+Tip 11: Determining a Program's Name and Path
+Created: March 1, 1995
+
+Abstract
+You can determine the name of your application as well as the directory where the program is stored on your disk. This is useful when a user has renamed your application or when you want to determine where your application can store its own temporary files.
+
+How to Determine a Program Name or Path
+You can find out the name of your application by retrieving the EXEName property of the App object. In the same manner, the Path property of App can be used to retrieve the directory your program is stored in. App can only be used while the application is running and only if that application is the currently active program.
+
+You can use the App.EXEName property to determine if a user has renamed your application program. App.EXEName can also be used to provide information needed to call some Windows® application programming interface (API) functions.
+
+The App.Path property can be used by applications that store configuration information within their own .EXE files. If you modify such an application, and need to save a new copy of the program to disk, the App.EXEName and App.Path can tell you where to save the new version of your application.
+
+Example Program
+The program below shows how you can retrieve an application's filename and path in Visual Basic®. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add a command button control to Form1. Command1 is created by default. Set the command button's Caption property to "Execute Notepad". 
+Add the following code to the Click event of the Command1 command button: 
+Sub Command1_Click()
+        ProgName$ = "C:\WINDOWS\NOTEPAD.EXE AUTOEXEC.BAT"
+        x = Shell(ProgName$, 2)
+        AppActivate "Notepad - AUTOEXEC.BAT"
+    SendKeys "%{ }X", -1    
+        p$ = App.Path
+        j$ = App.EXEName
+        SendKeys "%{ }C", -1    
+        AppActivate "Form1"
+        Text1.Text = p$ & j$
+End Sub
+
+Directly below the Command1 command button, draw a Text Box on Form1. Text1 is created by default. Set the text box's Text property to a NULL (empty) string. 
+Add a second command button control to Form1. Command2 is created by default. Set the command button's Caption property to "Exit". 
+Add the following code to the Click event of the Command2 command button: 
+Sub Command2_Click()
+    End
+End Sub
+
+Save the project to disk using the filename TEXT.MAK. Create an .EXE program file in the root directory of drive C (C:\TEST.EXE). 
+To execute this program, exit Visual Basic. Next, from Program Manager, click on File/Run. Type the name of the program to run as C:\TEST.EXE and click the OK command button. 
+After Windows launches TEST.EXE, you can click the "Execute Notepad" command button. The Windows Notepad application will be executed and will load your AUTOEXEC.BAT file. Next, TEST sends the ALT+SPACE+X keystroke combination to Notepad to maximize that application's window. TEST's program name and path are then stored in two string variables and, when the ALT+SPACE+C keystrokes are sent to Notepad to terminate that program, TEST displays the full path of TEST.EXE in its Text Box. Clicking the "Exit" command button terminates the demonstration program.

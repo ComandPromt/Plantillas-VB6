@@ -1,0 +1,65 @@
+Tip 15: Creating a List of Directories Stored on a Disk
+Created: March 1, 1995
+
+Abstract
+Visual Basic® has three file system controls: the Drive List Box, the Directory List Box, and the File List Box. Using these three controls, a Visual Basic application can access every file stored on a floppy, fixed, or network disk drive.
+
+Finding All Directories on a Disk Drive
+You can use the Visual Basic® file system controls to navigate up and down the directory structure of a disk. This means that you can determine the name of each directory, saving the name in a List Box or dynamic array, if desired. Finding the directory names would be useful, for example, in a file-finding application.
+
+When a Visual Basic program displays a Directory List Box control on the screen, the user can see a list of the current directories in the selected path. The user can select a directory by double-clicking on its name. However, the default directory is not automatically changed to the selected directory by the Directory List Box control. Your application must retrieve the selected directory's name from the Path property of the Directory List Box and call a ChDir function to physically change directories on the disk. When using the Drive List Box and the File List Box controls, your application must also physically change to the selected drive and filename, respectively.
+
+The Path property of a Directory List Box always returns the name of the currently selected directory. When you change the Path property, the PathChange event is automatically triggered. This event updates the Directory List Box to show the new directories in the selected directory.
+
+Example Program
+The following program shows how you can determine the names of all directories stored on a hard drive. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Place a ListBox, a DirListBox, and a CommandButton on the form. 
+Add the following code to the Form_Load event for Form1: 
+Sub FindDirectories()
+    
+    Dim i As Integer
+    On Error Resume Next
+    
+    For i = 0 To Dir1.ListCount - 1
+        Dir1.Path = Dir1.List(i)
+        List1.AddItem Dir1.List(Dir1.ListIndex)
+        FindDirectories
+    Next i
+    
+    Dir1.Path = Dir1.Path & "\.."
+   
+    DoEvents
+    
+
+End Sub
+
+Private Sub Command1_Click()
+
+    Dir1.Path = "c:\"
+
+    FindDirectories
+
+End Sub
+
+Add a Directory List Box control to Form1. Dir1 is created by default. Set its Visible property to False. 
+Add the following code to the Change event for the Dir1 Directory List Box control: 
+Sub Form_Load()
+    Next_Dir = 0
+    Temp_Dir = "C:\"
+    Dir1.Path = Temp_Dir
+    Temp_Dir = List2.List(Next_Dir)    
+Get_Next:
+    Next_Dir = Next_Dir + 1
+    Dir1.Path = Temp_Dir
+    Temp_Dir = List2.List(Next_Dir)    
+    If List2.ListCount - 1 = Next_Dir Then
+        Exit Sub
+    End If
+    GoTo Get_Next
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. Set its Visible property to False and its MultiSelect property to 1-Simple. 
+Add a second List Box control to Form1. List2 is created by default. Set its Visible property to True, its MultiSelect property to 1-Simple, and its Sorted property to True. 
+When you execute this program, Visual Basic will search for all subdirectories on the drive C. This may take a few moments to do, depending on the size of the hard disk and the number of directories the application finds. The name of each subdirectory will be displayed in the List Box, in alphabetical order.

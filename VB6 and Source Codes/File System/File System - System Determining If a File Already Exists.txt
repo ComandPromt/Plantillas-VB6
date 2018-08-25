@@ -1,0 +1,67 @@
+Tip 1: Determining If a File Already Exists
+Created: March 1, 1995
+
+Abstract
+The Windows® function OpenFile provides a reliable method of determining whether or not a specific filename or path name exists.
+
+The information in this article applies to: 
+
+Standard and Professional Editions of Microsoft® Visual Basic® for Windows, versions 2.0 and 3.0. 
+Microsoft Visual Basic programming system for Windows, version 1.0. 
+OpenFile Function
+The OpenFile function can be used to perform several file operations, such as creating a new file, deleting a file, or determining if a file exists. To declare this function within your program, include the following Declare statement in the Global Module or General Declarations section of a Visual Basic® for Windows® form:
+
+Declare Function OpenFile% Lib "Kernel" (ByVal lpFileName$, lpReOpenBuff
+    As OFSTRUCT, ByVal wStyle%)
+
+Note that this Declare statement must be typed as one single line of text.
+
+The OpenFile function takes the following arguments, described as follows:
+
+Argument Description 
+lpFileName A string containing the name, which may or may not include a path name, to test. 
+lpReOpenBuff An OFSTRUCT structure that will contain information about the file after the OpenFile function has been called. 
+wStyle This combination of one or more flags specifies the type of operation that is to be performed on the file. 
+
+In our demonstration program, we need only specify wStyle as the constant OF_EXIST.
+
+After calling the OpenFile function, an integer value is returned. If a negative number is returned, the nErrCode value in the OFSTRUCT structure can be examined to find out if the file exists already.
+
+Example Program
+The following program demonstrates how to determine if a file already exists. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Global Module: 
+'OFSTRUCT structure used by the OpenFile API function
+Type OFSTRUCT            '136 bytes in length
+    cBytes As String * 1
+    fFixedDisk As String * 1
+    nErrCode As Integer
+    reserved As String * 4
+    szPathName As String * 128
+End Type
+
+Within the Global Declaration section of Form1, add the following Windows function declaration (note that this Declare statement must be typed as one single line of text): 
+Declare Function OpenFile% Lib "Kernel" (ByVal lpFileName$, lpReOpenBuff As OFSTRUCT, ByVal wStyle%)
+
+Next, add the following lines of code to the Global Declaration section of Form1: 
+Dim wStyle As Integer
+Dim Buffer As OFSTRUCT
+Dim IsThere As Integer
+Dim TestFile As String
+
+Add the following code to the Form_Load() event procedure: 
+Sub Form_Load()
+    TestFile = "c:\testfile.dat"
+    IsThere = OpenFile(TestFile, Buffer, OF_EXIST)
+    If  IsThere < 0 Then
+        GoTo CheckForError
+        Else
+        Debug.Print "This file already exists"
+    End If
+    CheckForError:
+    IsThere = Buffer.nErrCode
+    If  IsThere = 3 Then
+        Debug.Print "Pathname not found"
+    End If
+

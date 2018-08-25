@@ -1,0 +1,72 @@
+This example displays the available video and audio codecs for the variable bit rate (VBR) modes you select, and the available audio formats for the audio codec you select. You will need a form with five combo boxes (cboVidVBR, cboVideoCodec, cboAudVBR, cboAudioCodec, and cboAudioFormat). 
+
+' Declare global variables.
+  Dim Pro As WMEncProfile2
+  Dim x As Integer, y As Integer
+
+Private Sub Form_Load()
+  ' Create a WMEncProfile2 object.
+    Set Pro = New WMEncProfile2
+    
+  ' Set the content type to audio and video.
+    Pro.ContentType = 17
+    
+  ' Populate the cboVidVBR and cboAudVBR combo boxes with
+  ' members of the WMENC_PROFILE_VBR_MODE enumeration type.
+    cboVidVBR.AddItem "WMENC_PVM_NONE (CBR)", 0
+    cboVidVBR.AddItem "WMENC_PVM_PEAK (Peak VBR)", 1
+    cboVidVBR.AddItem "WMENC_PVM_UNCONSTRAINED (Quality VBR)", 2
+    cboVidVBR.AddItem "WMENC_PVM_BITRATE_BASED (Bit Rate VBR)", 3
+    cboAudVBR.AddItem "WMENC_PVM_NONE (CBR)", 0
+    cboAudVBR.AddItem "WMENC_PVM_PEAK (Peak VBR)", 1
+    cboAudVBR.AddItem "WMENC_PVM_UNCONSTRAINED (Quality VBR)", 2
+    cboAudVBR.AddItem "WMENC_PVM_BITRATE_BASED (Bit Rate VBR)", 3
+End Sub
+
+' This procedure displays the video codecs that are available for
+' the selected video VBR mode.
+Private Sub cboVidVBR_Click()
+  ' Set the video VBRMode to the selected WMENC_PROFILE_VBR_MODE enumeration type.
+    Pro.VBRMode(WMENC_VIDEO, 0) = cboVidVBR.ListIndex + 1
+  
+  ' Populate the cboVideoCodec combo box with the names of the
+  ' available video codecs.
+    cboVideoCodec.Clear
+    Dim vVidCodecName As Variant, lVid4cc  As Long
+    For x = 0 To Pro.VideoCodecCount - 1
+        lVid4cc = Pro.EnumVideoCodec(x, vVidCodecName)
+        cboVideoCodec.AddItem vVidCodecName
+    Next x
+End Sub
+
+' This procedure displays the audio codecs that are available for
+' the selected audio VBR mode.
+Private Sub cboAudVBR_Click()
+  ' Set the audio VBRMode to the selected WMENC_PROFILE_VBR_MODE enumeration type.
+    Pro.VBRMode(WMENC_AUDIO, 0) = cboAudVBR.ListIndex + 1
+    
+  ' Populate the cboAudioCodec combo box with the names of the
+  ' available audio codecs.
+    cboAudioCodec.Clear
+    cboAudioFormat.Clear
+    Dim vAudCodecName As Variant, lAud4cc  As Long
+    For x = 0 To Pro.AudioCodecCount - 1
+        lAud4cc = Pro.EnumAudioCodec(x, vAudCodecName)
+        cboAudioCodec.AddItem vAudCodecName
+    Next x
+End Sub
+
+' This procedure displays the audio formats that are available for
+' the selected audio codec.
+Private Sub cboAudioCodec_Click()
+  ' Populate the cboAudioFormat combo box with the names of the
+  ' available audio formats.
+    cboAudioFormat.Clear
+    Dim vAudFormatName As Variant, lAudBRate As Long
+    Dim SRate As Variant, Channels As Variant, BperSample As Variant
+    For y = 0 To Pro.AudioFormatCount(cboAudioCodec.ListIndex) - 1
+        lAudBRate = Pro.EnumAudioFormat(cboAudioCodec.ListIndex, y, vAudFormatName, SRate, Channels, BperSample)
+        cboAudioFormat.AddItem vAudFormatName
+    Next y
+End Sub
+

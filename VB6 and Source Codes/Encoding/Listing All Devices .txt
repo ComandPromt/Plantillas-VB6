@@ -1,0 +1,74 @@
+This example shows how to enumerate the audio and video sources on a computer, including external digital devices, and populate combo boxes with their resource names. You will need a form with three combo boxes (cboAudioSource, cboVideoSource, and cboDevices).
+
+Private Sub Form_Load()
+' Declare objects and variables.
+  Dim Encoder As WMEncoder
+  Dim SrcPlugMgr As IWMEncSourcePluginInfoManager
+  Dim DCPlugMgr As IWMEncDeviceControlPluginInfoManager
+  Dim PlugInfo As IWMEncPluginInfo
+  Dim iPindex As Integer, iRindex As Integer
+  Dim x As Integer, y As Integer, z As Integer
+
+  Set Encoder = New WMEncoder
+  Set SrcPlugMgr = Encoder.SourcePluginInfoManager
+  Set DCPlugMgr = Encoder.DeviceControlPluginInfoManager
+
+' Loop through all the audio and video devices on the system.
+  For iPindex = 0 To SrcPlugMgr.Count - 1
+
+  ' Set the IWMEncPluginInfo object to the current plug-in.
+    Set PlugInfo = SrcPlugMgr.Item(iPindex)
+
+  ' Find the device plug-ins that support resources.
+    If PlugInfo.SchemeType = "DEVICE" And _
+    PlugInfo.Resources = True Then
+
+      ' Loop through the resources in the current plug-in.
+        For iRindex = 0 To PlugInfo.Count - 1
+
+          ' Add audio resources to the audio combo box.
+            If PlugInfo.MediaType = 1 Then
+                cboAudioSource.AddItem PlugInfo.Item(iRindex), x
+                x = x + 1
+            End If
+
+          ' Add video resources to the video combo box.
+            If PlugInfo.MediaType = 2 Then
+                cboVideoSource.AddItem PlugInfo.Item(iRindex), y
+                y = y + 1
+            End If
+
+          ' Add devices that support both audio and video resources to
+          ' the audio and video combo boxes.
+            If PlugInfo.MediaType = 3 Then
+                cboAudioSource.AddItem PlugInfo.Item(iRindex), x
+                cboVideoSource.AddItem PlugInfo.Item(iRindex), y
+                x = x + 1
+                y = y + 1
+            End If
+        Next
+    End If
+  Next
+
+' This section shows how to enumerate digital devices such as DV cameras
+' and VTRs.
+' Loop through the connected digital devices on the system.
+  For iPindex = 0 To DCPlugMgr.Count - 1
+    
+  ' Set the IWMEncPluginInfo object to the current plug-in.
+    Set PlugInfo = DCPlugMgr.Item(iPindex)
+    
+  ' Find the device plug-ins that support resources.
+    If PlugInfo.SchemeType = "DeviceControl" And _
+    PlugInfo.Resources = True Then
+        
+      ' Loop through the resources in the current plug-in
+      ' and add them to the cboDevices combo box.
+        For iRindex = 0 To PlugInfo.Count - 1
+            cboDevices.AddItem PlugInfo.Item(iRindex), z
+            z = z + 1
+        Next
+    End If
+  Next
+End Sub
+

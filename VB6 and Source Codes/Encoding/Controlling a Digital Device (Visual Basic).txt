@@ -1,0 +1,169 @@
+Controlling a Digital Device (Visual Basic)
+This example shows how to: 
+
+Use a digital device as a source. 
+Use VCR-style buttons to forward, rewind, play, and stop the tape. 
+View the device output as you cue the tape before encoding. 
+Use events to monitor changes in state. 
+This example uses a pre-preview to display the stream before encoding begins, and a preview of the stream during encoding. 
+
+To use this example, you need: 
+
+A form (Form1). 
+A frame (PreviewFrame). 
+Four VCR-style buttons (btnREW, btnPLAY, btnFF, and btnSTOP). 
+A button to start the encoding process (btnEncode). 
+A label (Label1) for displaying the state of the device. 
+In addition to the Windows Media Encoder reference, you must also add the Windows Media Encoder Device Control and the Windows Media Encoder Preview Control references to your project.
+
+It is also assumed that you have a digital device connected to the computer. The Windows Media Encoder SDK supports digital video (DV) devices connected to an IEEE 1394 digital video port, and video tape recorder (VTR) devices connected through a COM port using the Sony RS422 protocol. 
+
+Option Explicit
+
+'Declare variables.
+Dim WithEvents Encoder As WMEncoder
+Dim SrcGrpColl As IWMEncSourceGroupCollection
+Dim SrcGrp As IWMEncSourceGroup2
+Dim SrcAud As IWMEncSource
+Dim SrcVid As IWMEncVideoSource
+Dim ProColl As IWMEncProfileCollection
+Dim Pro As IWMEncProfile
+Dim File As IWMEncFile
+Dim DCPlugMgr As IWMEncDeviceControlPluginInfoManager
+Dim PlugInfo As IWMEncPluginInfo
+Dim DCColl As IWMEncDeviceControlCollection
+Dim DControl As IWMEncDeviceControl
+Dim DCPlugin As IWMEncDeviceControlPlugin
+Dim DVColl_Preview As IWMEncDataViewCollection
+Dim Preview As WMEncDataView
+Dim PrePreview As WMEncPrepreview
+Dim lPreviewStream As Integer
+Dim sDeviceString As String
+Dim i As Integer, j As Integer
+
+Private Sub Form_Load()
+' Create a WMEncoder object.
+  Set Encoder = New WMEncoder
+
+' Retrieve a device control plug-in info manager object from WMEncoder.
+  Set DCPlugMgr = Encoder.DeviceControlPluginInfoManager
+
+' Loop through the connected digital devices on the system such as DV cameras and VTRs.
+  For i = 0 To DCPlugMgr.Count - 1
+
+  ' Set the IWMEncPluginInfo object to the current plug-in.
+    Set PlugInfo = DCPlugMgr.Item(i)
+    
+  ' Find the first device plug-in that supports resources.
+    If PlugInfo.SchemeType = "DeviceControl" And PlugInfo.Resources = True Then 
+        sDeviceString = PlugInfo.Item(0)
+        Exit For
+    End If
+
+  Next i
+  
+' Add the device as the audio source and video source.
+  Set SrcGrpColl = Encoder.SourceGroupCollection
+  Set SrcGrp = SrcGrpColl.Add("SG_1")
+  Set SrcAud = SrcGrp.AddSource(WMENC_AUDIO)
+  Set SrcVid = SrcGrp.AddSource(WMENC_VIDEO)
+  SrcAud.SetInput ("Device://" & sDeviceString)
+  SrcVid.SetInput ("Device://" & sDeviceString)
+
+' Encode to a file.
+  Set File = Encoder.File
+  File.LocalFileName = "C:\DeviceOutput.wmv"
+    
+' Select a profile from the collection and set it into the source group.
+  Set ProColl = Encoder.ProfileCollection
+  For i = 0 To ProColl.Count - 1
+    Set Pro = ProColl.Item(i)
+    If (Pro.Name = "Windows Media Video 8 for Local Area Network (384 Kbps)") Then
+        SrcGrp.Profile = Pro
+    End If
+  Next i
+    
+' Retrieve the device control collection, then add a device to it.
+  Set DCColl = SrcGrp.DeviceControlCollection
+  Set DControl = DCColl.Add
+  DControl.SetInput ("DeviceControl://" & sDeviceString)
+
+  ' Initialize the encoding session.
+  Encoder.PrepareToEncode True
+
+  ' Get the plug-in from the device.
+  Set DCPlugin = DControl.GetDeviceControlPlugin
+
+  ' Get the source plug-in for the pre-preview and then display it in the frame.
+  Set PrePreview = SrcVid.GetSourcePlugin
+  PrePreview.SetCaptureParent PreviewFrame.hWnd
+
+  ' Retrieve the preview collection and create a preview object.
+  Set DVColl_Preview = SrcVid.PreviewCollection
+  Set Preview = New WMEncDataView
+
+End Sub
+Private Sub btnEncode_Click()
+  ' Specify the stream to preview.
+  lPreviewStream = DVColl_Preview.Add(Preview)
+  
+  ' Disable the VCR buttons.
+  btnREW.Enabled = False
+  btnPLAY.Enabled = False
+  btnFF.Enabled = False
+  btnSTOP.Enabled = False
+    
+  ' Start encoding.
+  Encoder.Start
+
+  ' Display the preview in PreviewFrame.
+  Preview.SetViewProperties lPreviewStream, PreviewFrame.hWnd
+  Preview.StartView (lPreviewStream)
+    
+End Sub
+Private Sub btnREW_Click()
+  ' Rewind.
+  DCPlugin.SetOperation (WMENC_DEVICE_REW)
+End Sub
+Private Sub btnPLAY_Click()
+  ' Play.
+  DCPlugin.SetOperation (WMENC_DEVICE_PLAY)
+End Sub
+Private Sub btnFF_Click()
+  ' Forward.
+  DCPlugin.SetOperation (WMENC_DEVICE_FF)
+End Sub
+Private Sub btnSTOP_Click()
+  ' Stop.
+  DCPlugin.SetOperation (WMENC_DEVICE_STOP)
+End Sub
+
+Private Sub Encoder_OnDeviceControlStateChange(ByVal EnumState As WMEncoderLib.WMENC_DEVICECONTROL_STATE, ByVal sName As String, ByVal sScheme As String)
+' When the device state changes, display the state in Label1.
+  Select Case EnumState:
+        Case WMENC_DEVICECONTROL_PLAYING
+        Label1.Caption = "Playing"
+        
+        Case WMENC_DEVICECONTROL_STOPPED
+        Label1.Caption = "Stopped"
+        
+        Case WMENC_DEVICECONTROL_FASTFORWARDING
+        Label1.Caption = "Forwarding"
+        
+        Case WMENC_DEVICECONTROL_REWINDING
+        Label1.Caption = "Rewinding"
+        
+        Case WMENC_DEVICECONTROL_UNSTABLE
+        Label1.Caption = "Unstable"
+        
+        Case WMENC_DEVICECONTROL_EJECT
+        Label1.Caption = "Eject"
+        
+        Case WMENC_DEVICECONTROL_ENDOFTAPE
+        Label1.Caption = "End of tape"
+        bDone = True
+        
+    End Select
+    
+ End Sub
+

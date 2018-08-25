@@ -1,0 +1,109 @@
+Tip 10: Formatting a Disk
+Created: March 1, 1995
+
+Abstract
+This article explains how you can format a diskette in a floppy drive from within a Visual Basic® application. Microsoft® Windows® does not provide any functions to format a diskette, but it can be done by using the WinExec application programming interface (API) function.
+
+Formatting Disks
+The Windows® WinExec application programming interface (API) function can execute any Windows-based or non-Windows-based program. To call the WinExec function, you must first add its Declare statement to the Global Declarations section of your Visual Basic® application. Following is the WinExec function declaration:
+
+Declare Function WinExec Lib "Kernel" (ByVal lpCmdFile As String, ByVal 
+   fuCmdShow As Integer) As Integer
+
+(Note that this Declare statement must be typed as a single line of text.)
+
+To execute a program, you would call the WinExec function with the statement:
+
+x = WinExec(lpCmdFile, fuCmdShow)
+
+specifying the following parameters:
+
+lpCmdFile   \A string containing the name of the application to execute
+fuCmdShow   \An integer value that tells WinExec how to show the application 
+            \when it is executed. This may be one of the following constants:
+   SW_HIDE      \The window is hidden and activation passes to another window.
+   SW_MINIMIZE  \The window is minimized and activation passes to another 
+                \window.
+   SW_RESTORE   \The window is activated and displayed in its original size and 
+                \at its original location.
+   SW_SHOW      \The window is activated and displayed in its current size and 
+                \at its current location.
+   SW_SHOWMAXIMIZED   \The window is maximized and activated.
+   SW_SHOWMINIMIZED   \The window is minimized and activated.
+   SW_SHOWMINNOACTIVE  \The window is minimized but the active window is not 
+                       \changed.
+   SW_SHOWNA    \The window is displayed at its current location in its current 
+                \size but the active window is not changed.
+   SW_SHOWNOACTIVATE   \The window is displayed at its most recent location in 
+                       \its most recent size but the active window is not 
+                       \changed.
+   SW_SHOWNORMAL       \The window is activated and displayed in its original 
+                       \size and at its original location.
+
+After the WinExec function is called, it returns an integer value greater than 32 if the application was successful. Otherwise, one of the following error codes is returned:
+
+Error Code Description 
+0 Out of memory 
+2 File not found 
+3 Path not found 
+5 Sharing/protection error 
+6 Each task requires separate data segments 
+10 Windows version is incorrect 
+11 Not valid .EXE file 
+12 Cannot execute OS/2 application 
+13 Cannot execute DOS 4.0 application 
+14 EXE type is unknown 
+15 Protected memory mode not supported by Windows 
+16 Cannot load another instance of .EXE file 
+17 Cannot load second instance in large-frame EMS mode 
+18 Cannot load protected-mode application in real mode 
+
+The lpCmdFile argument must be a string containing the name of the application program you want to execute, as well as any command line parameters required by the application program itself. If the argument does not include the full path, Windows will search for the application in the following order: 
+
+The current directory 
+The Windows directory 
+The Windows System directory 
+The directory that contains the current task's application file 
+All directories in the PATH environment variable 
+Network directories 
+As stated earlier, the WinExec function can execute any Windows-based or MS-DOS®–based program. This includes .EXE, .COM, and .BAT files. In addition, WinExec can also be used to execute Windows screen savers (files that have the .SRC file extension) and program information files (files that have the .PIF file extension). Windows is shipped with several .PIF files that you can use in conjunction with the WinExec function. One of these files is called DOSPRMPT.PIF. This particular .PIF file contains information that Windows needs to run an MS-DOS program. The .PIF file tells Windows, for example, how much memory should be set aside to run the MS-DOS program.
+
+We can tell Windows to execute the FORMAT command in Visual Basic with the following statement:
+
+x = WinExec("dosprmpt.pif  /c c:\dos\format b: < c:\response.tmp", SW_HIDE)
+
+Each time MS-DOS formats a diskette, it asks you to press the ENTER key to initiate the procedure. After the disk has been formatted, the program asks you to type a Volume Label name and/or press the ENTER key. Next, you are asked if you wish to format another diskette, to which you respond with a "y" or "n" key.
+
+This problem is easily solved. To respond to the prompts from the FORMAT command, we first need to create a file called RESPONSE.TMP. This file contains the keystrokes we want to pass on to the FORMAT command, just as if we had typed them at the keyboard ourselves. DOS's redirection capabilities will allow us to pass the contents of the RESPONSE.TMP file to the FORMAT.COM program.
+
+Example Program
+The following program formats a floppy disk in drive B. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+In the General Declarations section of Form1, add the following three statements: 
+Const Resp_File = "c:\response.tmp"
+Const SW_HIDE = &H0
+Dim ActiveApps As Integer
+
+In addition, add the following two Declare statements (note that each statement should be typed as a single line of text): 
+Declare Function WinExec Lib "Kernel" (ByVal lpCmdLine As String, ByVal nCmdShow 
+   As Integer) As Integer
+Declare Function GetNumTasks Lib "Kernel" () As Integer
+
+Add a command button control to Form1. Command1 is created by default. Set its Caption property to "Format Disk". 
+Add the following code to the Click event of Command1: 
+Sub Command1_Click()
+    Cmd = Chr(13) & Chr(10) & Chr(13) & Chr(10) & "N" & Chr(13) & Chr(10)
+    FileNum = FreeFile
+    Open Resp_File For Output As #FileNum
+    Print #FileNum, Cmd
+    Close #FileNum    
+    ActiveApps = GetNumTasks()
+    X = WinExec("dosprmpt.pif /c c:\dos\format b: <c:\response.tmp", SW_HIDE)    
+    Do While GetNumTasks() <> ActiveApps
+        X = DoEvents()
+    Loop    
+    Kill Resp_File
+End Sub
+
+Execute this demonstration program by pressing the F5 function key or by selecting Run from the Visual Basic menu. Insert a floppy diskette into drive B and click the "Format Disk" command button. Visual Basic will format the diskette in drive B and return control to the demonstration program.

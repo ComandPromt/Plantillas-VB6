@@ -1,0 +1,49 @@
+Tip 139: Retrieving a Disk's Volume Label
+July 1, 1995
+
+Abstract
+Each time you format a disk in MS-DOS®, you are given the opportunity to assign a unique name (called a volume label) to that disk. This article explains how to retrieve a disk's volume label in a Microsoft® Visual Basic® application.
+
+Using Dir$ Function to Retrieve Only Specific File Names
+The Dir$ function in Microsoft® Visual Basic® can retrieve the name of any file stored on disk. To search for a specific file on disk, you pass the file's name to the Dir$ function as:
+
+FileName = Dir$("C:\AUTOEXEC.BAT")
+
+If the AUTOEXEC.BAT file is not found on drive C, the Dir$ function will return an empty string; otherwise, the file's name is returned. You can, of course, also search for files by specifying a wildcard file name, such as AUT*.*, to find the name of each file that begins with the AUT prefix characters stored on disk.
+
+When you create a new file under the MS-DOS® or Microsoft Windows® operating systems, that file is assigned a file attribute. A file may have one or more of the following attributes assigned to it.
+
+Normal 0 Data can be read from or written to the file. 
+Read Only 1 Data can be read from the file but not written to the file. 
+Hidden 2 The file cannot be seen in the directory list. 
+System 4 The file is a system file and is used only by the operating system. 
+Volume Label 8 The special name given to the disk. Only one volume label can be assigned to each disk. 
+Directory 16 The file is a subdirectory. 
+Archive 32 The file has been modified since backup was last performed. 
+
+You can use any of these numeric file attribute values in conjunction with the Dir$ function to retrieve specific types of files.
+
+In the example program below, you want to display the volume label name for drive C. To do this, you run the statement:
+
+TempBuffer = Dir$("C:*.*", ATTR_VOLUME)
+
+This tells Dir$ that you want to retrieve the file that has its volume label attribute set. Because only one file on each disk can have a volume label at any given time, you need to run this statement only once to retrieve the disk's name.
+
+Example Program
+This program shows how to retrieve a disk's volume label. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant to the General Declarations section of Form1: 
+Const ATTR_VOLUME = &H8
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim TempBuffer As String
+    TempBuffer = Dir$("C:*.*",ATTR_VOLUME)
+    Text1.Text = TempBuffer
+End Sub
+
+Run the example program by pressing F5. Click the command button. The program will display the volume label for drive C in the Text Box control, if such a file does indeed exist.
+

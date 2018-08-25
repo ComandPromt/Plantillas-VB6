@@ -1,0 +1,70 @@
+Tip 70: Creating Temporary Files
+May 1, 1995
+
+Abstract
+When developing an application in Visual Basic®, you may need to create a temporary file on disk. This article explains how to use the Windows® application programming interface (API) GetTempFileName function to create temporary files.
+
+Managing Temporary Files
+The Windows® application programming interface (API) GetTempFileName function can be used to create a temporary file on a floppy or hard disk. Files created by this function are not automatically deleted when your Visual Basic® application terminates—you must do this using Visual Basic's Kill statement.
+
+To create a temporary file in Visual Basic, you use the GetTempFileName function. The Declare statement for this function is as follows (note that it must be typed as a single line of code):
+
+Declare Function GetTempFileName Lib "Kernel" (ByVal cDriveLetter As Integer, 
+   ByVal lpPrefixString As String, ByVal wUnique As Integer, ByVal 
+   lpTempFileName As String) As Integer
+
+GetTempFileName requires four arguments, as follows:
+
+cDriveLetter An integer value containing the disk drive letter. 
+lpPrefixString A string containing the filename prefix. This is a standard DOS filename, except that it should be less than eight characters long, because it will be padded with the wUnique value when the file is created. 
+wUnique An integer value containing the number to use to append to the eight-character filename prefix. If a value of zero is specified, the function generates its own random number from the system's current time stamp. 
+lpTempFileName A string that will hold the name of the newly created temporary file. This string should be initialized to a length of at least 144 characters. 
+
+The GetTempFileName function will create the temporary file on the first hard disk or on the disk specified by the TEMP environment variable. You can set the TF_FORCEDRIVE bit of the cDriveLetter argument to tell the GetTempFileName function to create the file in the current directory of the specified disk. In all other cases, the temporary file will be created on the disk specified in the cDriveLetter argument.
+
+After you call the GetTempFileName function, the file will have been created on the specified disk. The lpTempFileName buffer will contain the file's complete path, terminated by the number specified by the wUnique argument.
+
+Once you have successfully created the temporary file from within your application, you can isolate the actual filename by issuing these two statements:
+
+TempFileName = Left(TempFileName, InStr(TempFileName, Chr(0)) - 1)
+TempFileName = Trim(Right(TempFileName, Len(TempFileName) - 3))
+
+The first statement uses the InStr function to strip off the last character returned in the buffer used to hold the filename. This byte is the value used in the wUnique argument. The second statement removes the preceding "C:\" drive specifier characters from the filename.
+
+You should be aware that temporary files created by the GetTempFileName function remain on the disk until you actually delete them.
+
+Example Program
+The following program shows how you can create temporary files from within your Visual Basic application. Each time you execute this program, a new temporary file is created. Be sure to delete these temporary files from your disk when finished with this program. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Declare Function GetTempFileName Lib "Kernel" (ByVal cDriveLetter As Integer, 
+   ByVal lpPrefixString As String, ByVal wUnique As Integer, ByVal 
+   lpTempFileName As String) As Integer
+Const TF_FORCEDRIVE = &H80
+
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+    Dim X As Integer
+    Dim Drive As Integer
+    Dim Prefix As String
+    Dim Unique As Integer
+    Dim TempFileName As String
+    Dim PathName As String
+    
+    TempFileName = Space$(144)
+    NewFileName = Space$(144)
+    
+    PathName = "C:\WINDOWS"
+    Drive = Asc(UCase(Left(PathName, 1))) + TF_FORCEDRIVE
+    Prefix = "DATA"
+    Unique = 0
+    
+    ChDir PathName
+    X = GetTempFileName(Drive, Prefix, Unique, TempFileName)
+    TempFileName = Left(TempFileName, InStr(TempFileName, Chr(0)) - 1)
+    TempFileName = Trim(Right(TempFileName, Len(TempFileName) - 3))
+    Text1.Text = TempFileName
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. 

@@ -1,0 +1,75 @@
+Sub Main()
+' Create a WMEncoder object.
+  Dim Encoder As WMEncoder
+  Set Encoder = New WMEncoder
+
+' Retrieve the source group collection and add a source group. 
+  Dim SrcGrpColl As IWMEncSourceGroupCollection
+  Set SrcGrpColl = Encoder.SourceGroupCollection
+  Dim SrcGrp As IWMEncSourceGroup2
+  Set SrcGrp = SrcGrpColl.Add("SG_1")
+
+' Add a video and audio source to the source group.
+  Dim SrcVid As IWMEncVideoSource2
+  Dim SrcAud As IWMEncAudioSource
+  Set SrcVid = SrcGrp.AddSource(WMENC_VIDEO)
+  Set SrcAud = SrcGrp.AddSource(WMENC_AUDIO)
+
+' Identify the source files to encode.
+  SrcVid.SetInput "C:\InputFile.mpg"
+  SrcAud.SetInput "C:\InputFile.mpg"
+
+' Choose a profile from the collection.
+  Dim ProColl As IWMEncProfileCollection
+  Dim Pro As IWMEncProfile
+  Dim i As Integer
+  Dim lLength As Long
+
+  Set ProColl = Encoder.ProfileCollection
+  lLength = ProColl.Count
+
+  For i = 0 To lLength - 1
+    Set Pro = ProColl.Item(i)
+    If Pro.Name = "Windows Media Video 8 for Local Area Network (384 Kbps)" Then
+        SrcGrp.Profile = Pro
+        Exit For
+    End If
+  Next
+
+' Fill in the description object members.
+  Dim Descr As IWMEncDisplayInfo
+  Set Descr = Encoder.DisplayInfo
+  Descr.Author = "Author name"
+  Descr.Copyright = "Copyright information"
+  Descr.Description = "Text description of encoded content"
+  Descr.Rating = "Rating information"
+  Descr.Title = "Title of encoded content"
+
+' Add an attribute to the collection.
+  Dim Attr As IWMEncAttributes
+  Set Attr = Encoder.Attributes
+  Attr.Add "URL", "IP address"
+
+' Specify a file object in which to save encoded content.
+  Dim File As IWMEncFile
+  Set File = Encoder.File
+  File.LocalFileName = "C:\OutputFile.wmv"
+
+' Crop 2 pixels from each edge of the video image.
+  SrcVid.CroppingBottomMargin = 2
+  SrcVid.CroppingTopMargin = 2
+  SrcVid.CroppingLeftMargin = 2
+  SrcVid.CroppingRightMargin = 2
+
+' Start the encoding process.
+  Encoder.Start
+
+' Wait until the encoding process stops before exiting the application.
+' You can do this by using the WMEncoder object to create an event sink.
+
+' For this example, simply monitor the size of the output file and
+' use a message box to indicate when to close the application.
+  MsgBox ("Click OK when encoding has stopped.")
+
+End Sub
+

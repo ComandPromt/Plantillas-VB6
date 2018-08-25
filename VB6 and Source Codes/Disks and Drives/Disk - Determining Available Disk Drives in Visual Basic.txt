@@ -1,0 +1,43 @@
+Tip 124: Determining Available Disk Drives in Visual Basic
+July 1, 1995
+
+Abstract
+The Drive List Box control in Microsoft® Visual Basic® reports the names of each drive connected to the computer system. This article explains another method you can use to determine which disk drives are available.
+
+Retrieving Disk Drives
+The Drive List Box control provided in Microsoft® Visual Basic® displays a list of all available disk drives attached to the computer system. You can, however, retrieve this same information without using a Drive List Box control in your application.
+
+The Visual Basic CurDir$ function identifies your current drive and directory. The syntax for the CurDir$ function is:
+
+X$ = CurDir$
+
+or
+
+CurDir$ = "C:\TEMP"
+
+When the first statement above is executed, CurDir$ retrieves the current path into the X string variable. The second statement above tells CurDir$ to switch to the TEMP directory on drive C. If you attempt to change to a nonexistent drive or directory, the CurDir$ function will generate an error condition.
+
+In the example program, you use a For-Next loop to cycle through all possible disk drives that may be installed in the computer system. Each time through the loop, you ask CurDir$ to change to a new, higher disk drive letter. When the function reports that it cannot switch to the specified drive, you know that you have found the last available disk drive.
+
+Example Program
+This program shows how to retrieve all valid disk drives without using a Drive List Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Text1.Text = ""
+    For X = Asc("C") To Asc("Z")
+        On Error Resume Next
+        c$ = CurDir$(Chr$(X) & ":\")
+        
+        If Err Then
+            Err = 0     'no such drive
+        Else
+            Text1.Text = Text1.Text & " " & Chr$(X)
+        End If
+    Next X
+End Sub
+
+Run the example program by pressing F5. Click the command button. The Text Box control shows which disk drives are installed in the computer system.

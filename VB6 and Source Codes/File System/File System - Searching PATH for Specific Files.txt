@@ -1,0 +1,88 @@
+Tip 153: Searching PATH for Specific Files
+September 5, 1995
+
+Abstract
+The MS-DOS® PATH statement tells the operating system to look for files in specific directories on your disk. This article explains how to find out whether a specific file exists in one of the PATH directories.
+
+Searching for Files
+When you write a program in Microsoft® Visual Basic®, you may need to determine if a specific file exists on a disk drive. At installation time, many software packages modify the MS-DOS® PATH statement in the AUOTOEXEC.BAT file by adding a new directory to the existing PATH directories. This allows an application to find its own system or data files that it requires to run successfully. You can add a search routine to your program to search these directories for an individual file.
+
+The first step is to retrieve the entire path for the specified disk drive. The Visual Basic CurDir$ function returns the current disk drive's path.
+
+Next, you need to call two Microsoft Windows® application programming interface (API) functions, GetWindowsDirectory and GetSystemDirectory. The GetWindowsDirectory function retrieves the path of the Windows directory. Windows stores its initialization files, help files, application files, and other files in this directory. The GetSystemDiectory function retrieves the path of the Windows system directory. Windows stores library, font, drive, and other system files in this directory.
+
+In the example program below, you use all three functions mentioned above to build a string (PathStr) that contains the directory names. The IsFileInPath function simply uses the InStr function to extract each individual directory name from PathStr. Then you use the Dir$ function to determine whether the target file exists in that directory.
+
+Example Program
+This program shows how to determine whether a specific file exists in one of the directories in the PATH statement. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Private Declare Function GetSystemDirectory Lib "kernel32" Alias 
+   "GetSystemDirectoryA" (ByVal lpBuffer As String, ByVal nSize As Long)
+   As Long
+Private Declare Function GetWindowsDirectory Lib "kernel32" Alias 
+   "GetWindowsDirectoryA" (ByVal lpBuffer As String, ByVal nSize As Long)
+   As Long
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim DirStr As String
+    Dim FileToFind As String
+    Dim Flag As Integer
+    
+    FileToFind = Text1.Text
+    Flag = IsFileInPath(FileToFind, DirStr)
+    If Flag Then
+        MsgBox "File Exists in: " & DirStr
+    Else
+        MsgBox "File does not exist in PATH"
+    End If
+End Sub
+
+Create a new function called BuildSearchPath. Add the following code to this function: 
+Sub BuildSearchPath(PathStr As String)
+    Dim RetVal As Integer
+    Dim Buffer As String * 128
+    
+    PathStr = CurDir$
+    RetVal = GetWindowsDirectory(Buffer, 128)
+    PathStr = PathStr & ";" & Mid$(Buffer, 1, RetVal)
+    Buffer = Space(128)
+    RetVal = GetSystemDirectory(Buffer, 128)
+    PathStr = PathStr & ";" & Mid$(Buffer, 1, RetVal)
+    PathStr = PathStr & ";" & App.Path
+    PathStr = PathStr & ";" & Environ$("PATH")
+End Sub
+
+Create a new function called IsFileInPath. Add the following code to this function: 
+Function IsFileInPath(TheFile As String, DirName As String) As Integer
+    Dim Separator As Integer
+    Dim SearchStr As String
+    Dim Results As String
+    
+    Call BuildSearchPath(SearchStr)
+    
+    While Len(SearchStr) <> 0
+        Separator = InStr(SearchStr, ";")
+        If Separator <> 0 Then
+            DirName = Mid$(SearchStr, 1, Separator - 1)
+            SearchStr = Mid$(SearchStr, Separator + 1)
+        Else
+            DirName = SearchStr
+            SearchStr = ""
+        End If
+        
+        Results = Dir$(DirName & "\" & TheFile)
+        If Results <> "" Then
+            IsFileInPath = True
+            Exit Function
+        End If
+    Wend
+    IsFileInPath = False
+End Function
+
+Run the example program by pressing F5. Type the name of a file that you want to find in the Text Box control. Click the command button. A message box will be displayed, telling you whether the file was found in one of the PATH directories.
+

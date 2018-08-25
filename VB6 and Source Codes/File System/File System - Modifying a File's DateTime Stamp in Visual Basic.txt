@@ -1,0 +1,113 @@
+Tip 195: Modifying a File's Date and Time Stamp in Visual Basic 4.0
+December 5, 1995
+
+Abstract
+In a Microsoft® Visual Basic® version 4.0 application, you may need to modify the date and time stamp of a file. This article explains how this can be accomplished.
+
+Setting a New Date and Time Stamp for a File
+To modify a file's date and time stamp in a Microsoft® Visual Basic® version 4.0 application, you must perform several steps. First, you need to call the Microsoft Windows® messaging application programming interface (MAPI) SystemTimeToFileTime function. This function converts a system time to a file time. The system time you want to convert must be stored in a SYSTEMTIME structure. The converted time is then stored in a FILETIME structure.
+
+Next, you must use the Windows MAPI LocalFileTimeToFileTime function. This function converts, as its name suggests, a local file time to a time that is based on the Coordinated Universal Time (UTC). This newly converted time information can then be used in your application by the Windows MAPI SetFileTimeWrite function.
+
+You must retrieve a handle to the file whose date and time stamp you want to modify. This can be done by calling the Windows MAPI CreateFile function. When you have the file's handle, a call to the SetFileTimeWrite function actually updates the date and time stamp of the file.
+
+Example Program
+This program shows how to modify the date and time stamp of a file. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Private Type FILETIME
+    dwLowDateTime As Long
+    dwHighDateTime As Long
+End Type
+
+Private Type SYSTEMTIME
+    wYear As Integer
+    wMonth As Integer
+    wDayOfWeek As Integer
+    wDay As Integer
+    wHour As Integer
+    wMinute As Integer
+    wSecond As Integer
+    wMilliseconds As Integer
+End Type
+
+Private Const GENERIC_WRITE = &H40000000
+Private Const OPEN_EXISTING = 3
+Private Const FILE_SHARE_READ = &H1
+Private Const FILE_SHARE_WRITE = &H2
+
+Private Declare Function SetFileTimeWrite Lib "kernel32" Alias 
+   "SetFileTime" (ByVal hFile As Long, ByVal MullP As Long, 
+   ByVal NullP2 As Long, lpLastWriteTime As FILETIME) As Long
+Private Declare Function SystemTimeToFileTime Lib "kernel32" 
+   (lpSystemTime As SYSTEMTIME, lpFileTime As FILETIME) As Long
+Private Declare Function CreateFile Lib "kernel32" Alias "CreateFileA" 
+   (ByVal lpFileName As String, ByVal dwDesiredAccess As Long, ByVal 
+   dwShareMode As Long, ByVal lpSecurityAttributes As Long, ByVal 
+   dwCreationDisposition As Long, ByVal dwFlagsAndAttributes As Long, 
+   ByVal hTemplateFile As Long) As Long
+Private Declare Function CloseHandle Lib "kernel32" (ByVal hObject As Long) 
+   As Long
+Private Declare Function LocalFileTimeToFileTime Lib "kernel32" 
+   (lpLocalFileTime As FILETIME, lpFileTime As FILETIME) As Long
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim Year As Integer, Month As Integer
+    Dim Day As Integer, Hour As Integer
+    Dim Minute As Integer, Second As Integer
+    Dim TimeStamp As Variant
+    Dim Filename As String
+    Dim X As Integer
+
+    Year = 1996
+    Month = 1
+    Day = 1
+    Hour = 1
+    Minute = 0
+    Second = 0
+
+    TimeStamp = DateSerial(Year, Month, Day) + TimeSerial(Hour, Minute, Second)
+    Filename = "c:\autoexec.bat"
+
+    X = ModifyFileStamp(Filename, TimeStamp)
+    MsgBox "The time and date stamp was updated"
+End Sub
+
+Create a new function called ModifyFileStamp. Add the following code to this function: 
+Function ModifyFileStamp(Filename As String, TimeStamp As Variant) 
+   As Integer
+    Dim X As Long
+    Dim Handle As Long
+    Dim System_Time As SYSTEMTIME
+    Dim File_Time As FILETIME
+    Dim Local_Time As FILETIME
+
+    System_Time.wYear = Year(TimeStamp)
+    System_Time.wMonth = Month(TimeStamp)
+    System_Time.wDay = Day(TimeStamp)
+    System_Time.wDayOfWeek = WeekDay(TimeStamp) - 1
+    System_Time.wHour = Hour(TimeStamp)
+    System_Time.wSecond = Second(TimeStamp)
+    System_Time.wMilliseconds = 0
+
+    'convert the system time to a file time
+    X = SystemTimeToFileTime(System_Time, Local_Time)
+
+    'convert local file time to file time based on UTC
+    X = LocalFileTimeToFileTime(Local_Time, File_Time)
+
+    'open the file so we can get a file handle to the file
+    Handle = CreateFile(Filename, GENERIC_WRITE, FILE_SHARE_READ Or 
+        FILE_SHARE_WRITE, ByVal 0&, OPEN_EXISTING, 0, 0)
+
+    'now change the file time and date stamp
+    X = SetFileTimeWrite(Handle, ByVal 0&, ByVal 0&, File_Time)
+    CloseHandle Handle
+
+End Function
+
+Run the example program by pressing F5. Click the Command Button control. The date and time stamp of the AUTOEXEC.BAT file is immediately updated.
+

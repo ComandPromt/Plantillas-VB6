@@ -1,0 +1,34 @@
+'Description: Detects the drive letter associated with the CD - ROM Drive.
+
+'Private Declare Function GetDriveType Lib "kernel32" Alias "GetDriveTypeA" (ByVal nDrive As String) As Long
+'Private Declare Function GetLogicalDriveStrings Lib "kernel32" Alias "GetLogicalDriveStringsA" (ByVal nBufferLength As Long, ByVal lpBuffer As String) As Long
+'Private Const DRIVE_REMOVABLE = 2
+'Private Const DRIVE_FIXED = 3
+'Private Const DRIVE_REMOTE = 4
+'Private Const DRIVE_CDROM = 5
+'Private Const DRIVE_RAMDISK = 6
+
+
+'Place the following code in under a command button or in a menu, etc...
+
+Dim r&, allDrives$, JustOneDrive$, pos%, DriveType&
+Dim CDfound As Integer
+allDrives$ = Space$(64)
+r& = GetLogicalDriveStrings(Len(allDrives$), allDrives$)
+allDrives$ = Left$(allDrives$, r&)
+Do
+pos% = InStr(allDrives$, Chr$(0))
+If pos% Then
+        JustOneDrive$ = Left$(allDrives$, pos%)
+        allDrives$ = Mid$(allDrives$, pos% + 1, Len(allDrives$))
+        DriveType& = GetDriveType(JustOneDrive$)
+        If DriveType& = DRIVE_CDROM Then
+           CDfound% = True
+           Exit Do
+        End If
+      End If
+  Loop Until allDrives$ = "" Or DriveType& = DRIVE_CDROM
+  If CDfound% Then
+        label1 = "The CD-ROM drive on your system is drive " & UCase$(JustOneDrive$)
+  Else: label1 = "No CD-ROM drives were detected on your system."
+  End If

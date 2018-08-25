@@ -1,0 +1,119 @@
+Tip 203: Searching a Disk for Files Based on Filename and Path
+February 28, 1996
+
+Abstract
+This article includes a Microsoft® Visual Basic® version 4.0 program that runs on the Microsoft Windows® 95 operating system. You can use this program to search a disk drive for a file or group of files. The search can be initiated from the root directory of the disk drive or from any specific directory. The found files are listed in a List Box control with their corresponding paths.
+
+Using a Recursive Search Routine to Find Files on a Disk
+When you are running the Microsoft® Windows® 95 operating system, you can selectively search a disk for a specific file in a directory by using the Visual Basic® version 4.0 Dir function. However, when you want to find all occurrences of a specific file in a directory or when you want to find all matching wildcard filenames on a disk, you need to perform a recursive search routine.
+
+The example program below lets you search a disk for a file or group of files matching the target filename. The target filename can be any valid MS-DOS® filename, including wildcard filenames. In addition, you can specify the directory from which you want to start the search process.
+
+To find all occurrences of the target filename, a hidden List Box control is used to hold the names of all directories in which the search is to be performed. The Dir[$]() function is used in a Do-While loop to retrieve the names of all subdirectories under the target directory. As each directory name is found, its name is added to the hidden List Box control.
+
+When you have retrieved the names of all directories stored under the target directory, you call the List_Files procedure. The List_Files procedure then performs another recursive search routine by using the same technique as the Get_Files procedure to find all files that match the target filename. The full path of the found file is added to the second List Box control. When all files and directories have been processed, the program quits.
+
+Example Program
+This program shows how to search for a filename by specifying a directory from which to begin the search. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1: 
+    Dim XFilename As String
+    Dim StrtPath As String
+
+Create a new procedure called Get_Files. Add the following code to this procedure: 
+Private Sub Get_Files(FPath As String)
+    Dim File_Name As String
+    Dim File_Path As String
+    Dim File_Read As Integer
+    Dim X As Boolean
+    Dim I As Integer
+
+    File_Path = FPath & "\"
+    File_Name = Dir$(File_Path, vbDirectory)
+    File_Read = 1
+    X = False
+
+    Do While File_Name <> ""
+        If File_Name <> "." And File_Name <> ".." Then
+            If GetAttr(File_Path & File_Name) = vbDirectory Then
+                StrtPath = File_Path & File_Name
+                List1.AddItem StrtPath
+                X = True
+                Get_Files StrtPath
+            End If
+        End If
+        If X = True Then
+            File_Name = Dir$(File_Path, vbDirectory)
+            For I = 2 To File_Read
+                File_Name = Dir$
+            Next
+            X = False
+        End If
+        File_Name = Dir$
+        File_Read = File_Read + 1
+    Loop
+End Sub
+
+Create a new procedure called List_Files. Add the following code to this procedure: 
+Private Sub List_Files()
+    Dim XIndex As Integer
+    Dim XName As String
+    Dim X_Filename As String
+
+    For XIndex = 0 To List1.ListCount - 1
+        XName = List1.List(XIndex) & "\" & XFilename
+        X_Filename = Dir(XName)
+        If X_Filename <> "" Then
+            List2.AddItem List1.List(XIndex) & "\" & X_Filename
+                Do While True
+                    X_Filename = Dir
+                    On Error GoTo exit_loop
+                        If X_Filename <> "" Then
+                            List2.AddItem List1.List(XIndex) & "\" & X_Filename
+                        Else
+                            Exit Do
+                        End If
+                Loop
+        End If
+exit_loop:
+        Next XIndex
+End Sub
+
+Add a Label control to Form1. Label1 is created by default. Set its Caption property to "Directory". 
+Add a Text Box control to Form1. Text1 is created by default. Set its Text property to an empty string. 
+Add a second Label control to Form1. Label2 is created by default. Set its Caption property to "Filename". 
+Add a second Text Box control to Form1. Text2 is created by default. Set its Text property to an empty string. 
+Add a List Box control to Form1. List1 is created by default. Set its Visible property to False. 
+Add a second List Box control to Form1. List2 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Search". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim XLen As Integer
+    
+    XLen = Len(Text1.Text)
+    
+    If Mid$(Text1.Text, XLen, 1) = "\" Then
+        StrtPath = Left$(Text1.Text, XLen - 1)
+    Else
+        StrtPath = Text1.Text
+    End If
+    
+    XFilename = Text2.Text
+    
+    List1.Clear
+    List2.Clear
+    
+    List1.AddItem StrtPath
+    Get_Files StrtPath
+    List_Files
+    
+    If List2.ListCount = 0 Then
+        MsgBox "Unable to find file"
+    Else
+        MsgBox "Search completed"
+    End If
+End Sub
+
+Run the example program by pressing F5. Suppose that you want to find all files with the extension .TXT in the directory C:\DOCS. In the first Text Box control, type the name of the directory from which you want to start the search. Next, type the name of the file you want to find in this starting directory. You may use any valid MS-DOS filename, as well as wildcard characters. Click the Search button. The program displays the results of its search in the List Box control and displays a message box indicating that the search has been completed.
+

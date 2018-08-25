@@ -1,0 +1,81 @@
+Tip 86: Allowing a Visual Basic Application to Accept Drag-and-Drop Files
+May 15, 1995
+
+Abstract
+Many Windows®-based applications can accept, or process, a file that has been dragged from File Manager. This article explains how you can add this feature to your own Visual Basic® application.
+
+Using MSGBLAST.VBX to Accept Drag-and-Drop Files
+Using File Manager, you can drag a file to another application and, when you release the mouse button (drop the file), the target application can process the file any way it wants to.
+
+In order for a program to be able to accept drag-and-drop files, however, the program must have a method of recognizing when a file has been sent to it. In Visual Basic®, this can be done by using the Message Blaster custom control and three Windows® application programming interface (API) functions: DragAcceptFiles, DragQueryFile, and DragFinish.
+
+The DragAcceptFiles function tells Windows that a specific window (that is, your Visual Basic application's form) can accept files dropped from File Manager. The Declare statement for this function is:
+
+Private Declare Sub DragAcceptFiles Lib "shell" (ByVal hWnd As Integer, ByVal 
+   bool As Integer)
+
+(Note that this Declare statement must be typed as a single line of code.)
+
+The DragAcceptFiles function takes only two arguments: the handle of the window that will accept the dropped files, and an integer value that specifies if the file can be accepted or ignored. If the Boolean argument is set to True, the window can accept dropped files; if it is set to zero, the window can no longer accept dropped files.
+
+You can retrieve the name of the file that was dropped on the target window by calling the DragQueryFile function. This function's declaration statement is:
+
+Private Declare Function DragQueryFile Lib "shell" (ByVal wParam As Integer, 
+   ByVal Index As Integer, ByVal lpszFile As Any, ByVal BufferSize As Integer)
+   As Integer
+
+(Note that this Declare statement must be typed as a single line of code.)
+
+DragQueryFile requires four arguments, as follows:
+
+wParam An integer value that contains the internal data structure's handle. This is provided by the WM_DROPFILES message. 
+Index An integer value containing the number of the individual file to be retrieved. If this value is -1, the number of files listed in the wParam structure will be returned. 
+lpszFile A string buffer that contains the name of the dropped file. 
+BufferSize An integer value containing the maximum number of characters in lpszFile. 
+
+After calling the DragQueryFile function, an integer value reports the status of the function. This value contains the number of characters copied to the lpszFile string or the number of files available if Index was set to zero.
+
+The third function needed to work with drag-and-drop files is the DragFinish function. This function simply requires that the internal data structure's handle be passed to it. DragFinish frees all structures used when transferring the file to the target application.
+
+The final step is to process the WM_DROPFILES message. This message is sent by Windows each time it needs to send a drag-and-drop request to a program. In your Visual Basic program you need only use the Message Blaster custom control to intercept the WM_DROPFILES message before Windows actually processes it itself. In the example program below, we use the Message Blaster control to retrieve the name of the dropped file and store that name in the List Box control.
+
+Example Program
+The example program below shows how to allow your Visual Basic application to accept drag-and-drop files from File Manager. To use this demonstration program, first execute the Windows Explorer or File Manager application. Then run the DEMO.EXE program. When you drag a file from File Manager to DEMO.EXE's window and release the mouse button, the filename will be displayed in the List Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Option Explicit
+Private Declare Sub DragAcceptFiles Lib "shell" (ByVal hWnd As Integer, ByVal 
+bool As Integer)
+Private Declare Function DragQueryFile Lib "shell" (ByVal wParam As Integer, 
+ByVal Index As Integer, ByVal lpszFile As Any, ByVal BufferSize As Integer) 
+As Integer
+Private Declare Sub DragFinish Lib "shell" (ByVal hDrop As Integer)
+Const WM_DROPFILES = &H233
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+msgblaster1.MsgList(0) = WM_DROPFILES
+msgblaster1.hWndTarget = Me.hWnd
+msgblaster1.MsgPassage(0) = 1
+DragAcceptFiles Me.hWnd, True
+
+End Sub
+
+Add a Message Blaster custom control to Form1. MsgBlaster1 is created by default. 
+Add the following code to the MsgBlaster1_Message event for MsgBlaster1: 
+Private Sub MsgBlaster1_Message(MsgVal As Integer, wParam As Integer, lParam As 
+Long, ReturnVal As Long)
+Dim hFilesInfo As Integer
+Dim szFileName As String
+hFilesInfo = wParam
+wTotalFiles = DragQueryFile(hFilesInfo, &HFFFF, ByVal 0&, 0)
+For wIndex = 0 To wTotalFiles
+szFileName = Space$(50)
+Retv% = DragQueryFile(hFilesInfo, wIndex, szFileName, 50)
+list1.AddItem szFileName
+Next wIndex
+DragFinish (hFilesInfo)
+End Sub
+
+Compile the program. From Visual Basic's File menu, select Make EXE File to create the executable file called DEMO.EXE. 

@@ -1,0 +1,217 @@
+Visual Basic Tips Index
+The articles in this series were written by Deborah L. Cooper, based on information unraveled from internal Microsoft e-mail threads. The articles document common (and sometimes not so common) Visual Basic® programming tips, tricks, and techniques discussed by Visual Basic developers at Microsoft. We hope you find this information useful in your programming tasks.
+
+Select one of the following articles for information on the indicated topic.
+
+Tip # Title 
+1 Determining if a File Already Exists 
+2 Detecting the Cancel Button When Using the Common Dialog Box 
+3 Retrieving the Name of the Temporary Directory 
+4 Adding Access Keys to Controls That Don't Have a Caption Property 
+5 Removing the Desktop Wallpaper 
+6 Displaying a File's Contents Correctly in Text Box 
+7 Minimizing and Maximizing Program Manager 
+8 Deleting Sections from .INI Files 
+9 Creating Multiline Command Buttons 
+10 Formatting a Disk 
+11 Determining a Program's Name and Path 
+12 Redirecting the Output of a Shelled DOS Program 
+13 Converting a Number to Hours, Minutes, Seconds 
+14 Copying Selected Items in a List Box to the Clipboard 
+15 Creating a List of Directories Stored on a Disk 
+16 Adding Visual Effect with Splash Screens 
+17 Hiding the Cursor (Mouse Pointer) 
+18 Automatically Selecting Text When Tabbing to Text Box 
+19 Changing the GraphType Property at Run Time 
+20 Detecting When Shift+PrintScrn Is Pressed 
+21 Creating an Iconized Visual Basic Application 
+22 Converting DWords, Words, and Bytes 
+23 Converting Fractional Values to Two-Decimal-Place Currency Values 
+24 Avoiding Errors When Removing Items from a List Box 
+25 Retrieving the Drive Letter for Temporary Files 
+26 Enumerating Screen and Printer Fonts 
+27 Determining When a Key or Mouse Button Is Pressed 
+28 Determining Which Forms Are Loaded 
+29 Displaying MDI Child Windows as Icons Without Showing Child Windows First 
+30 Retrieving the Default Printer's Name from WIN.INI 
+31 Creating the Windows Wallpaper Effect 
+32 Creating Custom Cursors (Mouse Pointers) 
+33 Capitalizing Words in a String 
+34 Displaying Characters in Different Colors 
+35 Determining a Window's Size and Position 
+36 Terminating a Running Application from Within Visual Basic 
+37 Restricting Mouse Pointer Movement to a Control 
+38 Determining the Number of Colors the Screen Supports 
+39 Drawing Custom Borders Around Visual Basic Forms 
+40 Calculating the Number of Bytes Used by Files Stored in a Directory 
+41 Creating Custom Bitmap Files 
+42 Using Bitmaps to Create Custom Cursors 
+43 Activating and Deactivating the Screen Saver 
+44 Modifying File Attributes 
+45 Using BitBlt to Display Bitmaps 
+46 Deleting Entire Directories 
+47 Changing the Default MS-DOS Icon 
+48 Copying a Window's Client Area to a Bitmap 
+49 Centering Forms 
+50 Using Drag and Drop in List Box Controls 
+51 Displaying a Status Bar While Executing Lengthy Procedures 
+52 Modifying a Window's Title Bar Caption 
+53 Adding Three-Dimensional Effects to Visual Basic Controls 
+54 Preventing a Window Form from Being Resized 
+55 Diagnosing "Error in Loading DLL" with LoadLibrary 
+56 Sorting Integer Arrays According to Index Positions 
+57 Creating a "Virus" to Prevent Unauthorized Use of Your Computer 
+58 Separating Information in a List Box with Tabs 
+59 Retrieving Text Under the Mouse Pointer 
+60 Executing Program Manager's File/Run Command 
+61 Creating Splitter Bars 
+62 Retrieving Filenames Associated with an Application 
+63 Preventing List Box from Redrawing (Refreshing) 
+64 Changing the Case of Text Entered in a Text Box Control 
+65 Separating a Path into Individual Fields 
+66 Disabling Task-Switching with the SetSysModalWindow Function 
+67 Returning Focus to a Specific Control After Executing WinHelp 
+68 Removing Duplicate Items from List Box Controls 
+69 Forcing a Picture Control to Use Only a Specific Font 
+70 Creating Temporary Files 
+71 Dragging Controls at Run Time 
+72 Positioning the Cursor over a Control That Receives Focus 
+73 Creating Nested Directories 
+74 Scrolling Through Two List Box Controls Simultaneously 
+75 Invoking Menu Items in Other Applications with SendMessage 
+76 Detecting Right Mouse Button Clicks on List Box Controls 
+77 Determining the Amount of RAM Installed in a Computer 
+78 Retrieving the Names of All Printers 
+79 Closing All MDI Child Windows at One Time 
+80 Drawing Borders Around Controls 
+81 Repairing and Compressing a Microsoft Access Database from Visual Basic 
+82 Retrieving Multiple Filenames from the Common Dialog Control 
+83 Listing Fields and Associated Properties for an Attached Microsoft Access Table 
+84 Creating a Scrolling "Credits" Control 
+85 Hiding MDI Child Forms at Run Time 
+86 Allowing a Visual Basic Application to Accept Drag-and-Drop Files 
+87 Sending Output to the Printer in Any Order 
+88 Shrinking Icons Down to Size 
+89 Invoking the Microsoft Word Page Setup Dialog Box 
+90 Adding ToolTips to Visual Basic Applications 
+91 Determining If a Form Is Loaded 
+92 Using the Shell Statement to Execute MS-DOS Programs 
+93 Retrieving the Names of Installed Printers 
+94 Using Drag-and-Drop on Multiple Items in a List Box Control 
+95 Deleting All Records from Every Table in a Microsoft Access Database 
+96 Centering a Form over Another Form 
+97 Creating a Task List 
+98 Saving a Window's Client Area in Bitmap Format 
+99 Adding Three-Dimensional Effects to Visual Basic Forms 
+100 Printing a Form Multiple Times on One Page 
+101 Using the Built-In Windows Icons 
+102 Modifying a Child Window's Caption 
+103 Preventing the CTRL+TAB and CTRL+F6 Key Combinations from Activating Child Windows 
+104 Creating a Form with a Thin Title Bar 
+105 Removing a Form's Title Bar 
+106 Centering Text Vertically in a Text Box Control 
+107 Detecting Double-Click Events in Combo Box Controls 
+108 Flashing Controls to Get the User's Attention 
+109 Modifying an MDI Form's Border Style 
+110 Sending a Click Event to a Command Button Control 
+111 Using Different Fonts in List Boxes That Have Tab Stops 
+112 Preventing ListIndex Property from Triggering a Click Event 
+113 Creating Transparent Forms 
+114 Preventing a Portion of a Text Box from Scrolling 
+115 Performing Smart Searches in Combo Box Controls 
+116 Sending Data to the Printer in Landscape or Portrait Mode 
+117 Changing a Menu's Shortcut Key at Run Time 
+118 Converting a Word for Windows Document to RTF Format 
+119 Creating a Resizable Control at Run Time 
+120 Minimizing Program Manager When Visual Basic Is Run 
+121 Modifying a Text Box's Appearance at Run Time 
+122 Comparing Object Variables in Visual Basic 
+123 Displaying Records from a Microsoft Access Database in an Outline Control 
+124 Determining Available Disk Drives in Visual Basic 
+125 Retrieving a Compressed File's Original Name 
+126 Sorting a List Box Control in Descending Order 
+127 Stamping Files with the Current Date and Time 
+128 Calculating the Beginning and Ending Date of a Month 
+129 Setting the Focus After Removing an Item from the List Box Control 
+130 Using the Undo Feature with a Text Box Control 
+131 Determining Whether a DLL File Is 16-Bit or 32-Bit 
+132 Preventing Duplicate Items from Being Added to List Box Controls 
+133 Using the SendMessage Function to Scroll Contents of Text Box Controls 
+134 Creating Temporary Files 
+135 Preventing a User from Editing the Contents of a Text Box Control 
+136 Using Keyboard and Mouse Shortcuts 
+137 Removing Items from a Drive List Box Control 
+138 Enabling and Disabling Scroll Bars in a List Box 
+139 Retrieving a Disk's Volume Label 
+140 Identifying CD-ROM Drives 
+141 Searching a List Box Control for a Partial Match 
+142 Determining Whether the Operating System Supports Long File Names 
+143 Determining Whether the Windows 95 Taskbar Is Visible or Hidden 
+144 Using Accelerator Keys with the TabStrip Control 
+145 Inserting Tab Characters in the Rich-Text Box Control 
+146 Retrieving the Printer Name from the Windows 95 Registry 
+147 Retrieving Multiple File Names from the Common Dialog Control 
+148 Using OLE Automation to Check Spelling 
+149 Enumerating Disk Drives in Visual Basic 4.0 
+150 Determining How Many Items Can Be Displayed in the List Box Control 
+151 Finding Whole Words in a Text Box Control 
+152 Determining the Status of Virtual Keys on the Keyboard 
+153 Searching PATH for Specific Files 
+154 Terminating Windows 95 in Visual Basic 
+155 Scrolling Text Horizontally in a Picture Box Control 
+156 Adding New Icons to the Windows 95 Taskbar 
+157 Centering a Form on the Screen 
+158 Retrieving the Windows Directory 
+159 Setting the Minimum Size of a Window 
+160 Retrieving the Versions of MS-DOS and Windows 
+161 Forcing the Common Dialog Control to Save Files to a Specific Disk Drive 
+162 Determining Whether a File Exists 
+163 Emulating a Double-Click Event in the Directory List Box Control 
+164 Copying Files from One Directory to Another 
+165 Locating CD-ROM Drives Installed on a Computer System 
+166 Playing .WAV Files in Visual Basic 
+167 Controlling the State of Virtual Keys on the Keyboard 
+168 Using the ShellExecute Function to Print Files 
+169 Setting the Position and Size of the Windows Help File 
+170 Positioning the Mouse Pointer over a Specific Control 
+171 Determining RGB Color Values 
+172 Extracting the Directory Name and the Filename from the Path 
+173 Launching Applications in Visual Basic 
+174 Using the GetKeyState Function to Determine the State of Virtual Keys 
+175 Determining the Current Screen Resolution 
+176 Sending Files to the Recycle Bin in Visual Basic 4.0 
+177 Adding Drag-and-Drop Functionality to Your Application 
+178 Enabling or Disabling Fast Task Switching in Windows 
+179 Retrieving the Computer Name 
+180 Performing Searches in a Combo Box Control with SendMessage 
+181 Arranging Child Forms in a Cascading Fashion 
+182 Temporarily Enabling or Disabling Tabs on the TabStrip Control 
+183 Changing the Color of the Grid Control's Cells 
+184 Creating a List of Directories and Files in a List Box Control 
+185 Determining the Number of Printable Lines Per Page on the Printer 
+186 Formatting Text in a Rich Text Box Control in Visual Basic 4.0 
+187 Determining Whether an Application Was Closed from the Control Menu 
+188 Adding New Commands to the Control Menu 
+189 Determining Which Screen and Printer Fonts Are Available 
+190 Adding Hot Key Access to Your Visual Basic Application 
+191 Shelling to Other Applications 
+192 Selecting a New Desktop Wallpaper 
+193 Launching Windows 95 Control Panel Applets in Visual Basic 
+194 Adding a Description to the Status Bar for the Toolbar Control 
+195 Modifying a File's Date and Time Stamp in Visual Basic 4.0 
+196 Using the Common Dialog Control to Invoke Context-Sensitive Help 
+197 Preventing a Right-Click from Displaying a Context Menu 
+198 Retrieving File Information in Visual Basic 4.0 
+199 Saving the Contents of the List Box Control to Disk in Visual Basic 4.0 
+200 Determining the Amount of Free Disk Space 
+201 Retrieving the Task List in Windows 95 
+202 Forcing a Combo Box Control to Drop Down with the ENTER Key 
+203 Searching a Disk for Files Based on Filename and Path 
+204 Changing the Screen Resolution at Run Time in Visual Basic 4.0 
+205 Drawing a Gradient Background Pattern on Forms in Visual Basic 4.0 
+206 Populating the Outline Control with a List of Directories and Files Stored on a Disk 
+207 Retrieving the Short (MS-DOS) Filename from a Long Filename in Windows 95 
+208 Changing the Displayed Icon in the About Dialog Box in Visual Basic 4.0 
+209 Changing the Color of a Label Control When the Mouse Pointer Is over the Control in Visual Basic 4.0 
+210 Determining Whether a Window or Control Has a Scroll Bar 
+211 Changing or Removing the Desktop Wallpaper in Visual Basic 4.0 

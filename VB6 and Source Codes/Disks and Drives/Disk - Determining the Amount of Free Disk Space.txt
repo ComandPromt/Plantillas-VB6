@@ -1,0 +1,95 @@
+Tip 200: Determining the Amount of Free Disk Space
+December 5, 1995
+
+Abstract
+This article explains how to retrieve the amount of available disk space from within a Microsoft® Visual Basic® application.
+
+Using the GetDiskFreeSpace Function
+When writing information to disk from within a Microsoft® Visual Basic® application, you may need to determine whether there is enough space available on the disk drive before starting to write the new data to it.
+
+The Microsoft Windows® application programming interface (API) GetDiskFreeSpace function allows you to calculate how much free space there is on a specified disk drive. To use this function, include the following Declare statement in the General Declarations section of your application:
+
+Declare Function GetDiskFreeSpace Lib "kernel32" Alias "GetDiskFreeSpaceA" 
+   (ByVal lpRootPathName As String, lpSectorsPerCluster As Long, 
+   lpBytesPerSector As Long, lpNumberOfFreeClusters As Long, 
+   lpTotalNumberOfClusters As Long) As Long
+
+The GetDiskFreeSpace function requires five arguments, as follows:
+
+lpRootPathName A string containing the root directory for the disk drive for which you want to retrieve information. If NULL, the default directory's root path is used. 
+LpSectorsPerCluster A long value that will contain the number of sectors per cluster. 
+LpBytesPerSector A long value that will contain the number of bytes per sector. 
+LpNumberOfFreeClusters A long value that will contain the number of free clusters on the disk. 
+LpTotalNumberOfClusters A long value that will contain the number of clusters on the disk. 
+
+After executing the GetDiskFreeSpace function, either a value of True is returned if the function was successful or a value of False if the function was not successful.
+
+To calculate the total number of bytes available on the disk, you need to multiply the number of bytes per sector by the number of sectors per cluster. Then, multiply this result by the number of free clusters on the disk. This total gives you the number of bytes of free space on the disk.
+
+Example Program
+This program shows how to retrieve the amount of free disk space. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. Set its MultiLine property to True. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim X As Long
+    X = GetDiskSpace("c:\")
+    If X Then
+        sFreeSpace = Format$(CurrentDisk.FreeBytes, "###,###,##0")
+        sTotalSpace = Format$(CurrentDisk.TotalBytes, "###,###,##0")
+        sFreePcnt = Format$(CurrentDisk.FreePcnt, "Percent")
+        sUsedPcnt = Format$(CurrentDisk.UsedPcnt, "Percent")
+    End If
+    text1.Text = "Free Space: " & sFreeSpace & " Percent: " 
+       & sFreePcnt & Chr(13) & Chr(10)
+    text1.Text = text1.Text & "Total Bytes free: " & sTotalSpace & 
+       " Percent: " & sUsedPcnt
+End Sub
+
+Create a new function called GetDiskSpace. Add the following code to this function (note that the "X =" line must be typed as a single line of code): 
+Function GetDiskSpace(sRootPathName As String) As Long
+    Dim X As Long
+    Dim lSectorsPerCluster As Long, lBytesPerSector As Long
+    Dim lNumberOfFreeClusters As Long, lTotalNumberOfClusters As Long
+    
+    X = GetDiskFreeSpace(sRootPathName, lSectorsPerCluster, lBytesPerSector, 
+       lNumberOfFreeClusters, lTotalNumberOfClusters)
+    GetDiskSpace = X
+    
+    If X Then
+        CurrentDisk.RootPath = sRootPathName
+        CurrentDisk.FreeBytes = lBytesPerSector * lSectorsPerCluster * 
+           lNumberOfFreeClusters
+        CurrentDisk.TotalBytes = lBytesPerSector * lSectorsPerCluster * 
+           lTotalNumberOfClusters
+        CurrentDisk.FreePcnt = (CurrentDisk.TotalBytes - CurrentDisk.FreeBytes) 
+           / CurrentDisk.TotalBytes
+        CurrentDisk.UsedPcnt = CurrentDisk.FreeBytes / CurrentDisk.TotalBytes
+    Else
+        CurrentDisk.RootPath = ""
+        CurrentDisk.FreeBytes = 0
+        CurrentDisk.TotalBytes = 0
+        CurrentDisk.FreePcnt = 0
+        CurrentDisk.UsedPcnt = 0
+        Exit Function
+    End If
+End Function
+
+From the Visual Basic Insert menu, select Module to create a new module. Module1.Bas is created by default. 
+Add the following Type, Constant, and Declare statements to Module1.Bas (note that the Declare statement must be typed as a single line of code): 
+Declare Function GetDiskFreeSpace Lib "kernel32" Alias "GetDiskFreeSpaceA" 
+   (ByVal lpRootPathName As String, lpSectorsPerCluster As Long, 
+   lpBytesPerSector As Long, lpNumberOfFreeClusters As Long, 
+   lpTotalNumberOfClusters As Long) As Long
+Type DISKSPACEINFO
+    RootPath As String * 3
+    FreeBytes As Long
+    TotalBytes As Long
+    FreePcnt As Single
+    UsedPcnt As Single
+End Type
+Global CurrentDisk As DISKSPACEINFO
+
+Run the example program by pressing F5. Click the Command Button control. The program displays the number and percentage of free bytes of disk space, and the total number and percentage of bytes used.

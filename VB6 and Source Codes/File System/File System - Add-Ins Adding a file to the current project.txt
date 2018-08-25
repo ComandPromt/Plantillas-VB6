@@ -1,0 +1,7 @@
+'Description: Adds a file to the current VB project with an Add-In 
+
+'Place the following code in under a command button or in a menu, etc...
+
+        Dim AP As Object
+        Set AP = gobjIDEAppInst.ActiveProject
+        AP.AddFile (App.Path & "\files\WskSock.Bas")

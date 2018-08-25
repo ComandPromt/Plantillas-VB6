@@ -1,0 +1,189 @@
+Tip 131: Determining Whether a DLL File Is 16-Bit or 32-Bit
+July 1, 1995
+
+Abstract
+When programming in Microsoft® Visual Basic®, you use the functions stored in dynamic-link library (DLL) files to add greater scope to your applications. You must, however, use the correct DLL file (16-bit or 32-bit) in your program. This article presents a function that tells you what type of file you are dealing with.
+
+Determining a File's Type
+The Microsoft® Windows® application programming interface (API) allows you to perform tasks in your Microsoft Visual Basic® applications that the Basic language itself cannot do. To perform such a task, you must call a function stored in a dynamic-link library (DLL) file.
+
+However, you must take into consideration whether you are programming in a 16-bit or 32-bit environment. If you're running in a 16-bit environment, then you can only use 16-bit DLL functions. However, if you're running in a 32-bit environment, you may be able to make calls to 16-bit and 32-bit functions, depending on the environment in question.
+
+Because your application may be run on many different operating systems (Windows version 3.1, Windows 95, OS/2®, Windows NT™, and so on), you need to find out whether files are 16-bit or 32-bit. Then you can determine which API functions can be used in your Visual Basic program.
+
+In the example program below, you can type the full path of a file you want to check. When you click the command button, the program reads data from the header block of the file and reports its file type.
+
+Each time an operating system saves a file on disk, the operating system prefixes the file with a header block as the first data stored in the file. This header block contains information that can be used to identify the file's type. For example, an MS-DOS® file has a header containing the two characters "MZ". When you run the ExeType function on this file, you would know that it is either a .COM, .CMD, .PIF, or .BAT file if the file contains the "MZ" signature in its header block.
+
+Example Program
+This program shows how you can identify individual file types. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant statements to the General Declarations section of Form1: 
+Option Explicit
+Const ordMSDOS = 1
+Const ordWindows = 2
+Const ordOS2_1 = 3
+Const ordNTWin = 4
+Const ordNTChar = 5
+Const ordDOSUnknown = 7
+Const ordNotExe = 0
+Const errNoFile = -1
+Const errOS2_2 = -2
+Const errWinOS2DLL = -3
+Const errNEUnknown = -4
+Const errNTNonIntel = -5
+Const errNTDLL = -6
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Text1.TEXT = ""
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. Set its MultiLine property to True. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    If Text1.TEXT = "" Then
+        Exit Sub
+    End If
+    Dim X As Integer
+    Dim FileToCheck As String
+    FileToCheck = Text1.TEXT
+    X = ExeType(FileToCheck)
+    If X = errNoFile Then
+        MsgBox "File does not exist", 16, "Error"
+        Exit Sub
+    End If
+    Select Case X
+        Case ordMSDOS
+            MsgBox "File is MSDOS EXE file", 16, "OK"
+        Case ordWindows
+            MsgBox "File is a Windows file", 16, "OK"
+        Case ordOS2_1
+            MsgBox "File is OS/2 1.x file", 16, "OK"
+        Case ordNTWin
+            MsgBox "File is NT Windows file", 16, "OK"
+        Case ordNTChar
+            MsgBox "File is NT character file", 16, "OK"
+        Case ordDOSUnknown
+            MsgBox "File is probably DOS extended file", 16, "OK"
+        Case ordNotExe
+            MsgBox "File is not MSDOS EXE file", 16, "OK"
+        Case errOS2_2
+            MsgBox "File is OS/2 LE file", 16, "OK"
+        Case errWinOS2DLL
+            MsgBox "File is a DLL executable but not by us", 16, "OK"
+        Case errNEUnknown
+            MsgBox "File is unknown NE system", 16, "OK"
+        Case errNTNonIntel
+            MsgBox "File is unknown type - perhaps a RISC file", 16, "OK"
+        Case errNTDLL
+            MsgBox "File is executable, but not by us", 16, "OK"
+    End Select
+End Sub
+
+Create a new function called ExeType. Add the following code to this function: 
+Function ExeType(sSpec As String) As Integer
+    'Check specified file to see if it is an
+    'executable file. If it is, what kind is it?
+    Dim sNullChr As String
+    sNullChr = Chr$(0)
+    Dim hFile As Integer
+    hFile = FreeFile
+    'Make sure the file exists on disk
+    Dim F As String
+    F = Dir$(sSpec)
+    If F = "" Then
+        ExeType = errNoFile
+        Exit Function
+    Else
+        Open sSpec For Binary Access Read Shared As hFile
+    End If
+    Dim sHeader As String * 128
+    Get hFile, 1, sHeader
+    'MSDOS headers start with magic header "MZ"
+    Dim sMagic As String * 2
+    sMagic = Mid$(sHeader, 1, 2)
+    If sMagic <> "MZ" Then
+        'Could still be a .BAT, .CMD, .PIF, or .COM file
+        'but that's not our problem here
+        ExeType = ordNotExe
+        Exit Function
+    End If
+    'Make an integer (Long to prevent overflows) out
+    'of offset &H18 and &H19 and then see if offset
+    'points beyond DOS header. If not, file is MSDOS
+    'EXE. Since Basic strings are 1-based rather than
+    '0-based, all hex offsets into file must be
+    'incremented by one.
+    Dim iData As Long
+    iData = Asc(Mid$(sHeader, &H20, 1)) * 256
+    iData = iData + Asc(Mid$(sHeader, &H19, 1)) + 1
+    If iData < &H40 Then
+        ExeType = ordMSDOS
+        Exit Function
+    End If
+    'Get the offset of new .EXE header
+    iData = Asc(Mid$(sHeader, &H3E, 1)) * 256
+    iData = iData + Asc(Mid$(sHeader, &H3D, 1)) + 1
+    Get hFile, iData, sHeader
+    Close hFile
+    'New .EXE headers start with magic header "NE"
+    Dim sMagic2 As String * 2
+    Dim sZero As String * 2
+    sMagic = Mid$(sHeader, 1, 2)
+    sMagic2 = Mid$(sHeader, 3, 2)
+    sZero = sNullChr & sNullChr
+    'Check for Windows/OS2 format
+    If sMagic = "NE" Then
+        'Get the executable file flags to check for DLL
+        iData = Asc(Mid$(sHeader, &HE, 1))
+        If iData And &H80 Then
+            'This is a DLL (executable but not by us)
+            ExeType = errWinOS2DLL
+        Else
+            'Get the operating system flags (byte, not word)
+            iData = Asc(Mid$(sHeader, &H37, 1))
+            If iData And &H2 Then
+                ExeType ordWindows  'Windows
+            ElseIf iData And &H1 Then
+                ExeType = ordOS2_1  'OS2 1.x
+            Else
+                ExeType = errNEUnknown  'Unknown NE system
+            End If
+        End If
+        'Check for OS/2 2.x format (cannot execute from Windows or NT)
+        ElseIf sMagic = "LE" Then
+            ExeType = errOS2_2  'OS/2 LE
+        'Check for NT format
+        ElseIf sMagic = "PE" And sMagic2 = sZero Then
+            'Get processor flags
+            iData = Asc(Mid$(sHeader, &H5, 1))
+            Select Case iData
+            Case &H4C, &H4D, &H4E, &H4F 'NT for intel 386, 486, 586, 686
+                ExeType = ordNTWin  'NT Windows
+            Case Else
+                ExeType = errNTNonIntel 'Some sort of RISC or other
+                Exit Function
+            End Select
+    'Get the EXE type flags
+    iData = Asc(Mid$(sHeader, &H18, 1))
+    If iData And &H20 Then
+        ExeType = errNTDLL  'executable, but not by us
+        Exit Function
+    End If
+    'Get the subsystem flags to identify NT character
+    iData = Asc(Mid$(sHeader, &H5D, 1))
+    If iData = 3 Then ExeType = ordNTChar
+        'Could also identify Posix files here
+    Else
+        'This is an MSDOS file with a header, but it's not
+        'an NE file. Many 16-bit DOS-extended executables fall
+        'through here. It could also be a non-EXE file that
+        'just happens to have "MZ" as its first two bytes.
+        ExeType = ordDOSUnknown 'probably DOS extended
+    End If
+End Function
+
+Run the example program by pressing F5. Type the name of a file in the Text Box and click the command button. A message box will identify what type of file it is.

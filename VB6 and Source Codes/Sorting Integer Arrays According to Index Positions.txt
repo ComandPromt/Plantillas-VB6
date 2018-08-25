@@ -1,0 +1,81 @@
+Tip 56: Sorting Integer Arrays According to Index Positions
+Created: April 17, 1995
+
+Abstract
+There are various methods of sorting data in a Visual Basic® application. This article explains how to sort an integer array while preserving the array's original sort order.
+
+Sorting Integer Arrays
+When writing an application in Visual Basic®, you can store numeric values or strings in a List Box control. The List Box's Sort property can be set to True to automatically sort the entries as they are added to the control. However, if you need to sort, for example, an integer array so that the position of each item in the array is preserved, you must write your own sort procedure.
+
+The following program shows how to sort an array of integer values according to the integer's position in the array. In the example program (below), the integers are stored in the array as follows:
+
+Mat(1)=5
+Mat(2)=7
+Mat(3)=4
+Mat(4)=6
+Mat(5)=3
+
+If we sorted these values in descending numerical order, the result would be:
+
+Mat(1)=7
+Mat(2)=6
+Mat(3)=5
+Mat(4)=4
+Mat(5)=3
+
+However, we want to be able to sort the array according to the integer's index value in the array. Therefore, the example program sorts this array as:
+
+Mat(1)=2
+Mat(2)=4
+Mat(3)=1
+Mat(4)=3
+Mat(5)=5
+
+Example Program
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+  Dim X As Integer
+  Dim Mat(1 To 5) As Integer
+  Dim Temp As Integer
+  Dim Order As String
+  Dim Tempstr As String
+  Mat(1) = 5
+  Mat(2) = 7
+  Mat(3) = 4
+  Mat(4) = 6
+  Mat(5) = 3
+    
+  For X = 1 To 5
+  List1.AddItem "Number " + Str$(Mat(X))
+  Next X
+    
+  Order = 12345
+  X = 1
+  Y = 1
+  For X = 1 To 5
+    For Y = 1 To 5
+         If X = Y Or X < Y Then
+             GoTo NextOne
+         End If
+                
+         If Mat(Y) > Mat(X) Then
+              Temp = Mat(X)
+              Mat(X) = Mat(Y)
+              Mat(Y) = Temp
+              Tempstr = Mid$(Order, X, 1)
+              Mid$(Order, X, 1) = Mid$(Order, Y, 1)
+              Mid$(Order, Y, 1) = Tempstr
+          End If
+NextOne:
+    Next Y
+       
+  Next X
+'Display results in List Box #2
+  For X = 5 To 1 Step -1
+  List2.AddItem "Array" + Str$(Mid$(Order, X, 1))
+  Next X
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. 
+Add a second List Box control to Form1. List2 is created by default. 

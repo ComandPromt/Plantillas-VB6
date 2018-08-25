@@ -1,0 +1,27 @@
+'Description: Shell Function. Runs an executable program. Wait for program to
+'             terminate. Time out after 30 seconds.
+
+'Declare Function GetModuleUsage Lib "Kernel" (ByVal hModule As Integer) As Integer
+'Const SW_HIDE = 0      'Normal Window
+'Const SW_NORMAL = 1    'Maximized Window
+'Const SW_MAXIMIZE = 3  'Minimized Window
+'Const SW_MINIMIZE = 6  'Hidden Window
+
+'Sub Command1_Click ()
+On Error Resume Next
+command1.Enabled = False
+iInst% = Shell("C:\TEST\DOSAPP.EXE", SW_MINIMIZE)
+startt! = Timer
+timeout% = False
+Do While GetModuleUsage(iInst%) > 0
+ DoEvents
+  If Abs(Timer - startt!) > 30 Then
+  timeout% = True
+ Exit Do
+End If
+Loop
+
+If timeout% Then MsgBox "Timed out, 30 seconds passed!", 0, "Warning"
+command1.Enabled = True
+'End Sub
+

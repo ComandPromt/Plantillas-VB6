@@ -1,0 +1,103 @@
+Tip 198: Retrieving File Information in Visual Basic 4.0
+December 5, 1995
+
+Abstract
+This article explains how, from within a Microsoft® Visual Basic® version 4.0 application, you can retrieve information about a specific file stored on disk. This information may include the date and time when the file was initially created, when the file was last accessed, and any number of other details.
+
+Using the GetFileInformationByHandle Function
+In some Microsoft® Visual Basic® version 4.0 applications you write, you may need to examine certain file information. For example, you may need to determine when a file was last accessed or the serial number of the volume that contains the file. This type of information about a file can be retrieved using the Microsoft Windows® application programming interface (API) GetFileInformationByHandle function.
+
+To use the GetFileInformationByHandle function, you must include the following Declare statement in your project:
+
+Declare Function GetFileInformationByHandle Lib "kernel32" (ByVal hFile 
+   As Long, lpFileInformation As BY_HANDLE_FILE_INFORMATION) As Long
+
+As you can see, this function requires only two arguments: the handle of the file you want to retrieve information on and the address of a BY_HANDLE_FILE_INFORMATION structure that will hold the file's information.
+
+There are several steps you must perform to retrieve information about a file. First, you must use the Windows API OpenFile function to obtain the specified file's file handle. Once you have the file handle, you can call the GetFileInformationByHandle function. The file's information is then stored in the BY_HANDLE_FILE_INFORMATION structure. Next, you must use the Windows API CloseHandle function to release the file handle to the system.
+
+In the example program below, you retrieve the date and time that the file was actually created. You then use the Windows API FileTimeToSystemTime function to convert the file's date and time stamp to individual values that you can use in the program. This same procedure is used to process the file's last access and last write date and time stamp. In addition, two other pieces of information are also retrieved about the file—the file's attributes and the volume's serial number.
+
+Example Program
+This program shows how to retrieve information about a specific file. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+From the Visual Basic Insert menu, select Module to create a new module. Module1.Bas is created by default. 
+Add the following code to Module1.Bas (note that each Declare statement must be typed as a single line of code): 
+Declare Function OpenFile Lib "kernel32" (ByVal lpFileName As String, 
+   lpReOpenBuff As OFSTRUCT, ByVal wStyle As Long) As Long
+Declare Function GetFileInformationByHandle Lib "kernel32" (ByVal hFile 
+   As Long, lpFileInformation As BY_HANDLE_FILE_INFORMATION) As Long
+Declare Function CloseHandle Lib "kernel32" (ByVal hObject As Long) As Long
+Declare Function FileTimeToSystemTime Lib "kernel32" (lpFileTime As FileTime, 
+   lpSystemTime As SYSTEMTIME) As Long
+Public Const OFS_MAXPATHNAME = 128
+Public Const OF_READ = &H0
+Type OFSTRUCT
+        cBytes As Byte
+        fFixedDisk As Byte
+        nErrCode As Integer
+        Reserved1 As Integer
+        Reserved2 As Integer
+        szPathName(OFS_MAXPATHNAME) As Byte
+End Type
+Type SYSTEMTIME
+        wYear As Integer
+        wMonth As Integer
+        wDayOfWeek As Integer
+        wDay As Integer
+        wHour As Integer
+        wMinute As Integer
+        wSecond As Integer
+        wMilliseconds As Integer
+End Type
+Type FileTime
+        dwLowDateTime As Long
+        dwHighDateTime As Long
+End Type
+Type BY_HANDLE_FILE_INFORMATION
+        dwFileAttributes As Long
+        ftCreationTime As FileTime
+        ftLastAccessTime As FileTime
+        ftLastWriteTime As FileTime
+        dwVolumeSerialNumber As Long
+        nFileSizeHigh As Long
+        nFileSizeLow As Long
+        nNumberOfLinks As Long
+        nFileIndexHigh As Long
+        nFileIndexLow As Long
+End Type
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim Ret As Long
+    Dim FileHandle As Long
+    Dim FileInfo As BY_HANDLE_FILE_INFORMATION
+    Dim lpReOpenBuff As OFSTRUCT
+    Dim FileTime As SYSTEMTIME
+
+    FileHandle = OpenFile("c:\autoexec.bat", lpReOpenBuff, OF_READ)
+    Ret = GetFileInformationByHandle(FileHandle, FileInfo)
+
+    Ret = FileTimeToSystemTime(FileInfo.ftCreationTime, FileTime)
+    Print "File created on " & FileTime.wYear, FileTime.wMonth, 
+       FileTime.wDay
+
+    Ret = FileTimeToSystemTime(FileInfo.ftLastAccessTime, FileTime)
+    Print "File last accessed on: " & FileTime.wYear, FileTime.wMonth, 
+       FileTime.wDay
+
+    Ret = FileTimeToSystemTime(FileInfo.ftLastWriteTime, FileTime)
+    Print "File last written to: " & FileTime.wYear, FileTime.wMonth, 
+       FileTime.wDay
+
+    Print "Volume Serial Number is: " & FileInfo.dwVolumeSerialNumber
+    Print "File attributes are: " & FileInfo.dwFileAttributes
+
+
+    Ret = CloseHandle(FileHandle)
+End Sub
+
+Run the example program by pressing F5. Click the Command Button control. The program displays the file's creation date, last access date, and last write date, as well as the disk's volume serial number and the attributes associated with the file.
+

@@ -1,0 +1,214 @@
+The two examples in this section show how to retrieve statistics while encoding. The first example shows how to retrieve statistics when encoding an input file to an output file. The second example shows how to retrieve statistics when encoding a live source and broadcasting it from the local computer. 
+
+Retrieving Statistics While Encoding from a File
+
+For this example, create a form and add: 
+
+A button (Command1). 
+A timer (Timer1). 
+Three labels (Label1, Label2, and Label3). 
+You also need a source file (C:\InputFile.mpg). 
+
+' Declare global variables.
+  Dim WithEvents Encoder As WMEncoder
+  Dim bDone As Boolean
+
+Private Sub Form_Load()
+' Create a WMEncoder object.
+  Set Encoder = New WMEncoder
+
+' Make sure the timer is off.
+  Timer1.Enabled = False
+
+' Declare variables.
+  Dim SrcGrpColl As IWMEncSourceGroupCollection
+  Dim SrcGrp As IWMEncSourceGroup2
+  Dim SrcVid As IWMEncVideoSource2
+  Dim SrcAud As IWMEncAudioSource
+
+' Add a source group to the collection.
+  Set SrcGrpColl = Encoder.SourceGroupCollection
+  Set SrcGrp = SrcGrpColl.Add("SG_1")
+
+' Add a video and audio source to the source group.
+  Set SrcVid = SrcGrp.AddSource(WMENC_VIDEO)
+  Set SrcAud = SrcGrp.AddSource(WMENC_AUDIO)
+
+' Specify the source file.
+  SrcVid.SetInput "C:\InputFile.mpg"
+  SrcAud.SetInput "C:\InputFile.mpg"
+
+' Choose a profile from the collection.
+  Dim ProColl As IWMEncProfileCollection
+  Dim Pro As IWMEncProfile
+  Dim i As Integer
+
+  Set ProColl = Encoder.ProfileCollection
+
+  For i = 0 To ProColl.Count - 1
+    Set Pro = ProColl.Item(i)
+    If Pro.Name = "Windows Media Video 8 for Local Area Network (384 Kbps)" Then
+        SrcGrp.Profile = Pro
+        Exit For
+    End If
+  Next
+
+' Specify an output file.
+  Dim File As IWMEncFile
+  Set File = Encoder.File
+  File.LocalFileName = "C:\OutputFile.wmv"
+  
+' Initialize the encoding process.
+  Encoder.PrepareToEncode (True)
+
+End Sub
+Private Sub Command1_Click()
+' Start the encoding process.
+  Encoder.Start
+  
+' Use a timer to get statistics once the encoding process has started.
+  Timer1.Enabled = True
+    
+' Using events, check for the end of the encoding process.
+  Do Until bDone = True
+    DoEvents
+  Loop
+    
+' Display a message when the process has finished.
+  MsgBox "Done!"
+
+End Sub
+
+' This events procedure checks for the end of the encoding process.
+Private Sub Encoder_OnStateChange(ByVal EnumState As _
+WMEncoderLib.WMENC_ENCODER_STATE)
+    If EnumState = WMENC_ENCODER_STOPPED Then bDone = True
+End Sub
+
+Private Sub Timer1_Timer()
+' Retrieve an IWMEncStatistics object.
+  Dim Stats As IWMEncStatistics
+  Set Stats = Encoder.Statistics
+  
+' Retrieve an IWMEncFileArchiveStats object.
+' Display the file size and file duration.
+  Dim FileStats As IWMEncFileArchiveStats
+  Set FileStats = Stats.FileArchiveStats
+  Label1.Caption = "Size: " & CInt(FileStats.FileSize * 10) & " Kb"
+  Label2.Caption = "Duration: " & CInt(FileStats.FileDuration * 10) & " s"
+
+' Retrieve an IWMEncOutputStats object and display the current bit rate.
+  Dim OutputStats As IWMEncOutputStats
+  Set OutputStats = Stats.WMFOutputStats
+  Label3.Caption = "Current bit rate: " & CInt(OutputStats.CurrentBitrate / 1000) & " Kbps"
+
+End Sub
+
+Retrieving Statistics While Broadcasting a Live Stream
+
+For this example, create a form and add: 
+
+Two buttons (Command1 and Command2). 
+A timer (Timer1). 
+Four labels (Label1, Label2, Label3, and Label4). 
+' Declare global variables.
+  Dim Encoder As WMEncoder
+
+Private Sub Form_Load()
+' Create a WMEncoder object.
+  Set Encoder = New WMEncoder
+  
+' Make sure the timer is off.
+  Timer1.Enabled = False
+
+' Specify the source for the input stream.
+  Dim SrcGrpColl As IWMEncSourceGroupCollection
+  Dim SrcGrp As IWMEncSourceGroup2
+  Dim SrcVid As IWMEncVideoSource2
+  Dim SrcAud As IWMEncAudioSource
+
+' Add a source group to the collection.
+  Set SrcGrpColl = Encoder.SourceGroupCollection
+  Set SrcGrp = SrcGrpColl.Add("SG_1")
+
+' Add a video and audio source to the source group.
+  Set SrcVid = SrcGrp.AddSource(WMENC_VIDEO)
+  Set SrcAud = SrcGrp.AddSource(WMENC_AUDIO)
+
+' Identify the capture cards that will produce the content.
+  SrcVid.SetInput "DEVICE://Default_Video_Device"
+  SrcAud.SetInput "DEVICE://Default_Audio_Device"
+
+' Choose a profile from the collection.
+  Dim ProColl As IWMEncProfileCollection
+  Dim Pro As IWMEncProfile
+  Dim i As Integer
+
+  Set ProColl = Encoder.ProfileCollection
+
+  For i = 0 To ProColl.Count - 1
+    Set Pro = ProColl.Item(i)
+    If Pro.Name = "Windows Media Video 8 for Local Area Network (384 Kbps)" Then
+        SrcGrp.Profile = Pro
+        Exit For
+    End If
+  Next
+
+' Create an IWMEncBroadcast object to specify a port and a protocol.
+  Dim Brdcst As IWMEncBroadcast
+  Set Brdcst = Encoder.Broadcast
+  Brdcst.PortNumber(WMENC_PROTOCOL_HTTP) = 8080
+  
+' Initialize the encoding process.
+  Encoder.PrepareToEncode (True)
+
+End Sub
+
+Private Sub Command1_Click()
+' Start the encoding process.
+  Encoder.Start
+
+' Use a timer to get statistics once the encoding process has started.
+  Timer1.Enabled = True
+
+End Sub
+
+Private Sub Timer1_Timer()
+' Retrieve a WMEncStatistics object.
+  Dim Stats As IWMEncStatistics
+  Set Stats = Encoder.Statistics
+  
+' Display the elapsed encoding time.
+  Label1.Caption = "Elapsed time: " & CInt(Stats.EncodingTime * 10) & " seconds"
+
+' Retrieve two IWMEncOutputStats objects and 
+' display bit rate information about the output.
+  Dim OutputStats1 As IWMEncOutputStats
+  Set OutputStats1 = Stats.WMFOutputStats
+  Label2.Caption = "Expected bit rate: " & CInt(OutputStats1.ExpectedBitrate / 1000) & " Kbps"
+  
+  Dim OutputStats2 As IWMEncOutputStats
+  Set OutputStats2 = Stats.WMFOutputStats
+  Label3.Caption = "Current bit rate: " & CInt(OutputStats2.CurrentBitrate / 1000) & " Kbps"
+
+' Retrieve an IWMEncNetConnectionStats2 object.
+  Dim NetStats As IWMEncNetConnectionStats2
+
+' Display information about client connections.
+  Set NetStats = Stats.NetConnectionStats
+    Select Case NetStats.ClientCount:
+        Case 0:
+            Label4.Caption = "No viewers"
+        Case 1:
+            Label4.Caption = "1 viewer at " & NetStats.ClientInfo(0, WMENC_PROTOCOL_HTTP)
+        Case Else:
+            Label4.Caption = NetStats.ClientCount & " viewers"
+    End Select
+End Sub
+
+Private Sub Command2_Click()
+' Stop encoding and turn off the timer.
+  Encoder.Stop
+  Timer1.Enabled = False
+End Sub
+

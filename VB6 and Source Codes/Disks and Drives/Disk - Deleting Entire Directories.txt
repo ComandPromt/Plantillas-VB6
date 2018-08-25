@@ -1,0 +1,54 @@
+Tip 46: Deleting Entire Directories
+Created: April 3, 1995
+
+Abstract
+Visual Basic® offers several commands to manipulate disk files. You can delete a file with the Kill statement and delete a directory with the RmDir function. If the Visual Basic application you are creating needs to remove all the files stored in a directory, these two commands will do this for you. This article shows how you can use Visual Basic file commands to remove all files stored in a subdirectory, including those files stored under nested subdirectories.
+
+Recursively Deleting Files and Directories from a Disk
+The Visual Basic® Kill statement deletes a specified file from the disk. To delete a specific file, you simply pass the filename to the Kill statement. The Kill statement supports the wildcard "*" and "?" characters. By the same token, the RmDir statement in Visual Basic deletes a directory from the disk. To delete a directory successfully, the directory must be empty—that is, all files in the directory must have been previously deleted.
+
+It's easy to see how the Kill and RmDir statements can be used to delete entire directory structures very quickly. The example program below starts off by changing to the target directory and then deleting all files stored in that directory. Once all the files from this directory have been deleted, the program removes the empty directories it finds. This process is repeated until the entire target directory and its associated files have been successfully removed from the disk.
+
+The example program only processes files that have a file attribute of Normal. This means that you would have to modify the program to search for and delete files with other attributes, such as hidden, read-only, or volume label files.
+
+Example Program
+The following program will delete all the files in a directory. Note that in this example it is assumed that a directory named TEST exists on drive C. All files, including nested subdirectories and their files, will be removed from disk with this program. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Remove Entire Directory". 
+Add the following code to the Click event for Command1: 
+Sub Command1_Click()
+  Dim TempDir As String
+  TempDir = "C:\TEST"
+  Nuke TempDir
+End Sub
+
+Add a new subroutine procedure called Nuke. Add the following code to this procedure: 
+Sub Nuke(DirName As String)
+  Const ATTR_NORMAL = 0
+  Const ATTR_DIRECTORY = 16
+
+  Dim OriginalDir, FileName, NextFileName As String
+
+  OriginalDir = CurDir$
+  ChDir DirName
+  FileName = Dir$("*.*", ATTR_NORMAL)
+  Do While FileName <> ""
+      Kill FileName
+      FileName = Dir$
+  Loop
+
+  Do
+    FileName = Dir$("*.*", ATTR_DIRECTORY)
+    While FileName = "." Or FileName = ".."
+    FileName = Dir$
+  Wend
+
+    If FileName = "" Then Exit Do
+    Nuke (FileName)
+  Loop    
+
+  ChDir OriginalDir
+  RmDir DirName
+End Sub
+

@@ -1,0 +1,49 @@
+Tip 125: Retrieving a Compressed File's Original Name
+July 1, 1995
+
+Abstract
+When designing a Microsoft® Visual Basic® application, you may need to use an installation program to compress and decompress files needed by your program. This article explains how to retrieve the original file name of a compressed file.
+
+Using the GetExpandedName API Function
+The MS-DOS® COMPRESS.EXE program allows you to compress one or more files on disk. Compressed files take up less space on your disk, and they are typically used to create installation programs.
+
+The Microsoft® Windows®-based LZEXPAND.DLL function library contains several routines to open, close, read, and write compressed files. However, you need to first determine the file's original, uncompressed name.
+
+The Windows application programming interface (API) function GetExpandedName can retrieve the original name of a compressed file. Compressed files are stored on disk with the last character in the file name extension set to an underscore ("_") character. When you run the COMPRESS.EXE program, you have the option of using the "/r" command line parameter. This command line parameter tells COMPRESS.EXE to create the file with an underscore character as the last character in the file name.
+
+To use the GetExpandedName function in a Microsoft Visual Basic® application, add the following Declare statement to the General Declarations section of your form (note that this Declare statement must be typed as a single line of code):
+
+Private Declare Function GetExpandedName Lib "LZEXPAND.DLL" (ByVal lpszSource 
+   As String, ByVal lpszBuffer As String) As Integer
+
+The GetExpandedName function requires two arguments, as follows.
+
+lpszSource A string containing the compressed file's name 
+lpszBuffer A string to hold the complete file's name 
+
+After this function is called, a value greater than zero will be returned if the operation was successful. If the function was not successful, a negative value will be returned.
+
+Example Program
+This program shows how to retrieve the full name of a file that was previously compressed by the COMPRESS.EXE program. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Declare statement to the General Declarations section of Form1 (note that this Declare statement must be typed as a single line of code): 
+Private Declare Function GetExpandedName Lib "LZEXPAND.DLL" (ByVal lpszSource 
+   As String, ByVal lpszBuffer As String) As Integer
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim Temp As String
+    Dim X As Integer
+    
+    Text1.Text = ""
+    Temp = Space$(128)
+    X = GetExpandedName("C:\TEMP\MYFILE.DL_", Temp)
+    Text1.Text = "Filename: " & Temp
+End Sub
+
+Note   This program assumes that you have a previously compressed file called MYFILE.DL_ stored in the C:\TEMP directory.
+Run the example program by pressing F5. Click the command button. The full name of the compressed file will be displayed in the Text Box control.
+

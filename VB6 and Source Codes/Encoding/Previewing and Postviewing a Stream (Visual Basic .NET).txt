@@ -1,0 +1,44 @@
+Previewing and Postviewing a Stream (Visual Basic .NET)
+This example, which is written for the .NET platform, shows how you can view a stream before and after it is compressed (a preview and a postview). You will need an input file (C:\InputFile.mpg), and a form (Form1) for the displays with two panels (Panel_Preview and Panel_Postview). This example also requires you to add the Windows Media Encoder Preview Control COM reference to your project.
+
+Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+  Dim Encoder As WMEncoderLib.WMEncoder = New WMEncoderLib.WMEncoder()
+
+' Configure the encoding session. Add an audio source and a video source, and specify a profile.
+  Dim SrcGrpColl As WMEncoderLib.IWMEncSourceGroupCollection = Encoder.SourceGroupCollection
+  Dim SrcGrp As WMEncoderLib.IWMEncSourceGroup = SrcGrpColl.Add("SG_1")
+  Dim AudSrc As WMEncoderLib.IWMEncSource = SrcGrp.AddSource(WMEncoderLib.WMENC_SOURCE_TYPE.WMENC_AUDIO)
+  Dim VidSrc As WMEncoderLib.IWMEncVideoSource = SrcGrp.AddSource(WMEncoderLib.WMENC_SOURCE_TYPE.WMENC_VIDEO)
+  Dim ProColl As WMEncoderLib.IWMEncProfileCollection = Encoder.ProfileCollection
+  Dim Pro As WMEncoderLib.IWMEncProfile = ProColl.Item(1)
+
+' Specify the source file, and set the profile into the source group.
+  AudSrc.SetInput("C:\InputFile.mpg")
+  VidSrc.SetInput("C:\InputFile.mpg")
+  SrcGrp.Profile = Pro
+
+' Create two IWMEncDataViewCollection objects--one for the preview collection and one for the postview collection.
+  Dim DVColl_Preview As WMEncoderLib.IWMEncDataViewCollection = VidSrc.PreviewCollection
+  Dim DVColl_Postview As WMEncoderLib.IWMEncDataViewCollection = VidSrc.PostviewCollection
+
+' Create two WMEncDataView objects--one for previewing and one for postviewing.
+  Dim Preview As WMPREVIEWLib.WMEncDataView = New WMPREVIEWLib.WMEncDataView()
+  Dim Postview As WMPREVIEWLib.WMEncDataView = New WMPREVIEWLib.WMEncDataView()
+
+' Declare variables to identify each stream.
+  Dim lPreviewStream As Long = DVColl_Preview.Add(Preview)
+  Dim lPostviewStream As Long = DVColl_Postview.Add(Postview)
+
+' Start encoding.
+  Encoder.Start()
+
+' Display the preview in a frame named Panel_Preview.
+  Preview.SetViewProperties(lPreviewStream, Panel_Preview.Handle.ToInt32)
+  Preview.StartView(lPreviewStream)
+
+' Display the postview in a frame named Panel_Postview.
+  Postview.SetViewProperties(lPostviewStream, Panel_Postview.Handle.ToInt32)
+  Postview.StartView(lPostviewStream)
+
+End Sub
+

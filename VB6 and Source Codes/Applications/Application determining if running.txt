@@ -1,0 +1,10 @@
+'Description: Determines if an application is running by finding its window
+
+'Declare Function FindWindow% Lib "user" (ByVal lpClassName As Any,ByVal lpCaption As Any)
+
+'Place the following code in under a command button or in a menu, etc...
+lpClassName$ = "SciCalc"
+lpCaption$ = "Calculator"
+Print "Handle = ";FindWindow(lpClassName$, 0&)
+Print "Handle = ";FindWindow(0&, lpCaption$)
+Print "Handle = ";FindWindow(lpClassName$,lpCaption$)

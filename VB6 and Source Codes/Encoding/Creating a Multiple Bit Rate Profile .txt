@@ -1,0 +1,62 @@
+This example shows how to: 
+
+Create a multiple bit rate (MBR) profile with three audiences. 
+Change the settings that are applied by default. 
+Validate the settings. 
+Save the profile to a .prx file. 
+See the Listing All Codecs (Visual Basic) example for information about enumerating the codecs that you can use with profiles.
+
+Sub main()
+' Create a WMEncProfile2 object.
+  Dim Pro As WMEncProfile2
+  Set Pro = New WMEncProfile2
+  
+' Verify profile settings immediately as they are set.
+  Pro.ValidateMode = True
+  
+' Provide a name and description.
+  Pro.ProfileName = "Sample MBR Profile"
+  Pro.ProfileDescription = "A video profile with three audiences."
+  
+' Specify video content.
+  Pro.ContentType = 16
+  
+' Specify constant bit rate (CBR) mode.
+  Pro.VBRMode(WMENC_VIDEO, 0) = WMENC_PVM_NONE
+  
+' Add audiences for 200, 400, and 600 Kbps.
+  Pro.AddAudience 200000
+  Pro.AddAudience 400000
+  Pro.AddAudience 600000
+  
+' Create an audience object, then loop through all of the audiences
+' in the current profile, making the same changes to each audience.
+  Dim Audnc As IWMEncAudienceObj
+  For x = 0 To Pro.AudienceCount - 1
+    Set Audnc = Pro.Audience(x)
+    ' The Windows Media 9 codec is used by default, but you can change
+    ' it as follows. Be sure to make this change for each audience.
+      Audnc.VideoCodec(0) = 5
+    
+    ' Make the video output size match the input size by setting 
+    ' height and width to 0.
+      Audnc.VideoHeight(0) = 0
+      Audnc.VideoWidth(0) = 0
+      
+    ' Change the buffer size to 5 seconds. By default, the end user's
+    ' default setting is used.  
+      Audnc.VideoBufferSize(0) = 5000
+  Next x
+  
+' Change the video image sharpness for the first audience only.
+  Set Audnc = Pro.Audience(0)
+  Audnc.VideoImageSharpness(0) = 70
+  
+' Validate the settings to make sure the profile has no errors.
+  Pro.Validate
+  
+' Save the profile to a .prx file.
+  Pro.SaveToFile "C:\Program Files\Windows Media Components\Encoder\Profiles\MyProfile.prx"
+
+End Sub
+

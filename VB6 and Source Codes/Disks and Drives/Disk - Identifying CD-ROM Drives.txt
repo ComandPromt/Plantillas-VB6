@@ -1,0 +1,59 @@
+Tip 140: Identifying CD-ROM Drives
+July 1, 1995
+
+Abstract
+Within your Visual Basic® application, you can determine whether an attached drive is actually a CD-ROM drive. This article explains how you can identify a CD-ROM drive in Visual Basic.
+
+Finding All CD-ROM Drives Attached to the Computer System
+From within a Visual Basic® application program, you can determine whether a disk drive is actually a CD-ROM drive. To do this, however, you need to use a special dynamic-link library (DLL) called VBASM.DLL.
+
+The VBASM.DLL dynamic-link library allows you to perform low-level routines that Visual Basic itself cannot perform. Written entirely in assembly language, VBASM is available in the Microsoft® Development Library. (See Additional References at the end of this article.)
+
+The example program below tests each possible disk drive from 0 through 25 (for a total of 26 possible disk drives) to see whether that particular drive is a CD-ROM drive. The program does this by calling a low-level Int 2Fh multiplex interrupt function.
+
+Function 150Bh, Int 2Fh, tells you whether or not the specified disk drive is a valid CD-ROM drive. To call this function, you set the AX register to 150Bh and the CX register to the number of the disk drive you want to check. The function will return with the BX register set to ADADh if the MSCDEX.EXE device driver (that is, the CD-ROM driver) is installed, and the AX register is set to a nonzero value if the specified disk is a CD-ROM drive. It is, therefore, simply a matter of testing each possible disk drive, from 0 through 25, to determine exactly how many CD-ROM drives are attached to the computer system.
+
+Example Program
+This program tests each installed disk drive to determine whether it is a CD-ROM drive. In addition, the drive letter of each CD-ROM drive is displayed in the Text Box along with the total number of CD-ROM drives that the program found. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. Set its MultiLine property to True. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim I As Integer
+    Dim DriveType As Integer
+    Dim Drive As String * 2
+    Dim TotalCDDrives As Integer
+    Dim Regs As VBREGS
+    
+    TotalCDDrives = 0
+    Text1.Text = ""
+    
+    For I = 0 To 25
+        Regs.AX = &H150B
+        Regs.BX = &H0
+        Regs.CX = I
+        Call vbInterrupt(&H2F, Regs, Regs)
+        If (Regs.BX = &HADAD) Then
+            Debug.Print Regs.AX
+            If (Regs.AX <> 0) Then
+                TotalCDDrives = TotalCDDrives + 1
+                Text1.Text = Text1.Text & Chr$(I + 65) & " is a CD-ROM drive" & 
+                   Chr$(13) & Chr$(10)
+            End If
+        End If
+    Next I
+    If (TotalCDDrives = 0) Then
+        Text1.Text = Text1.Text & "No CD-ROM drives were found."
+    Else
+        Text1.Text = Text1.Text & Chr$(13) & Chr$(10) & Str$(TotalCDDrives) & 
+           "CD-ROM drives were found."
+    End If
+    
+End Sub
+
+Retrieve the VBASM.DLL and VBASM.TXT files from the Development Library. Copy the VBASM.DLL file to the \WINDOWS\SYSTEM directory. 
+Add a new BAS module to your project. Copy the VBASM.TXT file to this new BAS module. 
+Run the example program by pressing F5. Click the command button. In the Text Box control, the program will display the drive letter of each CD-ROM drive found installed in the computer system, in addition to a total count of the number of attached CD-ROM drives.
+

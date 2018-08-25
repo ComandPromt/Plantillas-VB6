@@ -1,0 +1,8 @@
+'Description: Detects if a file exists.
+
+'Function FileExists (filename As String) As Integer
+	On Error Resume Next
+        x% = Len(Dir$(filename))
+	If Err Or x% = 0 Then FileExists = False Else FileExists = True
+'End Function
+

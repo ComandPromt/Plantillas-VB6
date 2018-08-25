@@ -1,0 +1,78 @@
+Tip 206: Populating the Outline Control with a List of Directories and Files Stored on a Disk
+February 28, 1996
+
+Abstract
+The Microsoft® Windows® File Manager and Explorer applications use an Outline control to display directories and files in a hierarchical list. This article explains how to populate the Microsoft Visual Basic® version 4.0 Outline control using this same technique.
+
+Using the Outline Control
+The Microsoft® Visual Basic® version 4.0 Outline control is an advanced List Box control that allows you to display a hierarchical list of items to your user. The Outline control allows you to present items with indentation levels that can be expanded (the subordinate items become visible) or collapsed (the subordinate items become invisible). This means that a directory can be saved to the Outline control at one level of indentation and the files stored within that directory can be stored at a secondary level of indentation.
+
+The example program below populates an Outline control with all directories and files stored on the selected disk. This feat is accomplished by performing a recursive search through the disk's file structure. The name of a file is retrieved from the disk's directory. If this entry is a directory, it is added to the Outline control as a first-level indentation item. However, if the entry is a file, the entry is added to the Outline control at the next level of indentation. This action is repeated until every directory and file has been processed.
+
+Example Program
+This program shows how to populate the Outline control with all directory and files stored on a disk drive. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1: 
+Option Explicit
+Dim FIndent As Integer
+Dim FIndex As Integer
+Dim StrtPath As String
+
+Add an Outline control to Form1. Outline1 is created by default. 
+Add a Drive List Box control to Form1. Drive1 is created by default. 
+Add the following code to the Change event for Drive1: 
+Private Sub Drive1_Change()
+    Outline1.Clear
+    Outline1.AddItem Drive1.Drive & "\"
+    FIndent = 1
+    FIndex = 0
+    StrtPath = Drive1.Drive
+    Get_Files StrtPath
+    MsgBox "OK"
+End Sub
+
+Create a new procedure called Get_Files. Add the following code to this procedure: 
+Private Sub Get_Files(FPath As String)
+    Dim File_Name As String
+    Dim File_Path As String
+    Dim File_Read As Integer
+    Dim X As Boolean
+    Dim I As Integer
+
+    FIndent = FIndent + 1
+    File_Path = FPath & "\"
+    File_Name = Dir$(File_Path, vbDirectory)
+    File_Read = 1
+    X = False
+
+    Do While File_Name <> ""
+        If File_Name <> "." And File_Name <> ".." Then
+            If GetAttr(File_Path & File_Name) <> vbDirectory Then
+                Outline1.AddItem File_Name
+                FIndex = FIndex + 1
+                Outline1.Indent(FIndex) = FIndent
+            Else
+                StrtPath = File_Path & File_Name
+                Outline1.AddItem File_Name
+                FIndex = FIndex + 1
+                Outline1.Indent(FIndex) = FIndent
+                X = True
+                Get_Files StrtPath
+            End If
+        End If
+        If X = True Then
+            File_Name = Dir$(File_Path, vbDirectory)
+                For I = 2 To File_Read
+                    File_Name = Dir$
+                Next
+            X = False
+        End If
+        File_Name = Dir$
+        File_Read = File_Read + 1
+    Loop
+    FIndent = FIndent - 1
+End Sub
+
+Run the example program by pressing Select a disk drive from the Drive List Box control by clicking the desired drive letter. The program will display a message box when it has populated the Outline control with all directories and files found on the target disk drive.
+

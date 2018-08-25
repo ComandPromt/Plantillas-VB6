@@ -1,0 +1,83 @@
+Tip 7: Minimizing and Maximizing Program Manager
+Created: March 1, 1995
+
+Abstract
+When writing an application in Visual Basic®, you may want to keep your desktop window as free of clutter as possible. This article explains how to minimize Program Manager so that it appears as an icon on your desktop. The article also demonstrates how you can restore Program Manager's window to its original size.
+
+Using the FindWindow and ShowWindow Functions
+The Windows ShowWindow function is used to set a window's visibility status. You can tell the function to display the window as minimized, maximized, or any number of other states.
+
+To declare this function within your program, include the following Declare statement in the Global Module or General Declarations section of your form:
+
+Declare Function ShowWindow Lib "User" (ByVal hWnd As Integer, ByVal nCmdShow As Integer) As Integer
+
+Note that this Declare statement must be typed as one single line of text.
+
+To call the ShowWindow function, you pass the window's handle and the visibility status you want to apply to the window. The visibility status may be one of the following constants:
+
+SW_HIDE Window is hidden. 
+SW_MINIMIZE Window is minimized. 
+SW_RESTORE Window is restored to original size/position. 
+SW_SHOW Window is restored to original size/position and activated. 
+SW_SHOWMAXIMIZED Window is maximized and activated. 
+SW_SHOWMINIMIZED Window is minimized and activated. 
+SW_SHOWMINNOACTIVE Window is minimized but not activated. 
+SW_SHOWNA Window is shown at current size/position but not activated. 
+SW_SHOWNORMAL Window is restored to original size/position. 
+
+To change the visibility status of a window with the ShowWindow function, you must first determine the window's handle. In our case, we need to retrieve the handle for Program Manager. This can be accomplished by calling the FindWindow function.
+
+To declare the FindWindow function within your program, include the following Declare statement in the Global Module or General Declarations section of your form:
+
+Declare Function FindWindow Lib "User" (ByVal lpClassName As Any, ByVal lpWindowName As Any) As Integer
+
+To call the FindWindow function, you must pass it two arguments, as follows:
+
+lpClassName A string (or long pointer to a string) that contains the window's class name. A value of zero is used to accept any class. 
+lpWindowName A string (or long pointer to a string) that contains the window's title bar text. A value of zero is used to accept any window title. 
+
+Because we want to minimize (or maximize) Program Manager to an icon, we would call the FindWindow function with the following statement:
+
+hWnd = FindWindow(0&, "Program Manager")
+
+The window's handle will be returned in the hWnd variable. We can then call the ShowWindow function to minimize or to maximize Program Manager with these two statements:
+
+I = ShowWindow(hWnd, SW_SHOWMINNOACTIVE)
+I = ShowWindow(hWnd, SW_RESTORE)
+
+Example Program
+The following program shows how to minimize and maximize Program Manager from within a Visual Basic application. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of text): 
+Declare Function ShowWindow Lib "User" (ByVal hWnd As Integer, ByVal nCmdShow
+    As Integer) As Integer
+Declare Function FindWindow Lib "User" (ByVal lpClassName As Any, ByVal 
+    lpWindowName As Any) As Integer
+Const SW_SHOWMINNOACTIVE = 7
+Const SW_RESTORE = 9
+
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Minimize PM". 
+Add the following code to the Click event for Command1: 
+Sub Command1_Click()
+    Dim hWnd As Integer, I As Integer
+    
+    hWnd = FindWindow(0&, "Program Manager")
+    If hWnd <> 0 Then
+        I = ShowWindow(hWnd, SW_SHOWMINNOACTIVE)
+    End If
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. Set its Caption property to "Maximize PM". 
+Add the following code to the Click event for Command2: 
+Sub Command2_Click()
+    Dim hWnd As Integer, I As Integer
+    
+    hWnd = FindWindow(0&, "Program Manager")
+    If hWnd <> 0 Then
+        I = ShowWindow(hWnd, SW_RESTORE)
+    End If
+    Form1.SetFocus
+End Sub
+
+When you execute this demonstration program, click on the "Minimize PM" command button to make Program Manager a minimized icon on the desktop. Click on the "Maximize PM" command button to restore Program Manager to its default size.

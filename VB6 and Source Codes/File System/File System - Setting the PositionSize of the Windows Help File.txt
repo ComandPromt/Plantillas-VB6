@@ -1,0 +1,90 @@
+Tip 169: Setting the Position and Size of the Windows Help File
+December 5, 1995
+
+Abstract
+This article explains how to set Microsoft® Windows® Help files (or the Help files of any other application) to a specific position on the screen and to a specific size.
+
+Using the WinHelp Function to Position and Size Help Files
+Designing a Help file for your Microsoft® Visual Basic® application is necessary if your program is either complicated or fairly large. After you have created your Help file, you can easily use the Microsoft Windows® application programming interface (API) WinHelp function to display your application's Help file in the exact position and in the exact size you want.
+
+The WinHelp function runs the Windows Help application. This program lets you specify the Help file you want to display to your user. The Declaration statement for the WinHelp function is:
+
+Declare Function WinHelp Lib "user32" Alias "WinHelpA" (ByVal hwnd As Long, 
+   ByVal lpHelpFile As String, ByVal wCommand As Long, dwData As Any) As Long
+
+The WinHelp function requires four arguments, as follows:
+
+hWnd A long value containing the window's handle. 
+LpHelpFile A string containing the full path of the Help file to display. 
+Wcommand A long value that specifies the type of Help to display. This can be one of the following values: 
+  HELP_COMMAND Runs a Help macro or macro string. The dwData argument is a string containing the name of this macro. 
+  *HELP_CONTENTS Displays the topic specified by the Contents option in the [OPTIONS] section of the Help file. 
+  HELP_CONTEXT Displays the topic identified by the context identifier defined in the [MAP] section of the Help file. The dwData argument contains the context identifier in a long unsigned integer. 
+  HELP_CONTEXTPOPUP Same as HELP_CONTEXT except that the Help file appears in a pop-up window. 
+  HELP_FORCEFILE Ensures that Windows displays the correct Help file. The dwData argument must be set to zero. 
+  HELP_HELPONHELP Displays the WINHELP.HLP file. This file explains how to use the Windows Help system. The dwData argument must be set to zero. 
+  *HELP_INDEX Displays the index in the Help Topics dialog box. The dwData argument must be set to zero. 
+  HELP_KEY Displays the topic in the keyword table that matches the specified keyword. The dwData argument contains the address of a keyword string. 
+  HELP_MULTIKEY Displays the topic in the alternative keyword table that matches the specified keyword. The dwData argument points to a MULTIKEYHELP structure. This structure specifies a keyword and a table footnote character. 
+  HELP_PARTIALKEY Displays the topic in the keyword table that most closely matches the specified keyword. The index tab appears if more than one match is found. The index can be displayed by using a pointer to an empty string. The dwData argument must contain the address of a keyword string. 
+  HELP_QUIT Closes the Windows Help application, providing that no other applications need it. The dwData argument must be set to zero. 
+  HELP_SETCONTENTS Displays the Contents topic, which is selected when the user clicks the Contents button. The dwData argument contains the context identifier for the Contents topic in an unsigned long integer. 
+  HELP_SETINDEX Displays the specified keyword table in the Index of the Help Topics dialog box. The dwData argument contains the context identifier for the Index topic in an unsigned long integer. 
+  HELP_SETWINPOS Displays the Help window. The dwData argument contains the address of a HELPWININFO structure that specifies the Help window's size and position. 
+DwData Set according to the wCommand argument. 
+
+*Note: New applications should use the HELP_FINDER value instead of this value. This older command is provided for downward compatibility only.
+In the list of options for the wCommand argument above, you can see that calling the WinHelp function with the HELP_SETWINPOS value allows you to set the size and position of your own Help window.
+
+The HELP_SETWINPOS value displays a Windows Help file window, providing it is loaded in memory and/or minimized. The exact position and size of the window is specified in the HELPWININFO structure.
+
+The HELPWININFO structure contains seven fields, as follows:
+
+wStructSize A long value containing the size of the HELPWININFO structure, specified in bytes. 
+X A long value containing the X-coordinate of the upper-left corner of the window, specified in screen coordinates. 
+Y A long value containing the Y-coordinate of the upper-left corner of the window, specified in screen coordinates. 
+Dx A long value containing the width of the window, specified in pixels. 
+dy A long value containing the length of the window, specified in pixels. 
+wMax A long value that specifies how the window is to be displayed. (See the explanation for the nShowCmd argument in Tip #22 for these values.) 
+rgchMember A string containing the name of the window. 
+
+To show a Help window in a specific size, the dx and dy fields of the HELPWININFO structure need to be defined. In the example program below, you set the values of these two fields to 620 pixels each.
+
+Likewise, you set the position of the Help window in the example program by setting the X and Y fields of the HELPWININFO structure to 400 each.
+
+Each time the program displays the Help window, the window appears at this new position and in this new size.
+
+Example Program
+This program shows how to position the Windows Help file (or any other Help file) to a specific location on the screen and in a specific size. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Click()
+    Dim Temp As Long
+    hwf.wStructSize = Len(hwf)
+    hwf.x = 400
+    hwf.y = 400
+    hwf.dx = 620
+    hwf.dy = 620
+    hwf.wMax = 1
+    Temp = WinHelp(Form1.hwnd, "c:\windows\winhelp.hlp", HELP_SETWINPOS, hwf)
+
+End Sub
+
+From the Visual Basic Insert menu, select Module to create a new module. Module1.Bas is created by default. 
+Add the following Constant, Type, and Declare statements to Module1.Bas (note that the Declare statement must be typed as a single line of code): 
+Declare Function WinHelp Lib "user32" Alias "WinHelpA" (ByVal hwnd As Long, 
+   ByVal lpHelpFile As String, ByVal wCommand As Long, dwData As Any) As Long
+   Type HELPWININFO
+        wStructSize As Long
+        x As Long
+        y As Long
+        dx As Long
+        dy As Long
+        wMax As Long
+        rgchMember As String * 2
+End Type
+Global Const HELP_SETWINPOS = &H203&
+Global hwf As HELPWININFO
+
+Run the example program by pressing F5. Form1 appears on the screen. Click the mouse anywhere on the form to display the Help file for Windows. Notice that the window is positioned in the lower-right corner of the screen and that the window's size has been set to 620 x 620 pixels.

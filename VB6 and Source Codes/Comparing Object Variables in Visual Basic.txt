@@ -1,0 +1,35 @@
+Tip 122: Comparing Object Variables in Visual Basic
+July 1, 1995
+
+Abstract
+The IS operator in Microsoft® Visual Basic® lets you determine whether the names of two variables refer to the same object (a control or form). This article explains how you can compare two object variables to determine whether they are the same entity.
+
+Using the IS Operator
+Microsoft® Visual Basic® allows you to dynamically create new objects at run time. For example, if you wanted to create another copy of Form1 while your program is running, you would issue a Dim statement to create an object variable of the Form type. The Set statement lets you create a new instance of a form or control. The just-cloned copy of the form or control inherits the same properties as the original form or control. Therefore, the Set command assigns a variable name to the cloned form or control, which allows you to keep track of the newly created objects. Later on in your Visual Basic application, you can use the IS operator to determine whether two object variables refer to the same control or form.
+
+In the example program below, you use the statement:
+
+If CopyOfForm Is Form1 Then...
+
+to see whether the new instance of the form you just created is the same as the original form. If it is, you display a message to that effect.
+
+When using object variables in your Visual Basic applications, you should be aware of two caveats. First, you cannot compare two object variables by using the equal ("=") operation. Second, the IS operator must be used within an If-Then statement, not from within a While loop.
+
+Example Program
+This program shows how to compare two Visual Basic objects to see whether they are identical. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1: 
+Dim CopyOfForm As New Form1
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1. 
+Private Sub Command1_Click()
+    Set CopyOfForm = Form1
+    CopyOfForm.Show
+    If CopyOfForm Is Form1 Then
+        MsgBox "CopyOfForm is a copy of Form1."
+    End If
+End Sub
+
+Run the example program by pressing F5. The Set command creates the two forms, even though only one copy of the form is visible. A message box is displayed, confirming that the two object variables (CopyOfForm and Form1) are the same entities (that is, both forms have exactly the same property settings). Note that if you run the example program by first removing the Set statement in the Click event of Command1, the comparison does not find the two forms to be identical controls.

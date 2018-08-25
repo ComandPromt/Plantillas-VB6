@@ -1,0 +1,9 @@
+'Description: Conditionally compiles code for 32 and 16 bit systems
+
+'Place the following code in a module, form, etc...
+
+#if Win32 then
+      'code for 32-bit systems
+#else
+       'code for 16-bit systems
+#end if

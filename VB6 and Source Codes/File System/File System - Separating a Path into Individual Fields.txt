@@ -1,0 +1,63 @@
+Tip 65: Separating a Path into Individual Fields
+Created: April 24, 1995
+
+Abstract
+When developing an application in Visual Basic®, you may need to ask the user to enter a fully qualified path, such as when saving a data file to disk. However, your program may need to determine if the specified directory and filename are valid DOS names, or you may need to use the individual elements of the path in some other way. This article demonstrates how you can write a procedure to extract the individual path, filename, and filename extension from a fully qualified path.
+
+Parsing the Elements of a Path
+The Visual Basic® InStr and Left$ functions provide the tools you need to parse, or extract, certain text from a larger text string. The InStr function lets you search for a specific character within a text string. If it finds the target character, InStr returns the character's position in the text string. Once you know where the target text is, you can use the Left$ function to retrieve only a specific portion of the original text string. In the example program below, we want to retrieve the directory name from the path. Therefore, we first call InStr to search the target string (Full) for the "\" backslash character. The backslash character tells us that the name of a directory was specified in the path. If the backslash character is found, we use the Left$ function to extract this directory name and store it in the variable Pname. We know that the name of the directory starts at the string's first position and ends at the position returned by InStr. This same technique is used to extract the filename extension from the specified filename, only the InStr function is told to search for the '.' (period character) and the Mid$ function is used to extract the actual filename's extension.
+
+Example Program
+The following program shows how you can separate a fully qualified path into separate directory, filename, and filename extension fields. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. Set its MultiLine property to True. 
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+  Dim FullName As String
+  Dim X As Integer
+  Dim PathName As String
+  Dim FileName As String
+  Dim ExtName As String
+  
+  FullName = "c:\winword\legal\filename.exe"
+  X = BreakDown(FullName, FileName, PathName, ExtName)
+     
+  Text1.Text = ""
+  Text1.Text = "Pathname  > " & PathName & Chr(13) & Chr(10)
+  Text1.Text = Text1.Text & "FileName  > " & FileName & Chr(13) & Chr(10)
+  Text1.Text = Text1.Text & "Extension > " & ExtName & Chr(13) & Chr(10)
+    
+End Sub
+
+Create a new function called BreakDown. Add the following code to this function (note that the BreakDown line must be typed as a single line of code): 
+BreakDown(Full As String, FName As String, PName As String, Ext As String) As Integer
+  If Full = "" Then
+      BreakDown = False
+      Exit Function
+  End If
+
+  If InStr(Full, "\") Then 
+FName = Full
+      PName = ""
+      Sloc% = InStr(FName, "\")
+      Do While Sloc% <> 0
+        PName = PName + Left$(FName, Sloc%)
+        FName = Mid$(FName, Sloc% + 1)
+        Sloc% = InStr(FName, "\")
+      Loop
+
+  Else
+      PName = ""
+      FName = Full
+  End If
+
+  Dot% = InStr(Full, ".")
+  If Dot% <> 0 Then 
+      Ext = Mid$(Full, Dot%)
+  Else
+      Ext = ""
+  End If
+  BreakDown = True
+End Function
+

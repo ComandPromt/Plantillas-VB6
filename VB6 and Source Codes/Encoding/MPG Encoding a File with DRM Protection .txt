@@ -1,0 +1,92 @@
+Sub Main()
+
+' Create a WMEncoder object.
+  Dim Encoder As WMEncoder
+  Set Encoder = New WMEncoder
+
+' Create an IWMDRMContentAuthor object.
+  Dim DRM As IWMDRMContentAuthor
+  Set DRM = Encoder.EncoderDRMContentAuthor
+
+' Retrieve the collection of DRM profiles.
+  Dim DRMProColl As IWMDRMProfileCollection
+  Set DRMProColl = DRM.DRMProfileCollection
+
+' Declare variables. Specify the provider's Web site and signature values.
+' The other variables are returned.
+  Dim sPublicKey As String
+  Dim sWebURL As String
+  Dim vProfileID As Variant
+  Dim vSeed As Variant
+  Dim sSigPrivKey As String
+  Dim sSignedPubKey As String
+  Dim sSigLSCert As String
+  Dim sSigRootCert As String
+  sWebURL = "http://YourWebSite"
+  sSigPrivKey = "Replace with signature private key"
+  sSignedPubKey = "Replace with signed public key"
+  sSigLSCert = "Replace with the licensor certificate"
+  sSigRootCert = "Replace with the Microsoft DRM License Server Root certificate"
+
+' Create the DRM profile. The public key, DRM profile ID, and
+' license key seed are returned.
+  sPublicKey = DRM.CreateDRMProfile(sWebURL, sSigPrivKey, sSignedPubKey, _
+  sSigLSCert, sSigRootCert, vProfileID, vSeed)
+
+' Create an IWMDRMProfile object. Assuming the new profile is the only one
+' in the collection, retrieve the DRM profile with item index = 0.
+  Dim DRMPro As IWMDRMProfile
+  Set DRMPro = DRMProColl.Item(0)
+
+' Set the rest of the properties for the DRM profile.
+  DRMPro.Description = "Replace with a description of this DRM profile"
+  DRMPro.LicenseAcquisitionURL = "Replace with v7 license acquisition URL"
+  DRMPro.Name = "Replace with a name for the DRM profile"
+  DRMPro.V1LicenseAcquisitionURL = "Replace with v1 license acquisition URL"
+
+' Add the required individualization version as an attribute in the DRM profile.
+  Dim ProAttr As IWMDRMAttributes
+  Set ProAttr = DRMPro.Attributes
+  ProAttr.Add "SECURITYVERSION", "2.2"
+
+' Add the content ID as an attribute. This attribute is for the current
+' session only, and is not saved in the profile.
+  Set ProAttr = DRM.Attributes
+  ProAttr.Add "ContentID", "10011"
+
+' Set the profile into the DRM session.
+  Dim vKeyID As Variant
+  DRM.SetSessionDRMProfile DRMPro.ID, vKeyID
+
+' Configure an encoding session.
+' Create a source group and add a file as the input source.
+  Dim SrcGrpColl As IWMEncSourceGroupCollection
+  Set SrcGrpColl = Encoder.SourceGroupCollection
+
+  Dim SrcGrp As IWMEncSourceGroup
+  Set SrcGrp = SrcGrpColl.Add("SG_1")
+
+  Dim SrcAud As IWMEncAudioSource
+  Dim SrcVid As IWMEncVideoSource
+  Set SrcAud = SrcGrp.AddSource(WMENC_AUDIO)
+  Set SrcVid = SrcGrp.AddSource(WMENC_VIDEO)
+  SrcAud.SetInput "C:\InputFile.mpg"
+  SrcVid.SetInput "C:\InputFile.mpg"
+
+' Specify an output file.
+  Dim File As IWMEncFile
+  Set File = Encoder.File
+  File.LocalFileName = "C:\PROTECTED.wmv"
+
+' Specify a profile.
+  Dim ProColl As IWMEncProfileCollection
+  Set ProColl = Encoder.ProfileCollection
+  SrcGrp.Profile = ProColl.Item(2)
+
+' Start encoding.
+  Encoder.Start
+  
+  MsgBox "Click OK when finished encoding."
+
+End Sub
+

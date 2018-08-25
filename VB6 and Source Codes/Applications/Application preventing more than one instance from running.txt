@@ -1,0 +1,6 @@
+'Description: Prevents than one instance of an application from running
+
+'Place the following code in a Form_Load() or Sub Main()
+
+If App.PrevInstance = True Then
+Unload Me

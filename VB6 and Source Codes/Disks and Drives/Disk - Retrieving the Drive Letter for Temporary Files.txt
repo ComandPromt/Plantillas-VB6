@@ -1,0 +1,46 @@
+Tip 25: Retrieving the Drive Letter for Temporary Files
+Created: March 1, 1995
+
+Abstract
+When you install a Windows®-based application on your hard disk, it creates its own directory and copies its files to that directory. However, when you run the application, it may need to create additional temporary data files of some sort. Where does the application store these temporary files and how can your program retrieve this drive number and/or path?
+
+The GetTempDrive and Environ$ Functions
+A temporary file can be created in any directory on the hard drive, but a Windows®-based application needs to know where you would like these files stored. To determine which disk drive should be used to hold temporary files, you can call the Windows application programming interface (API) GetTempDrive function . Include the following Declare statement in the Global Module or the General Declarations section of a Visual Basic® program:
+
+Declare Function GetTempDrive Lib "Kernel" (ByVal cDriveLetter As Integer)
+   As Integer
+
+Note that this Declare statement must be typed as a single line of text.
+
+The GetTempDrive function does not require any arguments—you simply call it. After you do so, it will return an integer value that represents the disk drive you can use to store temporary files. However, you will need to convert the drive number to an ASCII drive letter.
+
+To convert the drive number to a drive letter, execute the following code:
+
+DriveLetter = Chr$(Drive And &HFF)
+
+As stated earlier, the GetTempDrive function retrieves the drive that can be used to store temporary files while your application is executing. GetTempDrive will return the drive number of the first hard disk it finds, which is usually the C: drive. However, this is not necessarily the same disk drive that is returned by retrieving the TEMP environment variable.
+
+The TEMP environment variable tells you the drive and/or directory that can be used to store temporary files as well. You retrieve the TEMP environment variable in a Visual Basic application by issuing the statement:
+
+X$ = Environ$("TEMP")
+
+Environ$ will retrieve the full path as stored in the DOS environment's TEMP variable. If you are creating a temporary file, you will need to append the filename to this variable's string (that is, X$ = X$ + FileName$).
+
+Example Program
+The following program will retrieve the drive letter from the computer system. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+In the general declarations section of Form1, enter the following three statements (note that the Declare statement must be typed as a single line of text): 
+Dim Drive As Integer
+Dim DriveLetter As String
+Declare Function GetTempDrive Lib "Kernel" (ByVal cDriveLetter As Integer)
+    As Integer
+
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+    Drive = GetTempDrive(0)
+    DriveLetter = Chr$(Drive And &HFF)
+    Text1.Text = DriveLetter
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. 

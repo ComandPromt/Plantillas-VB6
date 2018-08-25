@@ -1,0 +1,29 @@
+Description: Determines drive type by letter designation
+
+'Private Declare Function GetDriveType Lib "kernel32" Alias "GetDriveTypeA" _
+ (ByVal nDrive As String) As Long
+'Const DRIVE_REMOVABLE = 2
+'Const DRIVE_REMOTE = 4
+'Const DRIVE_RAMDISK = 6
+'Const DRIVE_FIXED = 3
+'Const DRIVE_CDROM = 5
+
+'syntax: MyDriveType("a:") or MyDriveType(dir1.path) etc..,
+'Function MyDriveType(ByVal DR As String) As String
+DR = Left$(DR, 2)
+x% = GetDriveType(DR)
+Select Case x%
+    Case DRIVE_REMOVABLE
+        MyDriveType = "REMOVABLE    " & DR
+    Case DRIVE_FIXED
+        MyDriveType = "FIXED        " & DR
+    Case DRIVE_REMOTE
+        MyDriveType = "REMOTE       " & DR
+    Case DRIVE_RAMDISK
+        MyDriveType = "RAMDISK      " & DR
+    Case DRIVE_CDROM
+        MyDriveType = "CDROM        " & DR
+    Case Else
+        MyDriveType = "UNKNOWN      " & DR
+End Select
+'End Function

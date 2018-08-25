@@ -1,0 +1,12 @@
+Description: Opens / Closes the CD drive door without OCX 
+
+'Private Declare Function mciSendString Lib "winmm.dll" Alias_ 
+ "mciSendStringA" (ByVal lpstrCommand As String, ByVal lpstrReturnString As String, _
+ ByVal uReturnLength As Long, ByVal hwndCallback As Long) As Long
+
+
+'Open CD drive door
+retvalue = mciSendString("set CDAudio door open", returnstring, 127, 0)
+
+'Close CD drive door
+retvalue = mciSendString("set CDAudio door closed", returnstring, 127, 0)

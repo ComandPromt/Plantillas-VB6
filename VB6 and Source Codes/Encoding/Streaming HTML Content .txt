@@ -1,0 +1,198 @@
+Streaming HTML Content (Visual Basic)
+This example shows how to include simple HTML content in a stream. The three parts of the example show how to: 
+
+Create a profile for use with audio, video, and HTML content. 
+Configure the encoding session. 
+Create a sample Web page with an embedded player control. 
+To test the sample, create the profile and start the encoding session, and then open the Web page to view the presentation. Click a button on the Visual Basic form to send Web content.
+
+Creating a Profile for HTML Content
+
+This example creates a profile for use with audio, video, and HTML content. Save the profile in the custom profiles directory so that this profile is included in the profile collection. For more information about the custom profile directory, see Enumerating and Setting Profiles. 
+
+Sub main()
+' Create a WMEncProfile2 object.
+  Dim Pro2 As WMEncProfile2
+  Dim Aud As IWMEncAudienceObj
+  Set Pro2 = New WMEncProfile2
+
+' Turn on validation, then specify the profile name and description.
+  Pro2.ValidateMode = True
+  Pro2.ProfileName = "HTML Profile"
+  Pro2.ProfileDescription = "Use with audio, video, and HTML content."
+
+' Set the content type to audio, video, and script.
+  Pro2.ContentType = 4113
+
+' Use CBR mode for the audio and video streams. By default, the 
+' Windows Media Audio 9 and Windows Media Video 9 codecs are used.
+  Pro2.VBRMode(WMENC_AUDIO, 0) = WMENC_PVM_NONE
+  Pro2.VBRMode(WMENC_VIDEO, 0) = WMENC_PVM_NONE
+
+' Add an audience of 500 Kbps.
+  Pro2.AddAudience 500000
+
+' Retrieve the first (and only) audience, then specify the HTML
+' stream bit rate (100 Kbps) and preroll (5 seconds).
+  Set Aud = Pro2.Audience(0)
+  Aud.StreamBitrate(WMENC_FILETRANSFER, 0) = 100000
+  Aud.Property(WMENC_FILETRANSFER, 0, "BufferWindow") = 5000
+
+' Validate settings, then save the profile.
+  Pro2.Validate
+  Pro2.SaveToFile "C:\Program Files\Windows Media Components\Encoder\Profiles\HTML.prx"
+
+End Sub
+
+Configuring an Encoding Session for HTML Content
+
+For this example, you need a form with two buttons (Command1 and Command2). It is assumed you have a folder (C:\HTML) with two images (image1.jpg and image2.jpg).
+
+' Declare variables. 
+  Dim Encoder As WMEncoder
+  Dim SrcGrpColl As IWMEncSourceGroupCollection
+  Dim SrcGrp As IWMEncSourceGroup2
+  Dim SrcAud As IWMEncAudioSource
+  Dim SrcVid As IWMEncVideoSource
+  Dim SrcHTML As IWMEncSource
+  Dim Pro As IWMEncProfile
+  Dim ProColl As IWMEncProfileCollection
+  Dim Brdcst As IWMEncBroadcast
+  Dim pUnkFileSrcPlugin As IUnknown
+  Dim FileSet As IWMEncFileSet
+  Dim FileTransSrc As IWMEncFileTransferSource
+
+Private Sub Form_Load()
+' Create a WMEncoder object.
+  Set Encoder = New WMEncoder
+
+' Retrieve the source group collection and add a source group.
+  Set SrcGrpColl = Encoder.SourceGroupCollection
+  Set SrcGrp = SrcGrpColl.Add("SG_1")
+
+' Add an audio, video, and HTML source to the source group. 
+  Set SrcAud = SrcGrp.AddSource(WMENC_AUDIO)
+  Set SrcVid = SrcGrp.AddSource(WMENC_VIDEO)
+  Set SrcHTML = SrcGrp.AddSource(WMENC_FILETRANSFER)
+
+' Use the default audio and video devices. 
+  SrcAud.SetInput ("Device://Default_Audio_Device")
+  SrcVid.SetInput ("Device://Default_Video_Device")
+
+' The HTML scheme is FileTransfer, and the resource string is not used. 
+  SrcHTML.SetInput ("FileTransfer://placeholdertext")
+
+' Set the HTML stream to repeat. 
+  SrcHTML.Repeat = True
+
+' Set up a pull broadcast from port 8080.
+  Set Brdcst = Encoder.Broadcast
+  Brdcst.PortNumber(WMENC_PROTOCOL_HTTP) = 8080
+
+' Retrieve the profile you just created and set it into the source group.
+  Set ProColl = Encoder.ProfileCollection
+  Dim x As Integer
+  For x = 0 To ProColl.Count - 1
+    Set Pro = ProColl.Item(x)
+    If Pro.Name = "HTML Profile" Then
+      SrcGrp.Profile = Pro
+      Exit For
+    End If
+  Next x
+
+' Start encoding.
+  Encoder.Start
+
+' Retrieve the file transfer plug-in from the HTML source. 
+  Set pUnkFileSrcPlugin = SrcHTML.GetSourcePlugin
+  Set FileTransSrc = pUnkFileSrcPlugin
+End Sub
+
+Private Sub Command1_Click()
+' When you click this button, create a new file set, add HTML content to
+' it, and then send it. 
+  Set FileSet = FileTransSrc.Add
+  FileSet.Add "C:\HTML\image1.jpg", "image1.jpg"
+  FileTransSrc.Send FileSet
+End Sub
+
+Private Sub Command2_Click()
+' When you click this button, create a new file set, add HTML content to
+' it, and then send it. 
+  Set FileSet = FileTransSrc.Add
+  FileSet.Add "C:\HTML\image2.jpg", "image2.jpg"
+  FileTransSrc.Send FileSet
+End Sub
+
+Creating a Web Page with an Embedded Player
+
+The following HTML code is for a very simple Web page with an embedded player. The player control is set to display URLs in the same window (rather than launching new instances of the Web browser). 
+
+Replace the hard-coded URL in this page (HTTP://COMPUTER_NAME:8080) with the URL to your encoding broadcast.
+
+<html>
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<script Language="vbscript">
+function init()
+myMessage.InnerHTML = "Loading"
+dshow.settings.invokeURLs = False
+End function
+</script>
+<base target="Content">
+</head>
+
+<body onload="init()" bgcolor="#336699">
+
+<script FOR="DSHOW" EVENT="Buffering(bStart)" LANGUAGE="vbScript">
+myMessage.InnerHTML = "Loading...please wait."  
+</script>
+<script FOR="DSHOW" EVENT="scriptCommand(scType, Param)" LANGUAGE="VBScript">
+Select Case scType 
+Case "URL" 
+   document.all.oTransContainer.SRC = Param
+   myMessage.InnerHTML = Param 
+Case Else
+   msgbox scType
+End Select
+</script>
+<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="31%" id="AutoNumber1" height="258">
+  <tr>
+    <td width="1%" height="175">&nbsp;</td>
+    <td width="94%" height="175">
+    <object ID="DSHOW" CLASSID="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6" width="288" height="245">
+      <param NAME="URL" VALUE="HTTP://COMPUTER_NAME:8080" ref>
+      <param NAME="DefaultFrame" VALUE="Content">
+      <param NAME="fullscreen" VALUE="0">
+      <param NAME="rate" VALUE="1">
+      <param NAME="balance" VALUE="0">
+      <param NAME="currentPosition" VALUE="0">
+      <param NAME="playCount" VALUE="1">
+      <param NAME="autoStart" VALUE="-1">
+      <param NAME="currentMarker" VALUE="0">
+      <param NAME="invokeURLs" VALUE="-1">
+      <param NAME="volume" VALUE="50">
+      <param NAME="mute" VALUE="0">
+      <param NAME="uiMode" VALUE="mini">
+      <param NAME="stretchToFit" VALUE="0">
+      <param NAME="windowlessVideo" VALUE="0">
+      <param NAME="enabled" VALUE="0">
+      <param NAME="enableContextMenu" VALUE="-1">
+    </object>
+    </td>
+    <td width="34%" height="175">
+    <iframe ID="oTransContainer" STYLE="position: absolute; top: 11; left: 350; width: 393; height: 278; filter: progidDXImageTransform.Microsoft.Fade(duration1.0,overlap1.0)">
+    </iframe></td>
+  </tr>
+  <tr>
+    <td width="1%" height="19">&nbsp;</td>
+    <td width="94%" height="19">
+    <div ID="myMessage">
+    </div>
+    </td>
+    <td width="34%" height="19">&nbsp;</td>
+  </tr>
+</table>
+</body>
+</html>
+

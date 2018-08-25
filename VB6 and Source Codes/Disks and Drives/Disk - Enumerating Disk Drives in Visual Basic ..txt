@@ -1,0 +1,63 @@
+Tip 149: Enumerating Disk Drives in Visual Basic 4.0
+August 31, 1995
+
+Abstract
+When you write a program in Microsoft® Visual Basic®, you may need to determine which disk drives are installed in the computer system. This article shows how to enumerate all disk drives within Visual Basic version 4.0.
+
+Using the GetLogicalDriveString Function
+You can use the Microsoft® Windows® application programming interface (API) GetLogicalDriveString function in a Microsoft Visual Basic® program to find out which disk drives are available. To use this function, you must include the following Declare statement in the General Declarations section of your program:
+
+Private Declare Function GetLogicalDriveStrings Lib "kernel32" Alias 
+   "GetLogicalDriveStringsA" (ByVal nBufferLength As Long,
+    ByVal lpBuffer As String) As Long
+
+The GetLogicalDriveString function requires two arguments, as follows.
+
+nBufferLength A long value containing the maximum size of the lpBuffer 
+lpBuffer A string buffer that will hold the drive letters 
+
+After the program calls this function, the lpBuffer is filled with entries that describe each valid disk drive found in the computer system. The string is null-terminated. Each entry in this string contains the drive letter, followed by a colon and a backslash character. For example, if drive A is found, the string will contain the entry:
+
+    NULL a:\ NULL NULL
+
+Notice that each entry is terminated by a null byte, and the last entry in the string is terminated by two consecutive null bytes.
+
+The example program below displays a list of all available disk drives in the Text Box control. The program uses the InStr and Mid functions to extract each individual entry from the lpBuffer string.
+
+Example Program
+This program shows how to create a list of all disk drives installed in the computer system. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Declare statement to the General Declarations section of Form1 (note that this Declare statement must be typed as a single line of code): 
+Private Declare Function GetLogicalDriveStrings Lib "kernel32" Alias 
+   "GetLogicalDriveStringsA" (ByVal nBufferLength As Long, 
+   ByVal lpBuffer As String) As Long
+
+Add a Text Box control to Form1. Text1 is created by default. Set its MultiLine property to True. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim X As Long
+    Dim L As Integer
+    Dim BufLen As Long
+    Dim BufString As String * 256
+    BufLen = 256
+    
+    Text1.Text = ""
+    X = GetLogicalDriveStrings(BufLen, BufString)
+    On Error GoTo Quit_Now
+    
+    Do
+        X = Y + 1
+        Z = Z + 1
+        Y = InStr(X, BufString, "\")
+        p$ = Mid$(BufString, Y - 2, 3)
+        Text1.Text = Text1.Text & p$ & Chr$(13) & Chr$(10)
+    Loop Until Y = 0
+    
+Quit_Now:
+    
+End Sub
+
+Run the example program by pressing F5. Click the OK command button. The Text Box will contain a list of all available disk drives in the computer system.
+

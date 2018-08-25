@@ -1,0 +1,50 @@
+Tip 161: Forcing the Common Dialog Control to Save Files to a Specific Disk Drive
+December 5, 1995
+
+Abstract
+The Microsoft® Visual Basic® Common Dialog control allows you to display a Save As dialog box in your Visual Basic application so that a user can save a file to disk. This article explains how to prevent a user from saving files to a disk drive that is not installed on the computer system.
+
+Preventing the Selection of Nonexistent Disk Drives
+The Microsoft® Visual Basic® Common Dialog control provides six dialog boxes that you can use in your application. The Action property of the Common Dialog control determines which of the six (Open Disk File, Save As, Color, Font, Print, and Help) dialog boxes appears. One of these dialog boxes is the Save As dialog box. This dialog box appears when you need to save a file to disk.
+
+The Save As dialog box lets the user of your application type the name he or she wants to assign to the file that is to be saved to disk. Note that the Common Dialog control does not actually save the data to the file—it simply provides an easy way for the user to select a file with which to work. The user can specify any disk drive, even one that is not actually installed on the computer system. This "flexibility," however, may create problems.
+
+You can require that a user save the file to a specific disk drive by first testing for a drive designation. The name of the file the user types is stored in the Common Dialog control's Filename property. It is a simple matter to check the first letter of this string to determine which disk drive the user wants to save the file to. You can then modify the drive designation to suit your needs.
+
+In the example program below, you use the Ucase and Left functions provided in Visual Basic to test the first character of the string stored in the Filename property. If this letter is not the letter A, you know the user typed a different drive letter. In this case, an error message appears indicating that the user must save the file to drive A only. If the user types the correct disk drive letter, the program continues running.
+
+Example Program
+This program shows how to force the Common Dialog Save As dialog box to save a file to a specific disk drive. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Common Dialog control to Form1. CommonDialog1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Call Save_DriveA
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Create a new function called Save_DriveA. Add the following code to this function: 
+Function Save_DriveA()
+    Dim X As Integer
+
+    Do
+        CommonDialog1.Action = 2    'save file
+        If UCase(Left(CommonDialog1.filename, 1)) <> "A" Then
+            MsgBox "You must save file to drive A only"
+        Else
+            Exit Do
+        End If
+        DoEvents
+    Loop
+
+    X = FreeFile
+    Open CommonDialog1.filename For Output As #X
+        Print #X, Text1.Text
+    Close #X
+    MsgBox "File has been saved to drive A"
+
+End Function
+
+Run the example program by pressing F5. Click the Command Button control. The Common Dialog Save As dialog box appears on the screen. Type the name you want to assign to the file, and click the Save button. If you specified a disk drive other than drive A, a message box appears. You are then returned to the Common Dialog Save As dialog box to type a new filename. You must type the filename by specifying drive A as the destination disk drive. The program will then save the contents of the Text Box control to the specified file

@@ -1,0 +1,15 @@
+'Description: Returns drive free space
+
+'Place the following code in a Form_Load()
+
+'Private Declare Function GetDiskFreeSpace Lib "kernel32" Alias "GetDiskFreeSpaceA" ( ByVal lpRootPathName As String, lpSectorsPerCluster As Long, lpBytesPerSector As Long, lpNumberOfFreeClusters As Long, lpTotalNumberOfClusters As Long) As Long
+Dim free_Space As Long
+ChDrive "C:"
+Dim numSectorsPerCluster As Long
+Dim numBytesPerSector As Long
+Dim numFreeClusters As Long
+Dim numTotalClusters As Long
+Dim success As Boolean
+success = GetDiskFreeSpace("C:\", numSectorsPerCluster, numBytesPerSector,  numFreeClusters, numTotalClusters)
+free_Space = numSectorsPerCluster * numBytesPerSector * numFreeClusters
+Label1.Caption = "The total free space on Drive C: = " & format(Str$(free_Space/1024),"###,### ") & " KB"

@@ -1,0 +1,16 @@
+'Description: Lauches an application based on file extension
+
+'Private Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" (ByVal hwnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long) As Long
+'Private Declare Function GetDesktopWindow Lib "user32" Alias "GetDesktopWindow" () As Long
+
+'Function StartDoc (DocName As String) as long
+Dim Scr_hDC as long
+Scr_hDC = GetDesktopWindow ()
+'change "Open" to "Explore" to bring up file explorer
+StartDoc = ShellExecute (Scr_hDC, "Open", DocName, "", "C:\", 1) 
+'end function
+
+'Place the following code in under a command button or in a menu, etc...
+
+dim r as long
+r = startdoc ("C:\windows\arcade.bmp")

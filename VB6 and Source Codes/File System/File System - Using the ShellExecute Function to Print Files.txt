@@ -1,0 +1,70 @@
+Tip 168: Using the ShellExecute Function to Print Files
+December 5, 1995
+
+Abstract
+This article explains how to print a file specified by the user of your Microsoft Visual Basic® application.
+
+Printing a File from Within an Application
+The Microsoft® Windows® application programming interface (API) ShellExecute function can be used from within a Microsoft Visual Basic® application to print a file. In addition, this function can be used to load an executable (.EXE) file.
+
+To use the ShellExecute function, you must include the following Declare statement in your project:
+
+Private Declare Function ShellExecuteAny Lib "shell32.dll" Alias "ShellExecuteA" 
+   (ByVal hwnd As Long, ByVal lpOperation As String, ByVal lpFile As String, 
+   ByVal lpParameters As Any, ByVal lpDirectory As Any, ByVal nShowCmd As Long) 
+   As Long
+
+The ShellExecute function requires six arguments, as follows:
+
+hWnd A long value that contains the window's handle. 
+LpOperation A string that specifies the operation that the ShellExecute function is to perform. This string can be one of three values, as follows: 
+  open Specifies that the file lpFile is to be opened. In Microsoft Windows 95 this file may be a Windows 95 folder. 
+  print Specifies that the file lpFile is to be printed. 
+  explore Explores the folder for lpFile in Windows 95. 
+LpFile A string containing the name of the file to open, print, or explore. 
+LpParameters Set to NULL if lpFile specifies a document file. If lpFile specifies an executable file, then lpParameters is a pointer to a string specifying the parameters that should be passed to the application. 
+LpDirectory A string specifying the default directory's name. 
+NShowCmd If a document file is specified in lpFile, this should be set to zero. If an executable file is specified in lpFile, this determines how the ShellExecute function displays the application after it is loaded. The following values may be used: 
+  SW_HIDE Hides the window and activates the executable file. 
+  SW_MAXIMIZE Maximizes the window. 
+  SW_MINIMIZE Minimizes the window. The next top-level window in the z-order is activated. 
+  SW_RESTORE Activates the window even if it is hidden or minimized. 
+  SW_SHOW Activates the window and displays it in its original size and at its original position. 
+  SW_SHOWMAXIMIZED Activates the window. The window is displayed as maximized. 
+  SW_SHOWMINIMIZED Activates the window. The window is displayed as minimized. 
+  SW_SHOWMINNOACTIVE Activates the window as minimized. The active window retains the focus. 
+  SW_SHOWNA Activates the window in its current state but the active window retains the focus. 
+  SW_SHOWNOACTIVATE Displays the window in its most recent size and in its most recent position. The active window retains the focus. 
+  SW_SHOWNORMAL Displays the window in its original size and at its original position. 
+
+In the example program below, you retrieve the name of the file you want to print from the Text Box control. Then you call the ShellExecute function with the lpFile argument set to "print". Notice that for demonstration purposes, you set the nShowCmd argument to SW_SHOWMINNOACTIVE. This argument lets you print the file to the printer without actually having to make the program receive the focus. The actual application that prints the document appears in a minimized window.
+
+Example Program
+This program shows how to use the ShellExecute function to print a Microsoft Word document. The function can also print regular text files, such as those created by the Windows 95 Notepad application. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function ShellExecuteAny Lib "shell32.dll" Alias "ShellExecuteA" 
+   (ByVal hwnd As Long, ByVal lpOperation As String, ByVal lpFile As String, 
+   ByVal lpParameters As Any, ByVal lpDirectory As Any, ByVal nShowCmd As Long) 
+   As Long
+Const SW_SHOWMINNOACTIVE = 7
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Text1.Text = ""
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Print". 
+Add the following code to the Click event for Command1 (note that the "Ret =" statement must be typed as a single line of code): 
+Private Sub Command1_Click()
+    Dim Ret As Long
+    Dim FileToPrint As String
+
+    FileToPrint = Text1.Text
+    Ret = ShellExecuteAny(Me.hwnd, "print", FileToPrint, ByVal 0&, ByVal 0&, 
+       SW_SHOWMINNOACTIVE)
+End Sub
+
+Run the example program by pressing F5. Type the name of a Microsoft Word document or text file you want to print in the Text Box control. Click the Print command button to run the application that originally created the document or text file. Notice that this application remains loaded in the background, minimized, while it sends the file to the printer.

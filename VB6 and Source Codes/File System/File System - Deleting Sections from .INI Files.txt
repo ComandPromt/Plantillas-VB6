@@ -1,0 +1,81 @@
+Tip 8: Deleting Sections from .INI Files
+Created: March 1, 1995
+
+Abstract
+Microsoft® Windows® and other Windows-based applications use initialization (.INI) files. These special files contain information about the Windows operating environment or configuration information used by a specific application.
+
+There are several Windows application programming interface (API) functions that can be used to create or modify .INI files. One of the more confusing tasks is using the WritePrivateProfileString() function to delete an entire section from an .INI file.
+
+This article explains how you can delete a specific entry from an .INI file. For a detailed description of Windows initialization files and the API functions you can use to modify them, see the "Additional References" section at the end of this article.
+
+Deleting a Section from an .INI File
+An initialization (.INI) file is an ASCII text file that follows a specific format. The file is divided into sections where the name of the section is enclosed in brackets. Directly below the section headings are one or more entries. Each entry (or key name) is the name you want to set a value for. This is followed by an equal sign. Next, the value to be assigned to the key name is specified.
+
+To modify an .INI file, you use the Windows WritePrivateProfileString() and WriteProfileString() functions. The WriteProfileString() function is used to modify the Windows WIN.INI initialization file, while all other .INI files are modified by calling the WritePrivateProfileString() function.
+
+The following is an example of an .INI file's contents:
+
+[progsetup]
+Date=10/10/95
+Datafile=c:\temp.dat
+
+In this example, the section name is "progsetup", the key names are Date and Datafile, and the values to be given to the key names are 10/10/95 and c:\temp.dat.
+
+To delete a specific entry from an initialization file, call the WritePrivateProfileString() function with the statement: 
+
+x = WritePrivateProfileString(lpAppName, 0&, 0&, FileName)
+
+specifying the following parameters:
+
+lpAppName   \The name of the section you want to remove from the INI file
+lpKeyName   \The entry you want to delete. This must be set to a NULL string
+            \to delete the entire section.
+lpString    \The string to be written to the entry. When set to an empty string,
+            \this causes the lpKeyName entry to be deleted.
+lpFileName  \The name of the INI file to modify.
+
+In our example above, we would set lpAppName to "progsetup", lpFileName to "C:\DEMO.INI", and both lpKeyName and lpString to 0& (zero). After you call this function, the entire "progsetup" section of the DEMO.INI file will be deleted.
+
+The lpKeyName and lpString variables are of type Any. If you use the type String, the function may or may not work properly, so be sure to specify these as type Any when deleting entries from initialization files. The same rule applies when using the WriteProfileString() function.
+
+Example Program
+The following program shows how to delete an entire section from an initialization file: 
+
+Using the Windows Notepad application, create a new text file called DEMO.INI. Save the file to the root directory on drive C. Add the following lines to this text file: 
+[progsetup]
+Date=10/10/95
+Datafile=c:\temp.dat
+[colors]
+Background=red
+Foreground=white
+
+Start a new project in Visual Basic. Form1 is created by default. 
+In the general declarations section of Form1, type the following Declare statement (note that this should be typed as a single line of text): 
+Declare Function WritePrivateProfileString% Lib "Kernel" (ByVal lpAppName
+   As String, ByVal lpKeyName As Any, ByVal lpString As Any, ByVal lpFileName 
+   As String)
+
+Add the following code to Form1_Load(): 
+Sub Form_Load()
+    crlf$ = Chr(13) & Chr(10)
+    Text1.Text = ""
+    Open "c:\demo.ini" For Input As #1
+    While Not EOF(1)
+        Line Input #1, file_data$
+        Text1.Text = Text1.Text & file_data$ & crlf$
+    Wend
+    Close #1
+    
+End Sub
+
+Add a text box control to Form1. Set its MultiLine property to True and its ScrollBars property to 3-Both. Adjust the size of the text box so that the contents of the C:\DEMO.INI file can be displayed in it. 
+Add a command button control to Form1. Command1 is created by default. Set its Caption property to "Modify DEMO.INI". 
+Add the following code to the Click event of Command1: 
+Sub Command1_Click()
+    FileName = "c:\demo.ini"
+    lpAppName = "progsetup"
+    x = WritePrivateProfileString(lpAppName, 0&, 0&, FileName)
+End Sub
+
+When you execute this sample program, the current contents of the file C::\DEMO.INI are displayed in the text box. Click once on the "Modify DEMO.INI" command button. The program has now deleted the entire "progsetup" section from the DEMO.INI file. You can verify that the file's contents were changed by running the demonstration program a second time.
+

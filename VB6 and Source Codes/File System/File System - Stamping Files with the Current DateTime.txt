@@ -1,0 +1,49 @@
+Tip 127: Stamping Files with the Current Date and Time
+July 1, 1995
+
+Abstract
+While your Microsoft® Visual Basic® program is running, you may need to update the date and time stamp for a particular file. This article explains how you can set a file's date and time stamp to the current date and time setting.
+
+Manipulating a File's Date and Time Information
+The FileDateTime function in Microsoft® Visual Basic® can tell you when a specific file was first created or last modified. FileDateTime returns both the date and time information as a string variable. However, Visual Basic does not offer a function to set a file's date and time information.
+
+The example program below shows how to update the date and time information for an already existing file. First, you need to make sure the file exists. The Dir$ function will return a NULL or empty string if it cannot find the specified file on the disk.
+
+When you know the file exists, you can use the Visual Basic file manipulation commands—Open, Get, Put, and Close—to force the operating system to update the file's date and time stamp.
+
+The technique is straightforward. You simply open the file, use the Get statement to retrieve the first byte from the file, and then use the Put statement to write that same byte back to the file. When you close the file, Microsoft Windows® automatically updates the file's date and time information.
+
+Example Program
+This program shows how to update a file's date and time information from within a Visual Basic application. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim FName As String
+    Dim F As String
+    Dim AnyThing As Integer
+    Dim X As Integer
+    
+    FName = "c:\test.doc"
+    F = Dir$(FName)
+    If F = "" Then GoTo NoSuchFile
+    
+    On Error GoTo FileError
+        X = FreeFile
+        Open FName For Binary As X
+        Get X, 1, AnyThing
+        Put X, 1, AnyThing
+        Close X
+    MsgBox "New time/date is: " & FileDateTime("c:\test.doc"), 16, "OK"
+    Exit Sub
+FileError:
+    MsgBox "Unable to time-stamp file", 16, "Error"
+    Exit Sub
+NoSuchFile:
+    MsgBox "That file does not exist!", 16, "Error"
+End Sub
+
+Note   This example program assumes you have a file named TEST.DOC in the root directory of drive C.
+Run the example program by pressing F5. Click the command button to update the file's date and time information.
+

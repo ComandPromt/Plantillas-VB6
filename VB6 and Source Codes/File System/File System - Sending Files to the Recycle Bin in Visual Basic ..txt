@@ -1,0 +1,74 @@
+Tip 176: Sending Files to the Recycle Bin in Visual Basic 4.0
+December 5, 1995
+
+Abstract
+When using the Microsoft® Windows® 95 operating system, you can delete a file from disk by dragging the file or sending the file to the Recycle Bin. The file is not actually removed from disk but is only marked for deletion by the system. When the Recycle Bin is emptied, however, the file is physically removed from the disk. This article explains how to send files to the Recycle Bin in a Microsoft Visual Basic® version 4.0 application.
+
+Using the SHFileOperation Function to Delete Files
+When you use the Microsoft® Windows® 95 operating system, any files that you delete are stored in the Recycle Bin. The files are not physically removed from the disk, but they appear to have been deleted. If you want, the files (or directories) that you have moved to the Recycle Bin can be restored and thus again be made available. However, if you want to physically remove the files stored in the Recycle Bin from your hard disk, you must empty the Recycle Bin. After the Recycle Bin has been emptied, you cannot recover the deleted files. The space occupied by the deleted files is also freed.
+
+In a Microsoft Visual Basic® version 4.0 application, you can send files to the Recycle Bin by calling the Windows application programming interface (API) SHFileOperation function. This function lets you manipulate files by moving, copying, renaming, or deleting them.
+
+The SHFileOperation function requires a pointer to a SHFILEOPSTRUCT structure that contains the name(s) of the file(s) you want to perform an operation on, as well as the type of operation (for example, deleting a file) you want to carry out.
+
+When deleting multiple filenames, each filename specified in the SHFILEOPSTRUCT structure must be separated by a NULL character. The entire list of filenames must be terminated by two consecutive NULL characters.
+
+The fFlags field in the SHFILEOPSTRUCT structure must be set to the operation you want to perform on the selected file(s). In this case, set this field to FO_DELETE, which tells the operating system that you want to delete the file by sending it to the Recycle Bin. In addition, because you are sending the file to the Recycle Bin, use the FOF_ALLOWUNDO flag. This flag preserves the information required to undelete a file should you later decide not to physically remove the file from the hard disk.
+
+Example Program
+This program shows how to send files to the Recycle Bin in Windows 95. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Public Const FO_DELETE = &H3
+    Public Const FOF_ALLOWUNDO = &H40
+Declare Function SHFileOperation Lib "shell32.dll" Alias "SHFileOperationA" 
+   (lpFileOp As SHFILEOPSTRUCT) As Long
+
+Create a new function called ShellDelete. Add the following code to this function: 
+Public Function ShellDelete(ParamArray vntFileName() As Variant)
+
+    Dim I As Integer
+    Dim sFileNames As String
+    Dim SHFileOp As SHFILEOPSTRUCT
+
+For I = LBound(vntFileName) To UBound(vntFileName)
+        sFileNames = sFileNames & vntFileName(I) & vbNullChar
+    Next
+sFileNames = sFileNames & vbNullChar
+
+    With SHFileOp
+        .wFunc = FO_DELETE
+        .pFrom = sFileNames
+        .fFlags = FOF_ALLOWUNDO
+    End With
+
+    ShellDelete = SHFileOperation(SHFileOp)
+
+    End Function
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim FileToKill As String
+
+    FileToKill = "c:\test*.txt"
+    ShellDelete FileToKill
+    MsgBox "File(s) deleted"
+End Sub
+
+From the Visual Basic Insert menu, select Module to create a new module. MODULE1.BAS is created by default. 
+Add the following TYPE structure to MODULE1.BAS: 
+Type SHFILEOPSTRUCT
+    hWnd As Long
+    wFunc As Long
+    pFrom As String
+    pTo As String
+    fFlags As Integer
+    fAborted As Boolean
+    hNameMaps As Long
+    sProgress As String
+End Type
+
+Run the example program by pressing F5. Click the Command Button control. A dialog box appears, asking whether you really want to delete the selected files. (All files with the name TEST*.TXT stored in the root directory of the hard drive will be deleted.) Click the Yes button to confirm the delete request.
+

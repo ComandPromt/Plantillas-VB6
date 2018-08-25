@@ -1,0 +1,29 @@
+'Description: Moves or Copies a file using API
+
+'Private Declare Function CopyFile Lib "kernel32" Alias "CopyFileA" (ByVal lpExistingFileName As String, ByVal lpNewFileName As String, ByVal bFailIfExists As Long) As Long
+'Private Declare Function MoveFile Lib "kernel32" Alias "MoveFileA" (ByVal lpExistingFileName As String, ByVal lpNewFileName As String) As Long
+
+
+'Place the following code in under a command button or in a menu, etc...
+
+source = "C:\myfile.txt"
+target = "C:\Windows\myfile.txt"
+
+
+'Copy File
+A = CopyFile(Trim$(Source), Trim(Target), False)
+If A Then
+        MsgBox "File copied!"
+Else
+        MsgBox "Error. File not moved!"
+End If
+
+
+
+'Move File
+A = MoveFile(Trim$(Source), Trim(Target))
+If A Then
+        MsgBox "File moved!"
+Else
+        MsgBox "Error. File not moved!"
+End If

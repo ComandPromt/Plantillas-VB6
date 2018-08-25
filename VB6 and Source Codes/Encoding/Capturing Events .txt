@@ -1,0 +1,71 @@
+Dim WithEvents Encoder As WMEncoder
+
+Private Sub Encoder_OnStateChange(ByVal enumState As WMEncoderLib.WMENC_ENCODER_STATE)
+    ' Wait until the encoding process stops before
+    ' exiting the application.
+    If enumState = WMENC_ENCODER_RUNNING Then
+        ' TODO: Handle running state.
+    ElseIf enumState = WMENC_ENCODER_PAUSED Then
+        ' TODO: Handle paused state.
+    ElseIf enumState = WMENC_ENCODER_STOPPED Then
+        ' End the application.
+        End
+    Else
+        ' TODO: Handle other encoder states.
+    End If
+End Sub
+
+Private Sub Form_Load()
+    ' Create a WMEncoder object.
+    Set Encoder = New WMEncoder
+  
+    ' Retrieve the source group collection and add a source group.
+    Dim SrcGrpColl As IWMEncSourceGroupCollection
+    Set SrcGrpColl = Encoder.SourceGroupCollection
+    Dim SrcGrp As IWMEncSourceGroup2
+    Set SrcGrp = SrcGrpColl.Add("SG_1")
+    
+    ' Add a video and audio source to the source group.
+    Dim SrcVid As IWMEncVideoSource2
+    Dim SrcAud As IWMEncAudioSource
+    Set SrcVid = SrcGrp.AddSource(WMENC_VIDEO)
+    Set SrcAud = SrcGrp.AddSource(WMENC_AUDIO)
+    
+    ' Identify the source files to encode.
+    SrcVid.SetInput "C:\\InputFile.mpg"
+    SrcAud.SetInput "C:\\InputFile.mpg"
+    
+    ' Choose a profile from the collection.
+    Dim ProColl As IWMEncProfileCollection
+    Dim Pro As IWMEncProfile
+    Dim i As Integer
+    Dim lLength As Long
+    
+    Set ProColl = Encoder.ProfileCollection
+    lLength = ProColl.Count
+    
+    For i = 0 To lLength - 1
+        Set Pro = ProColl.Item(i)
+        If Pro.Name = "Windows Media Video 8 for Local Area Network (384 Kbps)" Then
+            SrcGrp.Profile = Pro
+            Exit For
+        End If
+    Next
+    
+    ' Fill in the description object members.
+    Dim Descr As IWMEncDisplayInfo
+    Set Descr = Encoder.DisplayInfo
+    Descr.Author = "Author name"
+    Descr.Copyright = "Copyright information"
+    Descr.Description = "Text description of encoded content"
+    Descr.Rating = "Rating information"
+    Descr.Title = "Title of encoded content"
+       
+    ' Specify a file object in which to save encoded content.
+    Dim File As IWMEncFile
+    Set File = Encoder.File
+    File.LocalFileName = "C:\\OutputFile.wmv"
+      
+    ' Start the encoding process.
+    Encoder.Start
+End Sub

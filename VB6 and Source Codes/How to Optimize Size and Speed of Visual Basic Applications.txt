@@ -1,0 +1,210 @@
+How to Optimize Size and Speed of Visual Basic Applications
+The information in this article applies to:
+Microsoft Visual Basic Standard Edition for Windows 2.0
+Microsoft Visual Basic Standard Edition for Windows 3.0
+Microsoft Visual Basic Standard Edition for Windows 1.0
+Microsoft Visual Basic Professional Edition for Windows 2.0
+Microsoft Visual Basic Professional Edition for Windows 3.0
+
+This article was previously published under Q73798 
+SUMMARY
+This article describes how to optimize Visual Basic applications for size and speed. It also provides examples for methods outlined in the "Visual Basic Programmer's Guide," chapter 11, "Optimizing Your Application for Size and Speed." 
+
+For additional information on this subject, please see the following article(s) in the Microsoft Knowledge Base: 
+112860 How to Optimize Memory Management in VB 3.0 for Windows 
+
+MORE INFORMATION
+Below are guidelines to help increase speed, available resources, available RAM, and available disk space in Visual Basic: 
+INCREASING SPEED
+You can increase speed in the following ways: 
+Preload forms.
+Store graphics as bitmaps.
+Place debug routines in a separate module.
+Use dynamic-link library (DLL) routines.
+Use integer and long variables instead of single, double, or currency variables.
+Cache frequently accessed properties in variables. 
+Example #1: Demonstrating Integers Versus Single Variables in a Loop
+Start Visual Basic; or choose New Project from the File menu (ALT+ F, N) if Visual Basic is already running. Form1 is created by default. 
+Add two command buttons and two labels to Form1.FRM. 
+Add the following two procedures to the (general) section of Form1. 
+   Sub Ints ()
+    Dim i As Integer
+    i = 1
+    Do Until i >= 5000         ' = 5000 iterations
+      label1.Caption = Str$(i)
+      i = i + 1
+      DoEvents
+    Loop
+   End Sub
+
+   Sub Reals ()
+    Dim r As Single
+    r = 1#
+    Do Until r <= 500          ' = 5000 iterations
+      label2.Caption = Str$(r)
+      r = r + .1
+      DoEvents
+    Loop
+   End Sub
+						
+Add the following code in the Command1_Click event procedure: 
+   Sub Command1_Click ()
+    StartTime = Timer
+    Call Ints
+    EndTime = Timer
+    MsgBox "Time for Integer Loop was: " & CStr(EndTime - StartTime)
+   End Sub
+						
+Add the following code in the Command2_Click event procedure: 
+   Sub Command2_Click ()
+    StartTime = Timer
+    Call Reals
+    EndTime = Timer
+    MsgBox "Time for Real Loop was: " & CStr(EndTime - StartTime)
+   End Sub
+						
+Run the sample. First test how long it takes the integer loop to process, then test how long it takes the single loop to process. You should see that the integer loop runs faster. 
+Example #2: Demonstrating Cached Properties in Variables
+Start Visual Basic; or choose New Project from the File menu (ALT+ F, N) if Visual Basic is already running. Form1 is created by default. 
+Add one text box and two command buttons to Form1.FRM. 
+Add the following code in the Command1_Click event procedure: 
+   Sub Command1_Click ()
+    Open "datacons.txt" For Input As #1   ' Open test file.
+    nl$ = Chr$(13) + Chr$(10)
+
+    text1.Text = ""                       ' Clear the text box.
+    StartTime = Timer
+    Do Until EOF(1)                       ' Grab all data into text box.
+      Line Input #1, tmp$
+      text1.Text = text1.Text + tmp$ + nl$
+    Loop
+    EndTime = Timer
+    Close #1
+    MsgBox "Time for Text Loop was: " & CStr(EndTime - StartTime)
+   End Sub
+						
+Add the following code in the Command2_Click event procedure: 
+   Sub Command2_Click ()
+    Dim buffer$
+
+    Open "datacons.txt" For Input As #1    ' Open test file.
+    nl$ = Chr$(13) + Chr$(10)
+
+    text1.Text = ""                        ' Clear the text box.
+    StartTime = Timer
+    Do Until EOF(1)                        ' Grab all data into text box.
+      Line Input #1, tmp$
+      buffer$ = buffer$ + tmp$ + nl$
+    Loop
+    text1.Text = buffer$
+    EndTime = Timer
+    Close #1
+    MsgBox "Time for Buffered Loop was: " & CStr(EndTime - StartTime)
+   End Sub
+						
+Run the sample. First test how long it takes the text loop to process, then test how long it takes the buffered loop to process. The buffered loop should run much faster. 
+INCREASING DISPLAY SPEED AND APPARENT SPEED
+You can increase display speed and apparent speed in the following ways:
+
+
+Turn off the ClipControls property under certain circumstances.
+Use AutoRedraw only when needed.
+Use image controls instead of picture boxes.
+Use line controls instead of the PSet method.
+Preload forms and keep them hidden until needed.
+Use progress indicators when appropriate.
+Preload the default data before showing a form.
+Hide controls that may repaint when resetting their properties.
+Use Show in Form_Load event procedure and reduce code in this event.
+Simplify your starting or startup form.
+Don't call procedures in modules from your startup form. 
+Example #3: Demonstrating the Technique of Hiding Controls
+Start Visual Basic; or choose New Project from the File menu (ALT+ F, N) if Visual Basic is already running. Form1 is created by default. 
+Add a control array of five text boxes to Form1.FRM. 
+Add the following to the Form_Resize event procedure: 
+   Sub Form_Resize ()
+    Dim i As Integer
+    Dim ht As Integer
+
+    ht = Form1.ScaleHeight / 5
+    For i = 0 to 4
+      text1(i).Move 0, i * ht, Form1.ScaleWidth, ht
+    Next i
+   End Sub
+						
+Add the following to the Form_Load event procedure: 
+   Sub Form_Load ()
+    Dim buffer As String
+    Dim i As Integer
+
+    Open "datacons.txt" For Input As #1  ' Open test file.
+    buffer = Input(LOF(1), 1)            ' Grab all contents.
+    Close #1
+    For i = 0 to 4                       ' Place in the 5 text controls.
+      text1(i).Text = buffer
+    Next i
+   End Sub
+						
+Run the sample. First grab the left side of Form1 and move it to the left, then grab the top of Form1 and move it upward. You should see five separate text boxes being re-painted. 
+To speed up or avoid four controls from being repainted, implement the changes listed in steps 7 and 8, then proceed to run the sample with actions listed in step 5, above. 
+Add a picture box; then inside the picture box, add a control array of five text boxes to Picture1. 
+Add the following to the Form_Resize event procedure: 
+   Sub Form_Resize ()
+    Dim i As Integer
+    Dim ht As Integer
+    Dim wd As Integer
+
+    wd = form1.ScaleWidth
+    picture1.Visible = False                    ' Hide the picture
+    picture1.Move 0, 0, wd, form1.ScaleHeight   ' and reposition it.
+
+    ht = form1.ScaleHeight / 5
+    For i = 0 To 4                              ' Now resize the text
+                                                ' boxes...
+     text1(i).Move 0, i * ht, wd, ht
+    Next i
+
+    picture1.Visible = True                   ' ...and show the picture.
+   End Sub
+						
+This technique adds a resource with the picture box, but helps with the apparent speed when you resize your form. This technique makes your application appear more uniform when running. 
+Example #4: Demonstrating the Techique of a Simple Startup Form
+This example shows you how to implement a Start-Up form or Display Banner for your program. In this example, Form1 is the start-up form and Form2 is the main form of your actual working program. 
+
+
+Start Visual Basic; or choose New Project from the File menu (ALT+ F, N) if Visual Basic is already running. Form1 is created by default. 
+Add a second form to your project, Form2.frm. 
+Add the following to the Form_Load event procedure of Form1.frm: 
+   Sub Form_Load ()
+    Me.Show         ' Show the form.
+    Me.Refresh      ' Refresh needed to force repaint of labels, etc.
+    Load Form2      ' Load the actual working form.
+       ' Assign any default properties, values, etc., for Form2 here.
+    Form2.Show      ' Display main form.
+    Unload Me       ' Unload me.
+   End Sub
+						
+Run this sample. This will display your simple Form1.FRM and load up Form2.FRM in the background. Once Form2.FRM is loaded and displayed, Form1.FRM is unloaded. 
+INCREASING AVAILABLE RESOURCES
+You can increase available resources in the following ways:
+
+
+Create simulated controls using a graphic object.
+Draw graphics images during run time.
+Use the Image control instead of picture boxes. 
+INCREASING AVAILABLE RAM
+You can increase available RAM in the following ways:
+
+
+Use Integer variables whenever possible.
+Create dynamic arrays to free arrays when not needed.
+Drop or unload controls and forms when they are not needed.
+Use local variables. 
+INCREASING DISK SPACE
+You can increase disk space in the following ways:
+
+
+Build controls at load time.
+Minimize header size.
+Delete unnecessary functions and subroutines.
+Delete unused objects and associated methods.

@@ -1,0 +1,64 @@
+Tip 62: Retrieving Filenames Associated with an Application
+Created: April 24, 1995
+
+Abstract
+This article explains how you can use the Windows® application programming interface (API) FindExecutable function to determine which filename extension is associated with a specific Windows-based application.
+
+Using the FindExecutable Function
+Using the Windows® File Manager, you can associate a filename extension with a specific application. For instance, all filenames with the .TXT extension are associated with the Notepad application. These associations are stored in the registration database and in the WIN.INI initialization file. Using file associations allows you to double-click a filename and have the associated Windows-based application automatically execute and load that file.
+
+In a Visual Basic® application, you can use the Windows application programming interface (API) FindExecutable function to retrieve the name of the executable file that is associated with a specific filename. The Declare statement for the FindExecutable function is as follows (note that it must be typed as a single line of code):
+
+Declare Function FindExecutable Lib "shell.dll" (ByVal lpszFile As String, ByVal 
+   lpszDir As String, ByVal lpszResult As String) As Integer
+
+The FindExecutable function takes three arguments, as follows:
+
+lpszFile A string containing the filename that is associated with a specific application.  
+lpszDir A string containing the path of the default directory to use. 
+lpszResult A string buffer that will hold the application's name. This buffer should be 128 bytes long. 
+
+After executing the FindExecutable function, an integer value will be returned indicating success or failure. If the value returned is greater than 32, the function was successful and lpszResult will contain the full path and filename of the executable application associated with the file. If the value returned is less than 32, the function was not successful. FindExecutable can return the following error codes:
+
+0 Insufficient system memory or corrupt program file 
+2 File not found 
+3 Path not found 
+5 Sharing or protection error 
+6 Separate data segments required for each task 
+8 Insufficient memory to run application 
+10 Windows version is incorrect 
+11 Program file is invalid 
+12 Program requires a different operating system 
+13 Program requires MSDOS 4.0 
+14 Program type is unknown 
+15 Protected memory mode is not supported 
+16 When loading a second instance of a program, invalid use of data segments 
+19 Cannot execute a compressed program file 
+20 Not a valid dynamic-link library (DLL) 
+21 Windows 32-bit extensions is required 
+
+Example Program
+When you run the program below, it will return the name of the Windows-based application associated with the file called README.WRI. This, of course, is the Windows Write applet. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. 
+Add the following Declare statement to the General Declarations section of Form1 (note that the Declare statement should be typed as one single line of code): 
+Declare Function FindExecutable Lib "shell.dll" (ByVal lpszFile As String, ByVal 
+   lpszDir As String, ByVal lpszResult As String) As Integer
+
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+  Text1.Text = ""
+  Dim X As Integer
+  Dim FileName As String
+  Dim DirName As String
+  Dim Result As String
+  FileName = "README.WRI"
+  DirName = "C:\VB\"
+  Result = Space$(128)
+  X = FindExecutable(FileName, DirName, Result)
+   
+  Text1.Text = Result
+    
+End Sub
+

@@ -1,0 +1,86 @@
+Tip 164: Copying Files from One Directory to Another
+December 5, 1995
+
+Abstract
+This article explains how to copy files from one directory to another in a Microsoft® Visual Basic® application.
+
+Using the FileCopy Statement
+In a Microsoft® Visual Basic® application, you can use the FileCopy statement to copy a file to a different directory and/or disk drive. The FileCopy statement requires two arguments: the name of the file you want to copy, and the name to be given to the new file. The target name can include the path of a directory or a specific disk drive. However, note that the FileCopy statement does not generate any warning errors if the target file already exists. In such situations, the target file overwrites the existing file.
+
+Unfortunately, the FileCopy statement does not allow you to specify a wildcard source filename. Using MS-DOS®, you could copy a group of files by issuing a command such as:
+
+COPY *.* C:\NEWFILES
+
+This command tells MS-DOS to copy all the files in the current directory to the NEWFILES directory on drive C.
+
+To accomplish this same task in Visual Basic, you must use the Dir$ function to retrieve the name of each individual file in the source directory. Then you use the FileCopy statement to copy that individual file to the target directory.
+
+A While-Wend routine can be used to quickly retrieve the names of all files in the target directory. As shown in the CopyFile subroutine in the example program below, the Dir$ function returns the name of each file it finds. When Dir$ returns an empty text string (""), you know that all files have been processed.
+
+Example Program
+This program shows how to copy all files from the source directory to the destination directory. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    text1.Text = ""
+    text2.Text = ""
+End Sub
+
+Add a Label control to Form1. Label1 is created by default. Set its Caption property to "Source directory:". 
+Add a second Label control to Form1. Label2 is created by default. Set its Caption property to "Destination directory:". Position this Label control just below Label1. 
+Add a Text Box control to Form1. Text1 is created by default. Position the Text Box control so that it is directly adjacent to the first Label control. 
+Add a second Text Box control to Form1. Text2 is created by default. Position the Text Box control so that it is directly adjacent to the second Label control. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Copy Files". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim SourceDir As String
+    Dim TargetDir As String
+    Dim X As Integer
+    Dim P As Integer
+
+    SourceDir = text1.Text
+    TargetDir = text2.Text
+    CopyFile SourceDir, TargetDir, P
+    MsgBox "Number of files copied = " & Str$(P)
+End Sub
+
+Create a new subroutine called CopyFile. Add the following code to this subroutine: 
+Sub CopyFile(SrcDir As String, TrgtDir As String, NumFiles As Integer)
+    Dim OldDir As String  'source dir name
+    Dim NewDir As String 'target dir name
+    Dim FileName As String 'source filename
+    Dim sType As String 'file type (extension)
+
+    OldDir = SrcDir
+    If Right$(OldDir, 1) <> "\" Then
+        OldDir = OldDir & "\"
+    End If
+
+    NewDir = TrgtDir
+    If Right$(NewDir, 1) <> "\" Then
+        NewDir = NewDir & "\"
+    End If
+
+    NumFiles = 0      'returns # files copied
+
+    FileName = Dir$(OldDir & "*.*")
+    While FileName <> ""
+        On Error Resume Next
+            FileCopy (OldDir & FileName), (NewDir & FileName)
+            If Err = 0 Then
+                NumFiles = NumFiles + 1
+            Else
+                Beep
+                MsgBox Error$, MB_ICONEXCLAMATION, ("Error copying file " 
+                                                    & FileName)
+            End If
+        On Error GoTo 0
+
+        FileName = Dir$        'get next matching file
+
+        DoEvents            'allow processes to occur
+    Wend
+End Sub
+
+Run the example program by pressing F5. Type the name of the source directory (the directory containing the files you want to copy) in the first Text Box control. Type the name of the destination directory in the second Text Box control. Click the Copy Files Command Button control. All files stored in the source directory are copied to the destination directory. A message box then appears indicating how many files were actually copied.

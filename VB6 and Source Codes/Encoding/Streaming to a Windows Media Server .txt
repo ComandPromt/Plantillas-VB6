@@ -1,0 +1,68 @@
+This example shows how to set up a multicast push broadcast to a Windows Media server. It is assumed that you have set up the Windows Media server; for more information, see Pushing a Stream to a Windows Media Server. To test this sample, open the .asx file in a player.
+
+' Declare variables.
+  Dim Encoder As WMEncoder
+  Dim SrcGrpColl As IWMEncSourceGroupCollection
+  Dim SrcGrp As IWMEncSourceGroup2
+  Dim SrcAud As IWMEncAudioSource
+  Dim SrcVid As IWMEncVideoSource
+  Dim ProColl As IWMEncProfileCollection
+  Dim Pro As IWMEncProfile
+  Dim PushDist As IWMEncPushDistribution
+  Dim strServerName As String
+  Dim strPubPoint As String
+  Dim strPubTemplate As String
+  Dim MyNSCFile As String
+  Dim MyNSCURL As String
+  Dim MyASXFile As String
+
+Private Sub Main()
+' Create a WMEncoder object.
+  Set Encoder = New WMEncoder
+
+' Retrieve the source group collection and add sources. 
+' Use the default devices for the audio and video sources.
+  Set SrcGrpColl = Encoder.SourceGroupCollection
+  Set SrcGrp = SrcGrpColl.Add("SG_1")
+  Set SrcAud = SrcGrp.AddSource(WMENC_AUDIO)
+  Set SrcVid = SrcGrp.AddSource(WMENC_VIDEO)
+  SrcAud.SetInput ("device://default_audio_device")
+  SrcVid.SetInput ("device://default_video_device")
+
+' Retrieve the profile collection. This example uses the 3rd profile.
+  Set ProColl = Encoder.ProfileCollection
+  Set Pro = ProColl.Item(2)
+  SrcGrp.Profile = Pro
+
+' Set up the push broadcast.
+  Set PushDist = Encoder.Broadcast
+
+' Specify the push distribution variables, including the Windows Media
+' server name, publishing point, and announcement files. 
+' Provide real values for the following placeholders.
+  strServerName = "MyWMServer:70"
+  strPubPoint = "MyPubPoint"
+  strPubTemplate = "AnotherPubPoint"
+  MyNSCFile = "\\servername\share\MyPubPoint.nsc"
+  MyNSCURL = "\\servername\share\MyPubPoint.nsc"
+  MyASXFile = "\\MyComputer\MyPubPoint.asx"
+
+' Remove the publishing point when the broadcast is over.
+  PushDist.AutoRemovePublishingPoint = True
+
+' Set the push distribution variables.
+  PushDist.ServerName = strServerName
+  PushDist.PublishingPoint = strPubPoint
+  PushDist.Template = strPubTemplate
+  Encoder.PrepareToEncode True
+
+' Generate the announcement file. 
+  PushDist.GenerateMulticastInfoFile (MyNSCFile)
+  PushDist.GenerateAnnouncementFile MyNSCURL, MyASXFile
+
+' Start encoding.
+  Encoder.Start
+  MsgBox "Click OK to stop broadcasting."
+
+End Sub
+

@@ -1,0 +1,19 @@
+Tip 3: Retrieving the Name of the Temporary Directory
+Created: March 1, 1995
+
+Abstract
+Starting with version 2.0 of MS-DOS®, the operating system uses an environment block to store information about the user's computer system. The environment block consists of one or more ASCIIZ strings (strings terminated with a NULL character) that provide information to MS-DOS or application programs about the operating system. One entry in the environment block, for example, tells MS-DOS where to find files (for example, the PATH statement, included in the AUTOEXEC.BAT file). This article explains how you can retrieve a specific variable from the environment block from within your own Visual Basic® application.
+
+Retrieving the Name of the Temporary Directory
+MS-DOS® and most applications you execute use the SET statement in the AUTOEXEC.BAT file to store their variables in the environment. When you installed Visual Basic®, you may have specified that it is to use a directory on drive C called JUNK to store its temporary working files. In that case, you would insert the statement SET TEMP=C:\JUNK in your AUTOEXEC.BAT file. From now on, each time Visual Basic needs to create a temporary file, it will look for the variable TEMP in the environment and use the specified directory to store the files it needs to create.
+
+The ENVIRON statement in Visual Basic allows you to retrieve a string that is associated with a variable stored in the MS-DOS environment. The ENVIRON statement has the following syntax:
+
+Environ[$](environmentstring)
+where "environmentstring" is a string expression that contains the name of the environment variable you want to retrieve.
+
+We can use the ENVIRON statement in our own program to retrieve the name of the directory used by Visual Basic for its temporary files. To do this, simply add the following statement to a code module in your Visual Basic program:
+
+D$=Environ$("TEMP")
+
+This statement tells Visual Basic to assign the value of the variable TEMP to D$. The environment variables are always returned as uppercase characters, despite the fact that they may have been entered as lowercase. In addition, the string returned in D$ will be terminated with a NULL character. If you ask the ENVIRON statement to return a string associated with a variable that does not exist, an empty string will be returned.

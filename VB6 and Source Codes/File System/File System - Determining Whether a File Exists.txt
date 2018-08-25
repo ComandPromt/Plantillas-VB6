@@ -1,0 +1,76 @@
+Tip 162: Determining Whether a File Exists
+December 5, 1995
+
+Abstract
+This article explains how to determine whether a file exists on a disk drive in a Microsoft® Visual Basic® application.
+
+Using the OpenFile Function
+You can use the Microsoft® Windows® application programming interface (API) OpenFile function in a Microsoft Visual Basic® application to determine whether a file actually exists on a disk drive. To use this function, the following Declare statement should be included in your project:
+
+Private Declare Function OpenFile Lib "kernel32" (ByVal lpFileName As String, 
+   lpReOpenBuff As OFSTRUCT, ByVal wStyle As Long) As Long
+
+The OpenFile function requires three arguments. The first argument is a string containing the full path of the file to test. The second argument is an OFSTRUCT structure, which contains information about the file after the OpenFile function is called. The third argument is the action you want the OpenFile function to take.
+
+The third argument, wStyle, tells the OpenFile function the action that the function is to perform. Because you want to find out whether a given file exists, you call the OpenFile function with the wStyle argument set to OF_EXIST. If the file does not exist, the OpenFile function will return an error code of 2—File Not Found.
+
+When the OpenFile function is run, it writes information about the file to the OFSTRUCT structure. Therefore, if an error occurs, you must retrieve the actual error code from the OFSTRUCT structure itself. In the example program below, you use the statement:
+
+If OpenFileStructure.nErrCode = FILE_NOT_FOUND Then
+
+After testing for the "File Not Found" error, you can indicate to the user whether or not the file exists.
+
+Example Program
+This program shows how to determine whether a file already exists on the disk drive. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Declare statement to the General Declarations section of Form1 (note that this Declare statement must be typed as a single line of text): 
+Private Declare Function OpenFile Lib "kernel32" (ByVal lpFileName As String, 
+   lpReOpenBuff As OFSTRUCT, ByVal wStyle As Long) As Long
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim TestFile As String
+    Dim Ret As Integer
+
+    TestFile = "c:\auto.bat"
+    Ret = FileExists(TestFile)
+
+    If Ret Then
+        MsgBox "File already exists"
+    Else
+        MsgBox "File does not exist"
+    End If
+End Sub
+
+Create a new function called FileExists. Add the following code to this function: 
+Function FileExists(FileName As String) As Integer
+    Dim RetCode As Integer
+    Dim OpenFileStructure As OFSTRUCT
+
+    Const OF_EXIST = &H4000
+    Const FILE_NOT_FOUND = 2
+
+    RetCode = OpenFile(FileName$, OpenFileStructure, OF_EXIST)
+    If OpenFileStructure.nErrCode = FILE_NOT_FOUND Then
+        FileExists = False
+    Else
+        FileExists = True
+    End If
+End Function
+
+From the Visual Basic Insert menu, select Module to create a new module. Module1.Bas is created by default. 
+Add the following Type and Constant statements to Module1.Bas: 
+Public Const OFS_MAXPATHNAME = 128
+
+Type OFSTRUCT
+    cBytes As Byte
+    fFixedDisk As Byte
+    nErrCode As Integer
+    Reserved1 As Integer
+    Reserved2 As Integer
+    szPathName(OFS_MAXPATHNAME) As Byte
+End Type
+
+Run the example program by pressing F5. Click the Command Button control. A message box appears. If the file "C:\AUTO.BAT" exists on drive C, the message box indicates that the target file does exist. If the file was not found on the disk, however, the message box indicates that the file does not exist.

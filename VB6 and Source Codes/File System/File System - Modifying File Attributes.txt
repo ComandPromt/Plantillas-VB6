@@ -1,0 +1,62 @@
+Tip 44: Modifying File Attributes
+Created: April 2, 1995
+
+Abstract
+Every time a new file is created, the operating system gives the file one or more special attribute settings. In your Visual Basic® program, you can use the GetAttr and SetAttr functions to modify a file's attribute settings.
+
+What Are File Attributes?
+A file, whether it is an executable program file, a data file, or other type, is stored to disk with one or more file attributes. The following table lists the seven possible attributes that can be given to a file.
+
+Attribute Value Description 
+Normal 0 Data can be read from or written to the file. 
+Read Only 1 Data can be read from but not written to the file. 
+Hidden 2 The file cannot be seen in the directory list. 
+System 4 The file is a system file that is used only by MS-DOS® or Windows®. 
+Volume Label 8 The file is the special name given to the disk. Only one volume label can be given to a disk as its unique identifier. 
+Directory 16 The file is a subdirectory. 
+Archive 32 The file has been modified since backup was last performed. 
+
+You can determine which attributes a file has been given by using the Visual Basic® GetAttr function. The syntax for this function is:
+
+GetAttr(filename)
+When this function is executed, it returns an integer value that tells you which attribute has been given to the file. A file that is read-only, for example, will return a value of 1. Because a file may have more than one attribute associated with it, you can use the And operator to perform a bit-wise comparison.
+
+Changing File Attributes
+Visual Basic also provides the SetAttr function, which allows you to change a file's attribute setting. The syntax for this function is:
+
+SetAttr(filename),(attribute)
+When changing a file's attributes, you must keep in mind that a file can have more than one attribute set at any given time. You must use the And operator to change only the desired bit in the attribute flag. The following table tells you the mask values you can use to change only the individual bit you are interested in.
+
+Attribute Mask Value 
+Archive 31 
+System 59 
+Hidden 61 
+Read Only 62 
+
+You can also remove all the attributes of a file by calling SetAttr with a value of zero as the Attribute value.
+
+Example Program
+The following program shows how you can use the GetAttr and SetAttr functions in a Visual Basic application. Execute this program by pressing the F5 function key. Click the "Test Archive Bit" command button. The program will respond by testing the AUTOEXEC.BAT file's attribute flag to see if its Archive bit is set. If the Archive bit is set, the program responds with the message, "File has archive bit set." Click the "Set Archive Off" command button. This resets the file's Archive bit to zero; the resulting message is displayed in the Text Box. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Test Archive Bit". 
+Add the following code to the Click event for Command1: 
+Sub Command1_Click()
+  FileName = "c:\autoexec.bat"
+  X = GetAttr(FileName)
+  If X = 32 Then
+      Text1.Text = "File has Archive bit set."
+  Else
+      Text1.Text = "File does not have Archive bit set."
+  End If
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. Set its Caption property to "Set Archive Off". 
+Add the following code to the Click event for Command2: 
+Sub Command2_Click()
+  FileName = "c:\autoexec.bat"
+  SetAttr FileName, GetAttr(FileName) And 31
+  Text1.Text = "Archive attribute set to Off."
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. 

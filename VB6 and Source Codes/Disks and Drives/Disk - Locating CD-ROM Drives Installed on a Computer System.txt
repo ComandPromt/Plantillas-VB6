@@ -1,0 +1,59 @@
+Tip 165: Locating CD-ROM Drives Installed on a Computer System
+December 5, 1995
+
+Abstract
+In a Microsoft® Visual Basic® application, you may need to determine what types of disk drives are installed on a computer system. This article explains how to locate the CD-ROM drives that are installed.
+
+Using the GetDriveType Function
+Occasionally, in a Microsoft® Visual Basic® application you may need to determine whether a specific disk drive is a CD-ROM, removable, fixed, RAM, or network drive. You can easily make this distinction by using the Microsoft Windows® application programming interface (API) GetDriveType function.
+
+The following Declare statement should be included in your project:
+
+Private Declare Function GetDriveType Lib "kernel32" Alias "GetDriveTypeA" 
+   (ByVal nDrive As String) As Long
+
+To use the GetDriveType function, you need to tell it the name of the disk's root directory. This should be in the format "c:\". After you call it, the GetDriveType function returns a value that indicates the type of disk drive.
+
+The value returned by the GetDriveType function may be one of the following:
+
+Value Drive Type 
+0 Unknown media type 
+1 No such root directory exists 
+DRIVE_REMOVABLE Drive can be removed 
+DRIVE_FIXED Drive cannot be removed 
+DRIVE_REMOTE Network disk drive 
+DRIVE_CDROM CD-ROM disk drive 
+DRIVE_RAMDISK RAM disk drive 
+
+As you know, all disk drives are identified by an alphabetic letter, starting with the letter A. The ASCII value for the letter A is 65. Because there are 26 possible disk drives, you can use a For-Next loop to test each possible disk drive to determine whether it is a CD-ROM disk drive.
+
+Example Program
+This program shows how to locate all CD-ROM disk drives installed on the computer system. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Declare statement to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function GetDriveType Lib "kernel32" Alias "GetDriveTypeA" 
+   (ByVal nDrive As String) As Long
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Text1.Text = FindCDROM
+End Sub
+
+Add a Text Box control to form1. Text1 is created by default. Set its MultiLine property to True. 
+Create a new function called FindCDROM. Add the following code to this function: 
+Function FindCDROM() As String
+    Dim Drive As Integer
+    Const DRIVE_CDROM = 5
+    FindCDROM = "No CD_ROM Installed"
+
+    For Drive = 65 To 90
+        If GetDriveType(Chr(Drive) & ":\") = DRIVE_CDROM Then
+            FindCDROM = "CD-ROM Drive " & Chr(Drive) & ":\"
+            Exit For
+        End If
+    Next Drive
+End Function
+
+Run the example program by pressing F5. Click the Command Button control. A list of all CD-ROM disk drives installed on the computer system appears in the Text Box control.

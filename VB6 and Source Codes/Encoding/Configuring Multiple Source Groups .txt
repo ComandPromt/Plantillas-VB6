@@ -1,0 +1,73 @@
+The following example shows how you can set up two source groups with audio and video content. The first source group uses a file (C:\InputFile.mpg), and the second source group uses the default sound card and capture card. The result is broadcasted from the local computer (http://computer_name:8080). 
+
+For information about enumerating the audio and video devices on your system, see the Listing All Devices (Visual Basic) example.
+
+Sub Main()
+' Create a Windows Media Encoder object.
+  Dim Encoder As WMEncoder
+  Set Encoder = New WMEncoder
+  
+' Create a source group collection object from the WMEncoder object.
+  Dim SrcGrpColl As IWMEncSourceGroupCollection
+  Set SrcGrpColl = Encoder.SourceGroupCollection
+  
+' Create a profile collection object from the WMEncoder object.
+  Dim ProColl As IWMEncProfileCollection
+  Set ProColl = Encoder.ProfileCollection
+  
+' Add a source group named SG1 to the collection.
+' Create a source object for each type of multimedia content
+' in the source group.
+  Dim SrcGrp1 As IWMEncSourceGroup2
+  Dim SrcAud1 As IWMEncAudioSource
+  Dim SrcVid1 As IWMEncVideoSource2
+  Set SrcGrp1 = SrcGrpColl.Add("SG1")
+  Set SrcAud1 = SrcGrp1.AddSource(WMENC_AUDIO)
+  Set SrcVid1 = SrcGrp1.AddSource(WMENC_VIDEO)
+  
+' Create a second source group named SG2, and two source objects.
+  Dim SrcGrp2 As IWMEncSourceGroup2
+  Dim SrcAud2 As IWMEncAudioSource
+  Dim SrcVid2 As IWMEncVideoSource2
+  Set SrcGrp2 = SrcGrpColl.Add("SG2")
+  Set SrcAud2 = SrcGrp2.AddSource(WMENC_AUDIO)
+  Set SrcVid2 = SrcGrp2.AddSource(WMENC_VIDEO)
+  
+' Create an IWMEncBroadcast object and specify a port and a protocol.
+  Dim Brdcst As IWMEncBroadcast
+  Set Brdcst = Encoder.Broadcast
+  Brdcst.PortNumber(WMENC_PROTOCOL_HTTP) = 8080
+  
+' Specify the input for the sources in the first source group.
+' For this example, source group 1 uses file sources.
+  SrcAud1.SetInput "C:\InputFile.mpg"
+  SrcVid1.SetInput "C:\InputFile.mpg"
+  
+' Create a profile object. For brevity, this example uses the first
+' profile in the collection. Then specify this profile object as
+' the profile to use in source group 1.
+  Dim Pro As IWMEncProfile
+  Set Pro = ProColl.Item(0)
+  SrcGrp1.Profile = Pro
+  
+' Specify the input sources for source group 2. In this example,
+' the sources are the default audio and video devices.
+' Set the profile for source group 2 to the same profile object.
+  SrcAud2.SetInput "DEVICE://Default_Audio_Device"
+  SrcVid2.SetInput "DEVICE://Default_Video_Device"
+  SrcGrp2.Profile = Pro
+  
+' Set source group 1 to roll over automatically to source group 2.
+' -1 indicates that the rollover happens when source group 1
+' has been encoded.
+  SrcGrp1.SetAutoRollover -1, "SG2"
+  
+' Start encoding.
+  Encoder.Start
+
+' For this example, use a message box to stop the application when you
+' have finished encoding.
+  MsgBox "Click OK to stop encoding."
+
+End Sub
+

@@ -1,0 +1,5 @@
+'Description: Duplicates the IIF function but doesn't require an extra dll 
+
+'Function myIIF (ByVal expr As Integer, ByVal truepart As Variant, ByVal falsepart As Variant) As Variant
+	If expr Then myIIF = truepart Else myIIF = falsepart
+'End Function

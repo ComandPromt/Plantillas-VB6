@@ -1,0 +1,52 @@
+The following example shows how to create the predefined user interface and broadcast live multimedia content from the local computer. The audio and video sources are configured to use the default sound card and capture card. Use a blank form for this example.
+
+' Create WMEncoderApp and WMEncoder objects.
+  Dim Encoder As WMEncoder
+  Dim EncoderApp As WMEncoderApp
+
+Private Sub Form_Load()
+  Set EncoderApp = New WMEncoderApp
+  Set Encoder = EncoderApp.Encoder
+
+' Display the predefined Encoder UI.
+  EncoderApp.Visible = True
+
+' Specify the source for the input stream.
+  Dim SrcGrpColl As IWMEncSourceGroupCollection
+  Dim SrcGrp As IWMEncSourceGroup
+  Dim SrcVid As IWMEncSource
+  Dim SrcAud As IWMEncSource
+
+  Set SrcGrpColl = Encoder.SourceGroupCollection
+  Set SrcGrp = SrcGrpColl.Add("SG_1")
+  Set SrcVid = SrcGrp.AddSource(WMENC_VIDEO)
+  Set SrcAud = SrcGrp.AddSource(WMENC_AUDIO)
+
+  SrcVid.SetInput "DEVICE://Default_Video_Device"
+  SrcAud.SetInput "DEVICE://Default_Audio_Device"
+
+' Specify a profile.
+  Dim ProColl As IWMEncProfileCollection
+  Dim Pro As IWMEncProfile
+  Dim i As Integer
+
+  Set ProColl = Encoder.ProfileCollection
+
+  For i = 0 To ProColl.Count - 1
+    Set Pro = ProColl.Item(i)
+    If Pro.Name = "Windows Media Video 8 for Local Area Network (384 Kbps)" Then
+        SrcGrp.Profile = Pro
+        Exit For
+    End If
+  Next
+
+' Create a broadcast.
+  Dim BrdCst As IWMEncBroadcast
+  Set BrdCst = Encoder.Broadcast
+  BrdCst.PortNumber(WMENC_PROTOCOL_HTTP) = 8080
+
+' Start the encoding process.
+  Encoder.Start
+
+End Sub
+
