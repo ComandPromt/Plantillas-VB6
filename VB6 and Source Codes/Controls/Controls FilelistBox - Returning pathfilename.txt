@@ -1,0 +1,9 @@
+'Description: Returns path and filename from the FileListBox Control
+
+'Place the following code in a File1_Click()
+
+If Right (File1.Path,1) <> "\" Then
+       Label1.Caption = File1.Path & "\" & file1.Filename
+else
+       Label1.Caption = File1.Path & file1.Filename
+end if

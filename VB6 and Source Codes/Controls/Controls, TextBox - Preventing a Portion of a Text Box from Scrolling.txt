@@ -1,0 +1,63 @@
+Tip 114: Preventing a Portion of a Text Box from Scrolling
+July 1, 1995
+
+Abstract
+The Microsoft® Windows® application programming interface (API) SendMessage function can be used to send messages to Microsoft Visual Basic® controls such as Text Boxes. This article explains how you can prevent text from scrolling in a Text Box control. The nonscrolling portion of the control can also be made invisible to the user.
+
+Sending Messages to Text Box Controls
+The Text Box control in Microsoft® Visual Basic® is best described as a mini-word-processing program. When the MultiLine property of the Text Box control is set to True, the lines of text wrap around to the next line. As the amount of text typed into the Text Box increases, the text within the control will scroll upwards. This means that the text becomes invisible. The text, however, remains in the control—it is not deleted.
+
+The Microsoft Windows® application programming interface (API) SendMessage function can be used to prevent a portion of the Text Box control from scrolling out of view. When you first create the Text Box control, its client area is the formatting rectangle (that is, the area where text can be typed.) The EM_SETRECTNP message can be sent to the control to limit the formatting rectangle to a specific area of the Text Box's client area.
+
+In the example program below, you want the second half of the Text Box control to remain intact. You don't want the text to scroll out of view. Therefore, you retrieve the height of the Text Box control from its Height property and divide this value by two. This gives us the coordinates of the bottom half of the Text Box. The result is then sent to the SendMessage function, which tells EM_SETRECTNP to prevent that rectangular area from being scrolled.
+
+You may want to substitute the EM_SETRECT message for the EM_SETRECTNP message. Using EM_SETRECT stops Windows from redrawing the text in the formatting rectangle area. This results in the text being invisible within the Text Box control.
+
+Example Program
+This program shows how to temporarily freeze a specific portion of a Text Box control. The frozen portion contains the text that will not be scrolled out of view. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as one single line of code): 
+Private Declare Function SendMessage Lib "User" (ByVal hWnd As Integer, ByVal 
+   wMsg As Integer, ByVal wParam As Integer, lParam As Any) As Long
+Const WM_USER = &H400
+Const EM_SETRECTNP = WM_USER + 4
+Const EM_SETRECT = WM_USER + 3
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Text1.Text = "This is the first paragraph that we want to show."
+    Text1.Text = Text1.Text & " in the Text Box control"
+    Text1.Text = Text1.Text & Chr$(13) & Chr$(10) & "This is the second paragraph that we"
+    Text1.Text = Text1.Text & " want to freeze so that text cannot be scrolled"
+End Sub
+
+Add the following code to the Click event for Form1: 
+Private Sub Form_Click()
+    Dim R As RECT
+    Dim X As Long
+    
+    ScaleMode = 3
+    
+    R.Left = 0
+    R.Top = 0
+    R.Right = Text1.Width
+    R.Bottom = Text1.Height / 2
+    
+    X = SendMessage(Text1.hWnd, EM_SETRECTNP, 0, R)
+    
+End Sub
+
+From the Visual Basic Insert menu, click Module to create a new module. Module1.Bas is created by default. 
+Add the following TYPE structure to Module1.Bas: 
+Type RECT
+    Left As Integer
+    Top As Integer
+    Right As Integer
+    Bottom As Integer
+End Type
+
+Add a Text Box control to Form1. Text1 is created by default. Set its MultiLine property to True. 
+Run the example program by pressing F5. The Text Box is displayed on Form1. Click the mouse once in the form. Try typing new text into the Text Box control. Notice that the text in the bottom half of the Text Box control does not scroll down as you add more text to the beginning of the Text Box control.
+
+Modify the program by sending an EM_SETRECT message to the Text Box instead of an EM_SETRECTNP message. Run the program a second time. The second half of the Text Box is not shown, even though the text is actually stored in the control as usual

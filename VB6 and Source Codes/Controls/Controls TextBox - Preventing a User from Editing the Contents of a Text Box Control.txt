@@ -1,0 +1,48 @@
+Tip 135: Preventing a User from Editing the Contents of a Text Box Control
+July 1, 1995
+
+Abstract
+The Text Box control in Microsoft® Visual Basic® lets your user type text that can later be used within your program. Alternatively, you may want to display some text but do not want the user to be able to edit that text. This article explains how to make a Text Box control's contents read-only.
+
+Making a Text Box Control Read-Only
+When developing a program in Microsoft® Visual Basic®, you may want to display some data in a Text Box control. If the MultiLine property is set to True, the text will automatically wrap to the next line. In addition, if the ScrollBars property of the Text Box control is set to 3-Both (or 1-Vertical or 2-Horizontal), your user can scroll through the control's contents.
+
+However, you might not want your user to be able to edit the text that is stored in the Text Box control. You can set the contents of a Text Box control to read-only status by using the Microsoft Windows® programming application interface (API) SendMessage function.
+
+The SendMessage function can be used to send an EM_SETREADONLY message to the Text Box control. This makes the Text Box control read-only.
+
+To use the SendMessage function within your program, include the following Declare statement in the General Declarations section of your project (note that this Declare statement must be typed as a single line of code):
+
+Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" 
+   (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Integer, 
+   ByVal lParam As Long) As Long
+
+The SendMessage function requires four arguments, as follows.
+
+hwnd A long value containing the handle of the Text Box control 
+wMsg A long value containing the message to be sent, in this case EM_SETREADONLY 
+wParam An integer value set to True to set the control's read-only flag, or False to remove the control's read-only flag 
+lParam A long value that should be set to zero (not used by EM_SETREADONLY) 
+
+After the program runs the SendMessage function, a long value is returned, indicating success (if the value is nonzero) or false (if the value is zero).
+
+Example Program
+This program shows how to prevent a user from editing the contents of a Text Box control without disabling the control itself. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" 
+   (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Integer, 
+   ByVal lParam As Long) As Long
+Const WM_USER = &H400
+Const EM_SETREADONLY = (WM_USER + 31)
+
+Add a Text Box control to Form1. Text1 is created by default. Set its MultiLine property to True and its ScrollBars property to 3-Both. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim RetVal As Long
+    RetVal = SendMessage(Text1.hwnd, EM_SETREADONLY, True, ByVal 0&)
+End Sub
+
+Run the example program by pressing F5. Type some text in the Text Box control. Notice that you can use the horizontal and vertical scroll bars to scroll through the text. You can also make changes to the text itself. Click the command button. You can still use the scroll bars or cursor keys to navigate within the Text Box control, but you cannot edit its contents.

@@ -1,0 +1,81 @@
+Icon, SmallIcon, Icons, SmallIcons, View Properties Example
+This example populates a ListView control with the contents of the Publishers table in the Biblio.mdb database. Four OptionButton controls are labeled with View property choices. You must place two ImageList controls on the form, one to contain images for the Icon property, and a second to contain images for the SmallIcon property of each ListItem object. To try the example, place a ListView, a control array of four OptionButton controls, and two ImageList controls on a form and paste the code into the form's Declarations section.
+
+Note   The example will not run unless you add a reference to the Microsoft DAO 3.51 Object Library by using the References command on the Tools menu. Run the example and click on the ComboBox control to switch views.
+
+Private Sub Option1_Click(Index as Integer)
+   ' Set the ListView control's View property to the
+   ' Index of Option1
+   ListView1.View = Index
+End Sub
+
+Private Sub Form_Load()
+   ' Create an object variable for the ColumnHeader object.
+   Dim clmX As ColumnHeader
+   ' Add ColumnHeaders. The width of the columns is the width
+   ' of the control divided by the number of ColumnHeader objects.
+   Set clmX = ListView1.ColumnHeaders. _
+   Add(, , "Company", ListView1.Width / 3)
+   Set clmX = ListView1.ColumnHeaders. _
+   Add(, , "Address", ListView1.Width / 3)
+   Set clmX = ListView1.ColumnHeaders. _
+   Add(, , "Phone", ListView1.Width / 3)
+   
+   ListView1.BorderStyle = ccFixedSingle ' Set BorderStyle property.
+   ListView1.View = lvwReport ' Set View property to Report.
+   
+   ' Add one image to ImageList1--the Icons ImageList.
+   Dim imgX As ListImage
+   Set imgX = ImageList1.ListImages. _
+   Add(, , LoadPicture("icons\mail\mail01a.ico"))
+   ' Add an image to ImageList2--the SmallIcons ImageList.
+   Set imgX = ImageList2.ListImages. _
+   Add(, , LoadPicture("bitmaps\assorted\w.bmp"))
+   
+   ' To use ImageList controls with the ListView control, you must
+   ' associate a particular ImageList control with the Icons and
+   ' SmallIcons properties.
+   ListView1.Icons = ImageList1
+   ListView1.SmallIcons = ImageList2
+   ' Label OptionButton controls with View options.
+      Option1(0).Caption = "Icon"
+      Option1(1).Caption = "SmallIcon"
+      Option1(2).Caption = "List"
+      Option1(3).Caption = "Report"
+      ListView1.View = lvwIcon ' Set to Icon view
+   
+   ' Create object variables for the Data Access objects.
+   Dim myDb As Database, myRs As Recordset
+   ' Set the Database to the BIBLIO.MDB database.
+   Set myDb = DBEngine.Workspaces(0).OpenDatabase("BIBLIO.MDB")
+   ' Set the recordset to the Publishers table.
+   Set myRs = myDb.OpenRecordset("Publishers", dbOpenDynaset)
+   
+   ' Create a variable to add ListItem objects.
+   Dim itmX As ListItem
+
+   ' While the record is not the last record, add a ListItem object.
+   ' Use the Name field for the ListItem object's text.
+   ' Use the Address field for the ListItem object's SubItem(1)
+   ' Use the Phone field for the ListItem object's SubItem(2)
+
+   While Not myRs.EOF
+      
+      Set itmX = ListView1.ListItems.Add(, , CStr(myRs!Name))
+      itmX.Icon = 1   ' Set an icon from ImageList1.
+      itmX.SmallIcon = 1   ' Set an icon from ImageList2.
+
+      ' If the Address field is not Null, set SubItem 1 to the field.
+      If Not IsNull(myRs!Address) Then
+         itmX.SubItems(1) = CStr(myRs!Address) ' Address field.
+      End If
+         
+      ' If the Phone field is not Null, set SubItem 2 to the field.
+      If Not IsNull(myRs!Telephone) Then
+         itmX.SubItems(2) = myRs!Telephone  ' Phone field.
+      End If
+         
+      myRs.MoveNext  ' Move to next record.
+   Wend
+End Sub
+

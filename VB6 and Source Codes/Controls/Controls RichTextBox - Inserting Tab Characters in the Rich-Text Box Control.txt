@@ -1,0 +1,30 @@
+Tip 145: Inserting Tab Characters in the Rich-Text Box Control
+August 31, 1995
+
+Abstract
+The Rich-Text Box control allows you to create rich-text format (RTF) documents from within your Microsoft® Visual Basic® application. However, when you want to insert a tab character in the Rich-Text Box control, the focus is instead moved to the next control in the tab order specified by the TabIndex property. This article explains how you can insert the tab character into the Rich-Text Box control itself.
+
+Setting a Control's Tab Order
+At run time, a Microsoft® Visual Basic® user must press CTRL+TAB to insert a tab character in a Rich-Text Box control. However, most people are accustomed to pressing the TAB key. Whenever the TAB key is pressed from within a Rich-Text Box control, the focus is immediately set to the next control on the form. The TabIndex property of a control determines which control then receives the focus. This is not the effect you want.
+
+When designing a form in Visual Basic, you can add controls such as Command Buttons and Text Boxes to perform functions within your application. Each time you add a new control to a form, Visual Basic assigns a new value to that control. This value is saved in the control's TabIndex property. At run time, a user can press the TAB key to move the focus from one control to another. The focus is moved to the control that has the next highest TabIndex value.
+
+You can change the value of a control's TabIndex property either during design time or at run time. However, the control must have a TabStop property associated with it. The TabStop property determines whether a user can press the TAB key to set the focus to that specific control.
+
+In the example program below, the TabStop property of all controls on the form is set to False. This prevents the user from setting the focus to another control by using the TAB key—even though the Rich-Text Box control has the focus. In this way, the Tab control character is correctly inserted into the text of the Rich-Text Box control.
+
+Example Program
+This program shows how to insert a tab control character in the Rich-Text Box control in Visual Basic version 4.0. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Rich-Text Box control to Form1. RichTextBox1 is created by default. 
+Add the following code to the GotFocus event for RichTextBox1. 
+Private Sub RichTextBox1_GotFocus()
+    On Error Resume Next
+    For Each Control In Controls
+        Control.TabStop = False
+    Next Control
+End Sub
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Run the example program by pressing F5. Note that the focus is set to the Rich-Text Box control. Type some text into this control. You can press the TAB key to insert that control character into the text you are typing whenever necessary. You should also note that pressing TAB does not move the focus to the Command Button control—you must click the Command Button itself to move the focus to it. In other words, while the focus is set to the Rich-Text Box control, you can press the TAB key and that character is inserted into the Rich-Text Box control.

@@ -1,0 +1,62 @@
+Tip 129: Setting the Focus After Removing an Item from the List Box Control
+July 1, 1995
+
+Abstract
+The List Box control in Microsoft® Visual Basic® lets you easily manage related pieces of information. You use the AddItem method to add new items to the list and the RemoveItem method to delete items from the list. This article explains how to set the focus to the next item in the List Box control after deleting the currently selected item.
+
+Setting the Focus to the Next Available Item
+When using the List Box control in Microsoft® Visual Basic®, you can use the AddItem method to add new items to the list or the RemoveItem method to delete items from the list.
+
+However, when you delete an item from the list, the focus does not automatically change to the next available item in the list. The example program below shows how to do this.
+
+The ListIndex property of a List Box control tells you which item was selected by the user. Knowing this value, you can use the RemoveItem method to delete that specific entry from the list. For example, if you select the third item in the List Box control, the ListIndex property would be set to a value of two (the List Box control starts numbering the entries from zero).
+
+It is a simple matter, then, to set the focus to the next available item in the list by keeping track of your position within the list. After deleting the selected item, you set the ListIndex property to your current position minus one. You can then set the focus to this newly selected item.
+
+Example Program
+This program shows how to delete an item from a List Box control and set the focus to the next available item in the list. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    List1.AddItem "Item #1"
+    List1.AddItem "Item #2"
+    List1.AddItem "Item #3"
+    List1.AddItem "Item #4"
+    List1.AddItem "Item #5"
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim PositionInList As Integer
+    Dim NumberOfItemsInList As Integer
+    PositionInList = List1.ListIndex
+    NumberOfItemsInList = List1.ListCount
+    If NumberOfItemsInList > 0 Then
+        If PositionInList >= 0 Then
+            List1.RemoveItem PositionInList
+        Else
+            MsgBox "You must select an item to delete.", 48, "Error"
+        End If
+    Else
+        MsgBox "There are no items to delete.", 48, "Error"
+    End If
+    NumberOfItemsInList = List1.ListCount
+    If NumberOfItemsInList > 0 Then
+        If PositionInList = NumberOfItemsInList Then
+            List1.ListIndex = NumberOfItemsInList - 1
+        Else
+            List1.ListIndex = PositionInList
+        End If
+    End If
+    List1.SetFocus
+End Sub
+
+Run the example program by pressing F5. Five items will appear in the List Box control. Notice that no items are selected. Click the Delete command button. A message box is displayed, indicating that you must select an item before you can delete it.
+
+Click the OK command button. Click the third item (Item #3) to select it. The item is deleted from the List Box control, and the focus is moved to the next available item in the list.
+
+Notice that if you attempt to delete an item that does not exist in the List Box control, a message box will be displayed, telling you that there are no items to delete.
+

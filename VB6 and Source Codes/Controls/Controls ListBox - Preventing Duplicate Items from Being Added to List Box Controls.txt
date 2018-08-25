@@ -1,0 +1,58 @@
+Tip 132: Preventing Duplicate Items from Being Added to List Box Controls
+July 1, 1995
+
+Abstract
+You can maintain a list of items in the Microsoft® Visual Basic® List Box control. This article explains how to add new items to the List Box control by first checking to see if the entry already exists in the list.
+
+Using SendMessage to Search for Duplicate Items
+When developing an application in Microsoft® Visual Basic®, you can use the List Box control to create and maintain a list of items. To add new items to the list, you use the AddItem method. The AddItem method does not automatically report that a duplicate item already exists in the List Box control—you must verify this before you actually add the new item to the list.
+
+You can search a List Box control for a specific item by using the Microsoft Windows® application programming interface (API) SendMessage function. SendMessage allows you to send a message to the operating system. In this case, you want to tell SendMessage to issue an LB_FINDSTRING message to the List Box control.
+
+The LB_FINDSTRING message lets you search a List Box control for an entry that matches the target string. The first argument to this message defines the type of search you want to perform. You need to specify a value of zero to begin the search operation at the first entry in the List Box control. The second argument to the LB_FINDSTRING message is a NULL-terminated string that is the actual item you want to search for.
+
+If the LB_FINDSTRING message returns a value of –1 (minus 1), you know that the target string was not found in the List Box control. You can then use the AddItem method to add the new item to the List Box control. If the item already exists in the list, however, you can simply display a message box or perform some other procedure to inform the user that a duplicate entry already exists in the List Box control.
+
+Example Program
+This program shows how to determine if a List Box control already contains the item you are trying to add to the control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function SendMessageFind Lib "user32" Alias "SendMessageA" 
+   (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Integer, ByVal 
+   lParam As String) As Long
+Const WM_USER = &H400
+Const LB_ERR = (-1)
+Const LB_FINDSTRING = &H18F
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    List1.AddItem "Item #1"
+    List1.AddItem "Item #2"
+    List1.AddItem "Item #3"
+    List1.AddItem "Item #4"
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Duplicate". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    CheckForDupes
+End Sub
+
+Create a new function called CheckForDupes. Add the following code to this function: 
+Sub CheckForDupes()
+    Dim Ret As Long
+    Dim A As String
+    A = Text1.TEXT
+    Ret = SendMessageFind(List1.hwnd, LB_FINDSTRING, 0, (A))
+    If Ret = LB_ERR Then
+        List1.AddItem Text1.TEXT
+    Else
+        List1.ListIndex = Ret
+        MsgBox "Duplicate entry - cannot add to List Box", 16, "Error"
+    End If
+End Sub
+
+Run the example program by pressing F5. The List Box control has five items in it. Type a new entry in the Text Box control. Click the Duplicate command button. The program searches the List Box control for the entry you typed in the Text Box control. If the entry was not found, the program adds it to the List Box control. Alternatively, if the entry already exists in the List Box control, a message box is displayed informing you of this fact.
+

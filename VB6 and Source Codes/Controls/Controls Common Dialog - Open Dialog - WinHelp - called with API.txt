@@ -1,0 +1,24 @@
+'Description: Calls the "Help Dialog" without need for an OCX
+
+'Private Declare Function WinHelp Lib "user32" Alias "WinHelpA" (ByVal hwnd As Long, ByVal lpHelpFile As String, ByVal wCommand As Long, ByVal dwData As Long) As Long
+
+'Place the following code in under a command button or in a menu, etc...
+
+Dim a
+a = WinHelp(Me.hwnd, "mai97.hlp", &H105, 0)
+
+'&H3 - Contents
+'&H105 - Search
+
+'cdlHelpContext       &H1     Displays Help for a particular topic.
+'cdlHelpQuit          &H2     Notifies the Help application that the specified Help file is no longer in use.
+'cdlHelpIndex         &H3     Displays the index of the specified Help file.
+'cdlHelpContents      &H3     Displays the contents topic in the current Help file.
+'cdlHelpHelpOnHelp    &H4     Displays Help for using the Help application itself.
+'cdlHelpSetIndex      &H5     Sets the current index for multi-index Help.
+'cdlHelpSetContents   &H5     Designates a specific topic as the contents topic.
+'cdlHelpContextPopup  &H8     Displays a topic identified by a context number.
+'cdlHelpForceFile     &H9     Creates a Help file that displays text in only one font.
+'cdlHelpKey           &H101   Displays Help for a particular keyword.
+'cdlHelpCommandHelp   &H102   Displays Help for a particular command.
+'cdlHelpPartialKey    &H105   Calls the search engine in Windows Help.

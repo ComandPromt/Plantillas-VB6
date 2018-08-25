@@ -1,0 +1,69 @@
+Tip 68: Removing Duplicate Items from List Box Controls
+May 1, 1995
+
+Abstract
+The Visual Basic® StrComp function can be used in conjunction with the RemoveItem method to delete entries that are duplicated in List Box controls. This article explains how you can compare the items in two separate List Box controls and delete the duplicate entries from one of the controls.
+
+Comparing the Contents of Two List Box Controls
+The AddItem and RemoveItem methods allow you to add or delete items from a List Box control in Visual Basic®. If the Sorted property of a List Box is set to True, the items are automatically sorted in alphabetical order as each new item is added or an old item is removed.
+
+If you have two List Box controls in your Visual Basic application and you want to remove the items from the second control that are already in the first List Box, you can use the StrComp function, which allows you to compare two strings to see if they are identical.
+
+When using StrComp to determine if two strings are identical, you can tell the function to ignore uppercase and lowercase differences. In other words, the function can be told to treat the string "this is a test" to be the same as or different from the string "THIS IS A TEST". 
+
+If you want StrComp to ignore the case of the strings you are comparing, use the 1 argument. To make StrComp include the case of the strings in the comparison, use the 0 argument (that is, X = StrComp(String1, String2, 0) or X=StrComp(String1, String2, 1).) In addition, the Option Compare Text command, which you would place in the General Declarations section of a form or module, tells StrComp (and other string functions) that all string comparisons are to ignore the upper- and lowercase differences. 
+
+After you call the StrComp function, it returns the status of the string comparison. StrComp returns one of the following four possible values.
+
+-1 The first string is less than the second string. 
+0 The first string is identical to the second string. 
+1 The first string is greater than the second string. 
+NULL Either String1 or String2 is a NULL (empty) string. 
+
+Example Program
+The program below shows how to remove duplicate items from List Box controls. When the program is first executed, both List Box controls contain two entries that are identical. Clicking the "Remove Duplicates" command button removes the identical items from the second List Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+  List1.AddItem "test1"
+  List1.AddItem "test2"
+  List1.AddItem "test3"
+  List1.AddItem "test4"
+    
+  List2.AddItem "test1"
+  List2.AddItem "test2"
+  List2.AddItem "test5"
+    
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. Set its Sorted property to True. 
+Add a second List Box control to Form1. List2 is created by default. Set its Sorted property to True. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Sub Command1_Click()
+    Call EliminateDupEntries(List1, List2)
+End Sub
+
+Create a new function called EliminateDupEntries. Add the following code to this function: 
+Sub EliminateDupEntries(First As Control, Sec As Control)
+  Dim Findx As Integer
+  Dim Sindx As Integer
+  Dim Ret As Integer
+    
+  Findx = 0
+  For Sindx = 0 To Sec.ListCount - 1
+    For Findx = Sindx To First.ListCount - 1
+        Ret = StrComp(First.List(Findx), Sec.List(Sindx))
+       Select Case Ret
+           Case 0:  
+            Sec.RemoveItem Sindx
+            Sindx = Sindx - 1
+            Exit For
+           Case 1:  
+            Exit For
+        End Select
+    Next Findx
+  Next Sindx
+ End Sub
+

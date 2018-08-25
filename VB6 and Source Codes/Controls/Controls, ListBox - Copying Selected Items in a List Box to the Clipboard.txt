@@ -1,0 +1,55 @@
+Tip 14: Copying Selected Items in a List Box to the Clipboard
+Created: March 1, 1995
+
+Abstract
+One of the nice features provided under Windows® 3.1 is its Clipboard. Data (text or graphics) can be copied from an application program to the Clipboard. This data can then be transferred from the Clipboard to a different application, to be processed in some way.
+
+This article shows how you can copy selected items from a List Box control to the Clipboard. The Clipboard.GetText command copies information from the Clipboard to an object, such as a Text Box. Conversely, the Clipboard.SetText command copies information from an object to the Clipboard.
+
+Example Program
+The following Visual Basic® application copies selected items from a List Box control to the Clipboard. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the FormLoad event for Form1: 
+Sub Form_Load()
+    List1.AddItem "Vancouver, B.C."
+    List1.AddItem "Surrey, B.C."
+    List1.AddItem "White Rock, B.C."
+    List1.AddItem "Richmond, B.C."
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. Set its MultiSelect property to 1-Simple. 
+Draw a Text Box control under the List Box control. Text1 is created by default. Set its MultiLine property to True and its ScrollBars property to 2-Vertical. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Copy to Clipboard". 
+Type the following code in the Click event for Command1: 
+Sub Command1_Click()
+    Dim CopytoClip As String
+    Dim I As Integer
+    Clipboard.Clear
+    CopytoClip = ""
+    For I = 0 To List1.ListCount - 1
+        If List1.Selected(I) Then
+            CopytoClip = CopytoClip & Form1.List1.List(I) & Chr$(13) & Chr$(10)
+        End If
+    Next I
+    Clipboard.SetText CopytoClip
+End Sub
+
+Add a Command Button control to Form1. Command2 is created by default. Set its Caption property to "Show Clipboard". 
+Type the following code in the Click event for Command2: 
+Sub Command2_Click()
+    'display data stored in clipboard
+    Text1.Text = ""
+    Text1.Text = Clipboard.GetText(CF_TEXT)
+End Sub
+
+Add a Command Button control to Form1. Command3 is created by default. Set its Caption property to "Exit". 
+Type the following code in the Click event for Command3: 
+Sub Command3_Click()
+    End
+End Sub
+
+Add the following statement to the General Declarations section of Form1: 
+Const CF_TEXT = 1
+
+After you execute this demonstration program, the List Box will contain the names of the four cities. Click one or more of these names to select them. Then, click the "Copy to Clipboard" command button. To verify that only the selected items were actually copied to the Clipboard, click the "Show Clipboard" command button. You can experiment with the program several times to verify that it works correctly. To terminate the application, click the Exit command button.

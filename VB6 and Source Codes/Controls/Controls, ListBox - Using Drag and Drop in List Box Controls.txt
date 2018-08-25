@@ -1,0 +1,58 @@
+Tip 50: Using Drag and Drop in List Box Controls
+Created: April 10, 1995
+
+Abstract
+Many Windows®-based applications allow you to "drag" an item from one location on the screen to another and then "drop" the selected item in a new position. This technique is called drag and drop. Items can be dragged from one control to another, or even between two different Windows-based applications. This article explains how you can use the drag-and-drop technique to move individual items to new positions within a list box control.
+
+Moving Items Around in a List Box
+The Windows SendMessage function can be used within a Visual Basic® application to simulate dragging and dropping items from one location to another within a List Box. This technique allows you to selectively sort the contents of a List Box in situations where the Sorted property cannot be used. In the demonstration program below, the height of each row in the List Box is used along with the SendMesage function to determine the new location for the selected item.
+
+Example Program
+The following Visual Basic program lets you "drag and drop" an item in a List Box to another position within the same List Box. This, in effect, allows you to selectively sort the items in a List Box without using the Sorted property. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as one single line of text): 
+Declare Function SendMessage Lib "User" (ByVal hWnd As Integer, ByVal wMsg
+   As Integer, ByVal wParam As Integer, lParam As Any) As Long
+Const LB_GETTOPINDEX = &H400 + 15
+
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+   Dim i As Integer
+   Me.Show
+   For i = 1 To 10
+      List1.AddItem "Item " & i
+   Next i
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. 
+Add the following code to the MouseDown event for List1: 
+Sub List1_MouseDown(Button As Integer, Shift As Integer, X As Single,
+                    Y As Single)
+   Static SecondClick As Integer
+   Static DropText As String
+   Dim RowHeight As Single
+   Dim TopI As Integer, InsertI As Single
+   TopI = SendMessage(List1.hWnd, LB_GETTOPINDEX, 0&, 0&)
+   RowHeight = TextHeight("X")
+   InsertI = Y \ RowHeight
+   If Button = 2 And DropText = "" And SecondClick = False Then
+      List1.ListIndex = InsertI + TopI
+      DropText = List1.Text
+      MousePointer = 10
+      SecondClick = True
+      List1.RemoveItem InsertI + TopI
+   ElseIf Button = 2 And Len(DropText) > 2 And SecondClick = True Then
+      If InsertI + TopI < List1.ListCount - 1 Then
+         List1.AddItem DropText, InsertI + TopI
+      Else
+         List1.AddItem DropText, InsertI + TopI + 1
+      End If
+      DropText = ""
+      SecondClick = False
+      MousePointer = 0
+   End If
+End Sub
+
+When you execute this program, the List Box is filled with ten items. Using the right mouse button, click on an individual item in the List Box. The item you just clicked on is removed from the List Box. Move the mouse pointer to the position you want to move the selected item to and click the right mouse button a second time. The selected item is moved to the new position within the List Box.
+

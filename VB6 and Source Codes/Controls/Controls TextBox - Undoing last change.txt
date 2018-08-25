@@ -1,0 +1,10 @@
+'Description: Undo Text Box Change
+
+'Declare Function sendmessage Lib "User" (ByVal hWnd As Integer, _
+ ByVal wmsg As Integer, ByVal wparam As Integer, lparam As Any) As Long
+'Global Const WM_USER = &H400
+'Global Const EM_UNDO = WM_USER+23
+
+'Sub UndoTBchange (TB As TextBox)
+x% = sendmessage(TB.hWnd, EM_UNDO, 0, 0)
+End Sub

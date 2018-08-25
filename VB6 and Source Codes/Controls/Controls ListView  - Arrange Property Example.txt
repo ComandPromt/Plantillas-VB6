@@ -1,0 +1,33 @@
+Arrange Property Example
+This example adds several ListItem objects and subitems to a ListView control. When you click on an OptionButton control, the Arrange property is set with the Index value of the OptionButton. To try the example, place a control array of three OptionButton controls, a ListView control, and two ImageList controls on a form and paste the code into the form's Declarations section. Run the example and click on an OptionButton to change the Arrange property.
+
+Private Sub Option1_Click(Index as Integer)
+   ' Set Arrange property to Option1.Index.
+   ListView1.Arrange = Index
+End Sub
+
+Private Sub Form_Load()
+   ' Label OptionButton controls with Arrange choices.
+      Option1(0).Caption = "No Arrange"
+      Option1(1).Caption = "Align Auto Left"
+      Option1(2).Caption = "Align Auto Top"
+
+   ' Declare variables for creating ListView and ImageList objects.
+   Dim i As Integer
+   Dim itmX As ListItem   ' Object variable for ListItems.
+   Dim imgX As ListImage   ' Object variable for ListImages.
+
+   ' Add a ListImage object to an ImageList control.
+   Set imgX = ImageList1.ListImages. _
+   Add(,,LoadPicture("icons\mail\mail01a.ico"))
+
+   ListView1.Icons = ImageList1   ' Associate an ImageList control.
+
+   ' Add ten ListItem objects, each with an Icon.
+   For i = 1 To 10
+      Set itmX = ListView1.ListItems.Add()
+      itmX.Icon = 1   ' Icon.
+      itmX.Text = "ListItem " & i
+   Next i
+End Sub
+

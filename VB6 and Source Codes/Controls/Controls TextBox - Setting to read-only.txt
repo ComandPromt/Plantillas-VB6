@@ -1,0 +1,18 @@
+Description: Sets a TextBox to read-only, prohibiting alteration to content
+'            set text1 to multi-line
+
+'Const WM_USER = &H400
+'Const EM_SETREADONLY = (WM_USER + 31)
+'Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" _
+(ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Long) As Long
+
+
+Open "C:\CONFIG.SYS" For Input As #1
+While Not EOF(1)
+	Line Input #1, TmpStr$
+        KeepStr$ = KeepStr$ & TmpStr$ & Chr$(13) & Chr$(10)
+Wend
+text1.Text = KeepStr$
+' Set the text box to read-only mode:
+ret& = SendMessage(text1.hWnd, EM_SETREADONLY, True, 0&)
+If ret& = 0 Then MsgBox "Couldn't Set Text Box to Read-Only."

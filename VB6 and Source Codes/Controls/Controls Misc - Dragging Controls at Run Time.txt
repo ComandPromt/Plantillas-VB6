@@ -1,0 +1,41 @@
+Tip 71: Dragging Controls at Run Time
+May 5, 1995
+
+Abstract
+Many Windows®-based applications allow you to move a control, such as a window, to a new position on the screen. This is accomplished by clicking the left mouse button on the control and, while holding the mouse button down, dragging the object to a new location on the screen. When you release the mouse button, the object remains at the new screen position. This article explains how you can add this functionality to your own Visual Basic® applications.
+
+Moving Forms and Other Controls
+When you click the mouse button, Visual Basic® triggers its MouseDown or MouseUp events. When you press the mouse button down, a MouseDown event is invoked; similarly, when you release the mouse button, a MouseUp event is invoked. At run time, you can allow a user to position controls at new locations on the screen by trapping the MouseDown event for each control.
+
+Each time a control receives the focus or detects mouse movement, Windows® calls the SetCapture or ReleaseCapture function. The Windows application programming interface (API) SetCapture and ReleaseCapture functions set or release the mouse capture, which tells the system which object is currently being manipulated. These functions can be used in conjunction with the SendMessage function to position a control at a new location on the screen.
+
+When an object, such as a form, is moved at run time, Windows generates a MOVE message. By trapping the MouseDown event for a control, you can tell Visual Basic to issue a move command to the operating system. This system command (MOVE) tells Windows to move the window to the new position.
+
+In the example program below, the user can move both the form and command button to new locations. When the MouseDown event is triggered for the control, the ReleaseCapture function is called. Next, the SendMessage function tells Windows to actually execute the MOVE command. This anchors the object at its new position on the screen.
+
+Example Program
+The example program below shows how to drag a control, such as a form or command button, to a new position on the screen. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Const WM_SYSCOMMAND = &H112
+Const SC_MOVE = &HF012
+Declare Sub ReleaseCapture Lib "User" ()
+Declare Sub SendMessage Lib "User" (ByVal hWnd As Integer, ByVal wMsg 
+   As Integer, ByVal wParam As Integer, lParam As Long)
+
+Add the following code to the MouseDown event for Form1: 
+Sub Form_MouseDown(Button As Integer, Shift As Integer, X As Single,
+         Y As Single)
+    ReleaseCapture
+    SendMessage Form1.hWnd, WM_SYSCOMMAND, SC_MOVE, 0
+End Sub
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the MouseDown event for Command1: 
+Sub Command1_MouseDown(Button As Integer, Shift As Integer, X As Single, 
+        Y As Single)
+    ReleaseCapture
+    SendMessage Command1.hWnd, WM_SYSCOMMAND, SC_MOVE, 0
+End Sub
+

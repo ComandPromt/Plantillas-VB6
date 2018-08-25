@@ -1,0 +1,80 @@
+Tip 64: Changing the Case of Text Entered in a Text Box Control
+Created: April 24, 1995
+
+Abstract
+This article explains how you can force a Visual Basic® Text Box control to convert all typed text to either uppercase or lowercase characters.
+
+Forcing Text to Be Uppercase or Lowercase
+The Visual Basic® Text Box control allows your program to accept any ASCII character typed on the keyboard by the user. You can force Windows® to convert the typed text to either all uppercase or all lowercase characters.
+
+The Windows application programming interface (API) GetWindowLong and SetWindowLong functions return or set various types of information about the style associated with the specified window. Every window in a Windows-based application has certain attributes that determine how that window is used within an application. Some of these style attributes can be changed at run time to modify the behavior of controls such as the Text Box control.
+
+To determine a window's current style settings, you can use the GetWindowLong function. The Declare statement for GetWindowLong is as follows (note that it must be typed as a single line of code):
+
+Declare Function GetWindowLong Lib "User" (ByVal hWnd As Integer, ByVal nIndex 
+   As Integer) As Long
+
+The GetWindowLong function requires two arguments, as follows:
+
+hWnd An integer value containing the window's handle 
+nIndex An integer value containing the type of window information you want to retrieve. This value may be one of the following constants: 
+  GWL_EXSTYLE—Retrieves the extended window style. 
+  GWL_STYLE—Retrieves the window style. 
+  GWL_WINDPROC—Retrieves the window function's address. 
+
+After the GetWindowLong function is executed, a long value is returned. This value depends on the specific nIndex argument used to call the function.
+
+To change a window's style, you call the SetWindowLong function. Its Declare statement is as follows (note that it must be typed as a single line of code):
+
+Declare Function SetWindowLong Lib "User" (ByVal hWnd As Integer, ByVal nIndex 
+   As Integer, ByVal dwNewLong As Long) As Long
+
+The SetWindowLong function requires one more argument than the GetWindowLong function, namely, dwNewLong. This long value should contain the new style value you want to apply to the specified window.
+
+When you want to force a Text Box control to convert typed text to uppercase characters, you can call SetWindowLong with dwNewLong set to the constant ES_UPPERCASE. Conversely, to convert all typed text to lowercase characters, you call SetWindowLong with dwNewLong set to the constant ES_LOWERCASE. In an actual Visual Basic application, you would first preserve the control's original window style and then restore the window's style when your special task has been completed.
+
+Example Program
+The program shown below displays two Command Buttons and a Text Box on a form. Click the "Uppercase Only" Command Button to force all text typed in the Text Box to uppercase characters. Conversely, click the "Lowercase Only" Command Button to force typed text to be converted to lowercase characters. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of text): 
+Declare Function GetWindowLong Lib "User" (ByVal hWnd As Integer, ByVal nIndex 
+   As Integer) As Long
+
+Declare Function SetWindowLong Lib "User" (ByVal hWnd As Integer, ByVal nIndex 
+   As Integer, ByVal dwNewLong As Long) As Long
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Uppercase Only". 
+Add the following code to the Click event for Command1: 
+Sub Command1_Click()
+  Text1.Text = ""
+  X = ChangeCase(Text1, True)
+  Text1.SetFocus
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. Set its Caption property to "Lowercase Only". 
+Add the following code to the Click event for Command2: 
+Sub Command2_Click()
+  Text1.Text = ""
+   X = ChangeCase(Text1, False)
+  Text1.SetFocus
+End Sub
+
+Create a new function called ChangeCase. Add the following code to this function: 
+Function ChangeCase(TheControl As Control, UpLow As Integer) As Integer
+  Const GWL_STYLE = (-16)
+  Const ES_UPPERCASE = &H8&
+  Const ES_LOWERCASE = &H10&
+  Dim Rtn As Long
+  Dim EditStyle As Long
+  EditStyle = GetWindowLong(TheControl.hWnd, GWL_STYLE)
+  If UpLow = True Then
+      EditStyle = EditStyle Or ES_UPPERCASE
+  End If
+  If UpLow = False Then
+      EditStyle = EditStyle Or ES_LOWERCASE
+  End If
+  Rtn = SetWindowLong(TheControl.hWnd, GWL_STYLE, EditStyle)
+End Function
+

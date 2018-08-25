@@ -1,0 +1,71 @@
+Tip 151: Finding Whole Words in a Text Box Control
+September 5, 1995
+
+Abstract
+When you design a Microsoft® Visual Basic® application, you can add a Text Box control to your project. The Text Box control lets a user type text that can be manipulated by your program. This article explains how you can add a word-search function to your program.
+
+Using the InStr Function
+The Text Box control provided in Microsoft® Visual Basic® acts like a miniature word-processing program. As new text is typed, it is appended to the text that already exists in the control. Your user can edit existing text or delete text that is no longer needed. However, that is the extent of the word-processing capability of the Text Box. You can, however, use the InStr function to add your own search function to find words in a Text Box control.
+
+In the example program below, you use a FindMatch function to search the Text Box control for a specific word. A message box is displayed telling you whether or not the target word was found.
+
+You can use the InStr function to isolate a specific piece of text within a larger piece of text. When the search finds a specific word match, the InStr function identifies the target text.
+
+It is a simple task to direct the InStr function to search for a particular word in the Text Box control. Let's assume you want to see whether the word dog is in the string, "He owns a cat and a dog". To do this, you tell InStr to search for the target word by issuing a statement such as:
+
+X = InStr("He owns a cat and a dog", "dog")
+
+Because the word dog actually exists in the sentence, InStr will report where it found the string dog. In the example program below, you assume that a word is defined by a space character, both before and after the word. However, if the string ends with a period character, then the InStr function will not find the word dog. This is because that word is actually the characters d-o-g-period.
+
+Therefore, you must take punctuation characters into account when you write a word-search function. In the example program below, you isolate each word that is surrounded by space characters. In addition, you isolate words that end with a linefeed, carriage return, comma, period, or space. This enables you to determine whether a word exists in the Text Box control, regardless of punctuation that may or may not be appended to the end of the word.
+
+Example Program
+This program shows how to search a Text Box control for whole words. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. Set its MultiLine property to True. 
+Add a Label control to Form1. Label1 is created by default. Set its Caption property to "Find word:". 
+Add a second Text Box control to Form1. Text2 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim X As Integer
+    X = FindMatch(Text1.Text, Text2.Text)
+    If X = 0 Then
+        MsgBox "Word not found"
+    Else
+        MsgBox "Word found"
+    End If
+End Sub
+
+Create a new function called FindMatch. Add the following code to this function: 
+Function FindMatch(Str1 As String, Str2 As String) As Integer
+    Dim Match As Integer
+    Dim Char1 As String
+    Dim Char2 As String
+    
+    Match = InStr(Str1, Str2)
+    
+    If Match <> 0 Then
+        Char1 = Mid$(Str1, Match - 1, 1)
+            If Codes(Char1) Then
+                Char2 = Mid$(Str1, Match + Len(Str2), 1)
+                If Codes(Char2) Then
+                    FindMatch = True: Exit Function
+                End If
+            End If
+    End If
+    
+    FindMatch = False
+End Function
+
+Create a new function called Codes. Add the following code to this function: 
+Function Codes(PuncStr As String) As Integer
+    If PuncStr = "," Or PuncStr = "." Or PuncStr = " " Or PuncStr = Chr(10) Or PuncStr = Chr(13) Or PuncStr = Chr(9) Then
+        Codes = True
+    Else
+        Codes = False
+    End If
+End Function
+
+Run the example program by pressing F5. Type some text in the first Text Box control. In the second Text Box control, type a word that you want to search for in the first Text Box. Click the command button to execute the search routine. A message box is displayed, telling you whether the target word (in Text2) was found in the Text Box (Text1).

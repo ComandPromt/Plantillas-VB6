@@ -1,0 +1,8 @@
+'Description: Calls the "Win95 AboutBox" without need for additional form.
+
+'private Declare Function ShellAbout Lib "shell32.dll" _
+Alias "ShellAboutA" (ByVal hwnd As Long, ByVal szApp As String, _
+ByVal szOtherStuff As String, ByVal hIcon As Long) As Long
+
+x = shellabout (Form1.hwnd, "Visual Basic 4.0", _
+"Xtreme Software Master Add-In 3.0", Form1.icon)

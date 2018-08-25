@@ -1,0 +1,13 @@
+'Description: Get a line count for a Text Box
+
+'Global Const WM_USER = &H400
+'Global Const EM_GETLINECOUNT = WM_USER + 10 
+
+'Function TextBoxLinecount (TB As TextBox) As Integer
+	If TB.MultiLine Then
+        	ret& = sendmessage(TB.hWnd, EM_GETLINECOUNT, 0, 0)
+                TextBoxLinecount = CInt(ret&)
+        Else
+                TextBoxLinecount = 1
+        End If
+'End Function

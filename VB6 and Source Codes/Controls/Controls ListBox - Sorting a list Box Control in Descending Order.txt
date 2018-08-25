@@ -1,0 +1,42 @@
+Tip 126: Sorting a List Box Control in Descending Order
+July 1, 1995
+
+Abstract
+The List Box control in Microsoft® Visual Basic® provides a method of sorting a list of items in alphabetic order. This article explains how you can sort the items in a List Box control in descending order.
+
+Sorting in Descending Order
+When developing an application in Microsoft® Visual Basic®, you can use the List Box control to maintain a list of related items. For example, you may need to store a list of vendor names in a List Box control.
+
+You can sort the items contained in a List Box control by setting the control's Sorted property to True. The items will be sorted in ascending alphabetic (A–Z) order. However, if you want to sort the items in descending order, you need to use two List Box controls.
+
+The example program uses two List Box controls. The first List Box contains the items you want to sort. The Visible property of this List Box is set to False, because it is your "working" List Box control. You don't want to see the contents of this control at run time. In addition, the Sorted property of the List Box is set to True. Each item you add to this List Box control is stored in ascending order.
+
+The second List Box control used in this program will display the final result of your sort routine. Its Visible property is set to True and its Sorted property is set to False.
+
+In the example program below, you simply copy the desired items you want to sort from the first List Box control to the second List Box control. To do this, you use a For-Next loop. The ListCount property of a List Box control tells you how many entries are stored in the control. You use this value (minus 1, because you start counting from zero) to step backwards from the end of the list to the beginning. Each time you cycle through the For-Next loop, you add the current item to the second List Box control. This stores the final list of items in descending (Z–A) order in the second List Box control.
+
+Example Program
+This program shows how to reverse-sort the contents of a List Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    List1.AddItem "Ten"
+    List1.AddItem "One"
+    List1.AddItem "Four"
+    List1.AddItem "Sixteen"
+    List1.AddItem "Forty"
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. Set its Visible property to False and its Sorted property to True. 
+Add a second List Box control to Form1. List2 is created by default. Set its Sorted property to False. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim X As Integer
+    For X = List1.ListCount - 1 To 0 Step -1
+        List2.AddItem List1.List(X)
+    Next X
+End Sub
+
+Run the example program by pressing F5. Click the command button. The List Box control is populated with the entries from the first (hidden) List Box control. These entries are sorted in descending order, from Z through A.

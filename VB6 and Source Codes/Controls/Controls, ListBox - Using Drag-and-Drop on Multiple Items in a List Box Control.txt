@@ -1,0 +1,62 @@
+Tip 94: Using Drag-and-Drop on Multiple Items in a List Box Control
+May 22, 1995
+
+Abstract
+The drag-and-drop functionality provided in many Windows®-based applications allows you to copy an item from one program to another or from one control to another control in the same application. This article explains how to use this drag-and-drop technique in Visual Basic® to copy multiple items selected in a List Box control to another List Box control.
+
+Dragging Multiple List Box Items
+Many Windows-based applications include drag-and-drop functionality. This means that you can select an item, such as an entry in a List Box control, click on the item, and, while holding the mouse button down, drag that item to another window or control and drop it on its new location.
+
+The example program below shows how you can add this drag-and-drop feature to your Visual Basic® applications. This program allows you to select multiple items in the source List Box control and drag the whole group of selected items to a second List Box control all at one time.
+
+Example Program
+This program shows how to drag several items selected in one List Box control to another List Box control. Run the example program by pressing the F5 function key. From the first List Box control, click the mouse on several items to select (highlight) them. While clicking each item, hold down the SHIFT key. When you want to drag the selected items to the second List Box control, click once on the first List Box control and hold the mouse button down while you drag the control to the second List Box. Release the mouse button to drop the selected items onto the second List Box control.
+
+While using this program, you can select the items from the first List Box either by holding the SHIFT key down while you click on each entry, or by simply clicking the mouse on each individual entry. If you hold the SHIFT key down when selecting entries, those entries will remain selected (highlighted) in the first List Box control after the items have been dropped onto the second List Box control. If the SHIFT key is not used, one of the selected items will not retain its selected status after the drag-and-drop operation has finished. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1: 
+Option Explicit
+Dim IG As Integer
+Dim LIG(20) As Integer
+Dim LGlobal As Long
+Const VK_SHIFT = &H10
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+Dim X As Integer
+IG = 0
+For X = 0 To 9
+List1.AddItem "Item #" + Str$(X)
+Next X
+List1.DragMode = 0
+LGlobal = 99999
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. Set its MultiSelect property to 1-Simple. 
+Add the following code to the MouseDown event for List1 (note that the Private line must be typed as a single line of code): 
+Private Sub List1_MouseDown(Button As Integer, Shift As Integer, X As Single, 
+Y As Single)
+LGlobal = List1.ListIndex
+For X = 1 To IG
+List1.Selected(LIG(X)) = True
+Next X
+List1.Drag
+End Sub
+
+Add a second List Box control to Form1. List2 is created by default. Set its MultiSelect property to 1-Simple. 
+Add the following code to the DragDrop event for List2: 
+Private Sub List2_DragDrop(Source As Control, X As Single, Y As Single)
+    For X = 0 To List1.ListCount - 1
+        If X = LGlobal Then
+            List2.AddItem List1.List(X)
+        Else
+            If List1.Selected(X) Then
+                List2.AddItem List1.List(X)
+            End If
+        End If
+    Next X
+    LGlobal = 99999
+    IG = 0
+End Sub
+

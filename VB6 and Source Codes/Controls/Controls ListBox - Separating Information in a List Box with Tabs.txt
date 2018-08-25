@@ -1,0 +1,111 @@
+Tip 58: Separating Information in a List Box with Tabs
+Created: April 17, 1995
+
+Abstract
+The List Box control provided in Visual Basic® allows you to create a list of items, optionally sorted alphabetically. Each item can contain any type of ASCII characters, including control codes such as the tab character, and all items can be sorted if the Sort property of the List Box is set to True. However, when trying to add items separated by tabs, the output is not correctly formatted in two or more columns. This article will explain how you can correctly format items in a List Box that contain embedded tab (ASCII 9) characters.
+
+Setting Tab Stops in List Boxes
+If you've ever tried to align multiple columns of data in a List Box control, you'll know how difficult this task can be. The data just doesn't line up properly. By using the Windows® application programming interface (API) GetDC, ReleaseDC, GetDeviceCaps, GetTextExtent, and SendMessage functions, you can add items to a List Box in correctly positioned columns.
+
+To display text in columns using a List Box control, you must first calculate the horizontal resolution of the device context (in this case, the List Box), and then determine the screen resolution ratio. Once you have this information, you can call the GetTextExtent function. This function tells you the height and width of a text string. The final step is to use SendMessage to actually set the tab stops in the List Box to the desired positions. You can then add items with embedded tab characters to the List Box control and the output will be formatted correctly.
+
+Example Program
+The program below shows how to add items to a List Box control. Each item consists of three parts, separated by tab characters. 
+
+Create a new project in Visual Basic®. Form1 is created by default. 
+Add the following Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Declare Function GetTextExtent Lib "GDI" (ByVal hDC%, ByVal lpString As String, 
+   ByVal nCount As Integer) As Long
+
+Declare Function GetDeviceCaps Lib "GDI" (ByVal hDC%, ByVal nIndex%) As Integer
+
+Declare Function GetDC Lib "USER" (ByVal hWnd As Integer) As Integer
+
+Declare Function ReleaseDC Lib "USER" (ByVal hWnd As Integer, ByVal hDC As 
+   Integer) As Integer
+
+Declare Sub SendMessage Lib "USER" (ByVal hWnd As Integer, ByVal wMsg As 
+   Integer, ByVal wParam As Integer, lParam As Any)
+
+Add the following code to the Form_Load event for Form1 (note that the List1.AddItem line must be typed as a single line of code): 
+Sub Form_Load()
+  Dim X As Integer
+  Dim ListHandle As Integer
+  Dim TabPos(2) As Integer
+    
+  ' Set tab stops at the following positions:
+  TabPos(0) = 5
+  TabPos(1) = 30
+  TabPos(2) = 60
+  ListHandle = List1.hWnd
+    
+  Call gSetListTabs(Form1, ListHandle, 3, TabPos())
+    
+  List1.AddItem "Microsoft Word" + Chr$(9) + "Version 6.0" + Chr$(9) + "10 
+    files"
+  List1.AddItem "Visual Basic" + Chr(9) + "Version 3.0" + Chr(9) + "89 files"
+    
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. 
+Create a new Sub procedure called gSetListTabs. Add the following code to this procedure (note that the Sub line must be typed as a single line of code): 
+Sub gSetListTabs(fForm As Form, iListHandle As Integer, iNumberOfColumns As 
+   Integer, iListTabs() As Integer)
+
+'*   'fForm'-the form on which the listbox resides     *
+'*   'iListHandle'-listbox hWnd (I use GetFocus())     *
+'*   'iNumberOfColumns'-# of tabs wanted in the listbox*
+'*   'iListTabs()'-the array of tab positions you want *
+
+  Dim iListDlgWidth As Integer, lTextWidth As Long
+
+
+  'Get the Pixel width
+  Dim iPixelWidth As Integer
+  fForm.ScaleMode = PIXELS              'Set to Pixels(3)
+  iPixelWidth = fForm.ScaleWidth        'Get Scalewidth in pixels
+  fForm.ScaleMode = Twips               'Set back to Twips(1)
+
+  'Set the Twip to Pixel Ratio
+  Dim sinTwipPixelRatio As Single
+  sinTwipPixelRatio = 1 / (fForm.ScaleWidth / iPixelWidth)
+
+  'Get the screen device context
+  Dim iWindowContext As Integer
+  iWindowContext = GetDC(fForm.hWnd)
+
+  'Use the device context to get the horizontal resolution
+  Dim iHorzResPixels As Integer
+  iHorzResPixels = GetDeviceCaps(iWindowContext, HORZRES)
+
+  'Calculate the screen resolution ratio
+  Dim sinScreenRatio As Single
+  sinScreenRatio = (640 / iHorzResPixels)
+
+  'Set up and calc the 'textwidth' average
+  Dim sTemp As String, iTemp  As Integer
+  sTemp = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
+  iTemp = 62
+
+  'GetTextExtent() returns a long, the lower 16 bits have
+  'the font textwidth in twips
+  lTextWidth = GetTextExtent(iWindowContext, sTemp, iTemp)
+  iListDlgWidth = (lTextWidth Mod 65536) / 2         'bottom 16 in Twips
+  iListDlgWidth = iListDlgWidth * sinTwipPixelRatio  'apply ratio
+  iListDlgWidth = CInt(iListDlgWidth * sinScreenRatio) / 15 'Res 640 x480
+iListDlgWidth = 15
+
+  'Apply factor to each tab position
+  Dim I As Integer
+  For I = 0 To iNumberOfColumns - 1
+    iListTabs(I) = iListTabs(I) * iListDlgWidth  'This is the magic Number
+  Next I
+
+  Call SendMessage(iListHandle, LB_SETTABSTOPS, iNumberOfColumns, iListTabs(0))
+
+  iWindowContext = ReleaseDC(fForm.hWnd, iWindowContext) 'Clean up resource
+
+End Sub
+
+When you execute this program, Visual Basic displays the two items in the List Box. Each item consists of three parts and each part is positioned at the user-defined tab stops within the List Box.
+

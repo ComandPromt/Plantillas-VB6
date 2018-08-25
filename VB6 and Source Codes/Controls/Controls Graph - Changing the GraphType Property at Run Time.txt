@@ -1,0 +1,13 @@
+Tip 19: Changing the GraphType Property at Run Time
+Created: March 1, 1995
+
+When using the Graph custom control in a Visual Basic® application, you can change the GraphType property at run time.
+
+To change the GraphType property successfully in an application, you must first execute a DrawMode statement, and then execute the statement that changes the GraphMode property. Therefore, you would first call the following statement in your Visual Basic application:
+
+Graph1.GraphType = 1
+
+Then, immediately after executing this statement, you would include the statement to change the GraphMode property, as follows:
+
+Graph1.DrawMode = 2 (or 3).
+

@@ -1,0 +1,54 @@
+Tip 184: Creating a List of Directories and Files in a List Box Control
+December 5, 1995
+
+Abstract
+This article explains how you can easily recreate the structure of a disk by storing a list of drives, directories, and/or files in a List Box control.
+
+Creating a List of Directories and Files
+The Microsoft® Windows® application programming interface (API) SendMessage function allows you to store a list of drives, directories, and/or files in a List Box control. In effect, this lets you easily recreate the structure of a disk. Although Microsoft Visual Basic® provides the Common Dialog File and Drive controls, it is faster and easier to use the SendMessage function to store a list of files in a List Box control. This technique also gives you greater control and flexibility when manipulating the filenames stored in the List Box control.
+
+To use the SendMessage function, you must include the following Declare statement in your project:
+
+Private Declare Function SendMessageAny Lib "user32" Alias "SendMessageA" 
+   (ByVal hWnd As Long, ByVal wMsg As Long, ByVal wParam As Integer, 
+   lParam As Any) As Long
+
+The SendMessage function is used to send a specific message to a window. In the example program below, the LB_DIR message is sent to the program's window. The LB_DIR message tells Windows to add a list of the files (specified by the wParam argument) to the List Box control.
+
+The wParam argument for the LB_DIR message lets you specify the type of files you want the List Box control to contain. You can set the wParam argument to include normal, read-only, hidden, system, and archive files. In addition, you can also set the wParam argument so that it sends drive and directory files to the List Box control.
+
+Example Program
+This program shows how to create a list of files and/or directories in a List Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function AppendMenu Lib "user32" Alias "AppendMenuA" 
+   (ByVal hMenu As Long, ByVal wFlags As Long, ByVal wIDNewItem As Long, 
+   ByVal lpNewItem As String) As Long
+Const WM_USER = &H400
+Const LB_DIR = &H18D
+Const DIR_NORMALFILES = &H0
+Const DIR_READONLY = &H8001
+Const DIR_HIDDEN = &H8002
+Const DIR_SYSTEM = &H8004
+Const DIR_DIRECTORIES = &H8010
+Const DIR_ARCHIVED = &H8020
+Const DIR_DRIVES = &HC000
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Call ListFiles("c:\*.*")
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. 
+Create a new subroutine called ListFiles. Add the following code to this subroutine: 
+Sub ListFiles(sFileSpec As String)
+    Dim I As Long
+    List1.Clear
+    I = SendMessageAny(List1.hWnd, LB_DIR, DIR_DRIVES, ByVal sFileSpec)
+    I = SendMessageAny(List1.hWnd, LB_DIR, DIR_DIRECTORIES, ByVal sFileSpec)
+    I = SendMessageAny(List1.hWnd, LB_DIR, DIR_NORMALFILES, ByVal sFileSpec)
+End Sub
+
+Run the example program by pressing F5. Click the Command Button control. The List Box control is filled with the names of your disk drives, directories, and files.

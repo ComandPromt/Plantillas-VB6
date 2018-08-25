@@ -1,0 +1,25 @@
+'Description: Tiles a Bitmap in a PictureBox
+
+'Private Declare Function BitBlt Lib "GDI32" (ByVal hDestDC As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal nWid As Integer, ByVal nHt As Integer, ByVal hSrcDC As Integer, ByVal XSrc As Integer, ByVal YSrc As Integer, ByVal dwRop As Long) As Integer
+
+'Private Sub Tile(picParent As PictureBox, picTile As PictureBox)
+'This subroutine tiles a picture onto another picture.
+'call syntax: Tile Picture1, Picture2
+'             Tile (destination), (source)
+Dim TileIt As Integer
+Const SRCCOPY = &HCC0020
+Dim X As Integer, Y As Integer
+Dim MaximumX As Integer, MaximumY As Integer
+MaximumX = picParent.Width + picTile.Width
+MaximumY = picParent.Height + picTile.Height
+MaximumX = MaximumX \ Screen.TwipsPerPixelX
+MaximumY = MaximumY \ Screen.TwipsPerPixelY
+Dim TileWidth As Integer, TileHeight As Integer
+TileWidth = picTile.Width \ Screen.TwipsPerPixelX
+TileHeight = picTile.Height \ Screen.TwipsPerPixelY
+For Y = 0 To MaximumY Step TileHeight
+  For X = 0 To MaximumX Step TileWidth
+    TileIt = BitBlt(picParent.hDC, X, Y, TileWidth, TileHeight, picTile.hDC, 0, 0, SRCCOPY)
+  Next
+Next
+'End Sub

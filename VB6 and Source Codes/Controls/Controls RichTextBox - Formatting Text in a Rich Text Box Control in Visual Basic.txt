@@ -1,0 +1,42 @@
+Tip 186: Formatting Text in a Rich Text Box Control in Visual Basic
+February 28, 1996
+
+Abstract
+The Microsoft® Visual Basic® version 4.0 Rich Text Box control allows the user to enter and edit text. In addition, this control provides more advanced formatting features than the conventional TextBox control. This article explains how to display selected text in different fonts in the Rich Text Box control.
+
+Using the TextRTF Property of a Rich Text Box Control
+The Microsoft® Visual Basic® version 4.0 Rich Text Box control is an advanced version of the TextBox control. Text entered in a Rich Text Box control can be formatted in different colors, fonts and font styles, and point sizes. For example, you can make text appear in bold or italic. You must remember that the Rich Text Box control formatting codes apply to the currently selected text only, not to all text in the control.
+
+In the example program below, you fill a Rich Text Box control with a list of all screen fonts installed in the computer system. This is accomplished by using the TextRTF property to tell the Rich Text Box control to display the text in the selected font.
+
+Note   The TextRTF property requires the Microsoft Windows® 95 or Microsoft Windows NT® 3.51 or later operating system.
+Example Program
+This program shows how to display text in different fonts in a Rich Text Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Rich Text Box control to Form1. Rich-Text Box1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim X As Integer
+    Rich-Text Box1.Text = ""
+    
+    For X = 0 To Screen.FontCount - 1
+        DoEvents
+        With Rich-Text Box1
+            Var = .TextRTF
+            var1 = Right(Var, Len(Var) - 1)
+            .Text = Screen.Fonts(X)
+            Var = .TextRTF
+            var2 = Left(Var, Len(Var) - 3)
+            Var = var2 & var1
+            .TextRTF = Var
+            .SelStart = 0
+            .SelLength = Len(Screen.Fonts(X))
+            .SelFontName = Screen.Fonts(X)
+            .SelFontSize = 12
+        End With
+    Next X
+End Sub
+
+Run the example program by pressing F5. Click the Command Button control. After a short delay, the Rich Text Box control is populated with a list of all installed screen fonts. Each font is displayed in its 12-point size.

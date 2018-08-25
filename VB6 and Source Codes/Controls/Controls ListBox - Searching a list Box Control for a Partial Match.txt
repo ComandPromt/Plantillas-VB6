@@ -1,0 +1,73 @@
+Tip 141: Searching a List Box Control for a Partial Match
+August 6, 1995
+
+Abstract
+The List Box control in Microsoft® Visual Basic® lets you display a list of items to the user. This article explains how you can search a List Box control for a specific entry by specifying a partial search string.
+
+Finding Items in a List Box Control
+The List Box control can be used within a Microsoft® Visual Basic® program to maintain a list of items. While your program is running, you can use the ListCount property of the List Box control to determine how many items are stored in the list. Then, using the ListCount value, you can search through the contents of a List Box control to find a specific item.
+
+It's easy to write a procedure in Visual Basic to selectively find items in a List Box control. For example, if you want to search the List Box control for the item "oranges," you can use a For-Next loop to check each entry in the List Box control to see whether it matches the target string. To do this, use the following code:
+
+For X = 0 To Lst.ListCount -1
+    If Lst.List(X) = "oranges" Then
+        'we found an item that matches.
+    End If
+Next X
+
+The code routine above tells us whether the item "oranges" was found in the List Box control, but what happens if we want to find a partial item in the control? Let's suppose that each item in the list contains a phrase such as "apples and oranges." You want to find the item that contains the word "oranges." The above routine will only return a match if the entire string matches the word "oranges."
+
+To work around this problem, we can use the Visual Basic InStr function to parse each entry in the List Box control. The InStr function will return the location within the larger string where the target string is found. To use this search technique, you still need to include a For-Next loop to examine each entry in the List Box control; however, you can also add code to call the InStr function to determine whether a specific portion of an entry matches your target string.
+
+Each time the InStr function finds the target string in an entry in the List Box control, it returns the target string's position within the entry. Just use the ListIndex property of the List Box control to retrieve the entry that matches your target string.
+
+Example Program
+This program shows how to search a List Box control for a partially matching string. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Form_Load event for Form1. 
+Private Sub Form_Load()
+    List1.AddItem "Apples and oranges"
+    List1.AddItem "Bananas and grapes"
+    List1.AddItem "Peaches and corn"
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1. 
+Private Sub Command1_Click()
+    GetPartialString
+End Sub
+
+Create a new procedure called GetPartialString. Add the following code to this procedure. 
+Sub GetPartialString()
+    Dim LittleString As String
+    Dim Item As Integer
+    
+    LittleString = Text1.Text
+    Item = GetMatch(List1, LittleString)
+    
+    If Item = -1 Then
+        MsgBox "No such entry found in List Box"
+    Else
+        List1.ListIndex = Item%
+    End If
+End Sub
+
+Create a new procedure called GetMatch. Add the following code to this procedure. 
+Function GetMatch(Lst As ListBox, ByVal SearchStr As String) As Integer
+    Dim X As Integer
+    
+    For X = 0 To Lst.ListCount - 1
+        If InStr(Lst.List(X), SearchStr) Then
+            GetMatch = X
+            Exit Function
+        End If
+    Next X
+    
+    GetMatch = -1      'no match
+End Function
+
+Run the demonstration program by pressing F5. Three items are displayed in the List Box control. Type a word such as "corn" in the Text Box control and click the command button. The program highlights the "Peaches and corn" entry in the List Box control because the word "corn" was found in this entry. Type the word "turnip" in the Text Box control. After you click the command button, a message box is displayed that tells you no such item was found.
+

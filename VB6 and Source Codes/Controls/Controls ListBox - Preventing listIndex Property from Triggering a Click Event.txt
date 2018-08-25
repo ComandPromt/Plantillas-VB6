@@ -1,0 +1,57 @@
+Tip 112: Preventing ListIndex Property from Triggering a Click Event
+July 1, 1995
+
+Abstract
+When you change the ListIndex property of a Combo Box control, the Click event is automatically triggered. This article explains how to suppress this Click event.
+
+Suppressing Click Events in Combo Box Controls
+The Combo Box control in Microsoft® Visual Basic® lets you create a list of items that the user can click to select. Within a Visual Basic program, you can select a specific item in a Combo Box control by using its ListIndex property. However, each time the ListIndex property is changed, a Click event is also triggered.
+
+Each time an item is selected in a Combo Box control, a CB_SETCURSEL message is sent to the control by the Windows® application programming interface (API). This message selects or deselects the specific item in the Combo Box control.
+
+To prevent a Click event from being triggered each time the ListIndex property is changed, you need only send the CB_SETCURSEL message directly to the control. The Click event is not generated, but the individual item is still selected or deselected.
+
+Example Program
+The example program below shows how to set the ListIndex property of a Combo Box control without generating a Click event. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as one single line of code): 
+Private Declare Function SendMessageByString Lib "User" Alias "SendMessage" 
+   (ByVal hWnd As Integer, ByVal wMsg As Integer, ByVal wParam As Integer, ByVal 
+   lParam As String) As Integer
+Const WM_USER = &H400
+Const CB_SETCURSEL = (WM_USER + 14)
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Combo1.AddItem "Item #1"
+    Combo1.AddItem "Item #2"
+    Combo1.AddItem "Item #3"
+End Sub
+
+Add a Combo Box control to Form1. Combo1 is created by default. 
+Add the following code to the Click event for Combo1: 
+Private Sub Combo1_Click()
+    MsgBox "Combo1 was Clicked!"
+End Sub
+
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Will Click". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Combo1.ListIndex = 1
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. Set its Caption property to "Will Not Click". 
+Add the following code to the Click event for Command2: 
+Private Sub Command2_Click()
+    SetComboListIndex Combo1, 1
+End Sub
+
+Create a new function called SetComboListIndex. Add the following code to this function: 
+Sub SetComboListIndex(cboCombo As ComboBox, iIndex As Integer)
+    Dim R As Integer
+    R = SendMessageByString(cboCombo.hWnd, CB_SETCURSEL, iIndex, "")
+End Sub
+
+Run the example program by pressing the F5 function key. Click the "Will Click" command button. A message box is displayed indicating that the Click event was triggered when the ListIndex property was changed. Click the "Will Not Click" command button. The item in the Combo Box is selected but a Click event is not triggered.
+

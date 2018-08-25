@@ -1,0 +1,46 @@
+Tip 67: Returning Focus to a Specific Control After Executing WinHelp
+Created: April 24, 1995
+
+Abstract
+You can add online Help to your Visual Basic® application by using the Windows® application programming interface (API) WinHelp function. However, you need to keep the focus on the control that had the focus just before you executed the WinHelp function. This article explains how a control can retain the focus after calling WinHelp.
+
+Using Form-Level Variables to Retain Focus
+Almost every application developed for Windows® includes a Help command. In a Visual Basic® application, you can attach a Help command to a Command Button control. When the user clicks on the Command Button, your program calls the Windows application programming interface (API) WinHelp function to display the actual Help file.
+
+After the user exits the Help program, however, the Command Button control now has the focus. It would be preferable to have the focus set to the control (such as a Text Box control) that had the focus before WinHelp was executed.
+
+You can force your application to automatically retain a control's focus by defining a Form-level variable as a control. When the focus is moved to a different control, such as a Text Box, the Form-level variable should be set to the control that is getting the focus. Then, after displaying the Help file, the focus can be set back to the control by using the Form-level variable.
+
+In the example program below, the focus returns to the Text Box control each time the Help Command Button is clicked. In other words, the Command Button never retains the focus.
+
+Example Program
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following statements to the General Declarations section of Form1 (note that the Declare statement should be typed as a single line of code): 
+Const HELP_CONTENTS = &H3
+
+Declare Function WinHelp Lib "User" (ByVal hWnd As Integer, ByVal lpHelpFile As 
+   String, ByVal wCommand As Integer, dwData As Any) As Integer
+
+Dim ControlWithFocus As Control
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add the following code to the GotFocus event for Text1: 
+Sub Text1_GotFocus()
+  Set ControlWithFocus = Text1
+End Sub
+
+Add a second Text Box control to Form1. Text2 is created by default. 
+Add the following code to the GotFocus event for Text2: 
+Sub Text2_GotFocus()
+  Set ControlWithFocus = Text2
+End Sub
+
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Help". 
+Add the following code to the Click event for Command1: 
+Sub Command1_Click()
+  Dim RVal As Integer
+  RVal = WinHelp(Form1.hWnd, "c:\vb\vb.hlp", HELP_CONTENTS, 0)
+  ControlWithFocus.SetFocus
+End Sub
+
+Run the program. There are two Text Box controls and one Command Button control shown on the form. Notice that Text1 currently has the focus. Click the Command Button to display the Contents window in Help. Exit Help. The Text1 control should still have the focus. Move the focus to the second Text Box control, Text2. Click the Help command button a second time and exit Help. The second Text Box control should have the focus. The Command Button control never retains the focus.

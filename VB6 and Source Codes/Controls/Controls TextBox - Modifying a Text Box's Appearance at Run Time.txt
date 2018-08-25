@@ -1,0 +1,69 @@
+Tip 121: Modifying a Text Box's Appearance at Run Time
+July 1, 1995
+
+Abstract
+The Text Box control in Microsoft® Visual Basic® is a mini-word-processing program that lets your user type either single or multiple lines of text. At design time, you set the MultiLine property either to False (single) or to True (multiline). This property cannot be changed at run time. However, during run time you can use Scroll Bar controls to give the impression that your Text Box can be made single or multiline at run time, regardless of the MultiLine property setting.
+
+Changing a Control's Features at Run Time
+When designing a Microsoft® Visual Basic® application, you can set the MultiLine property of a Text Box to True or False. If this property is set to False, only a single line of text can be typed in the Text Box control. If the MultiLine property is set to True, many lines of text can be typed in the control. In addition, if the ScrollBars property is set to 3-Both, you can scroll through the text both vertically and horizontally.
+
+There's only one problem—the MultiLine property cannot be dynamically switched at run time, which means that the Text Box is set to what it was in the design phase of the program.
+
+However, by using the Microsoft Windows® application programming interface (API) SetScrollRange function, you can add code to your Visual Basic application that will allow you to create a work-around solution. This enables you to change the Text Box's appearance from single to multiline at run time.
+
+The SetScrollRange function lets you set the minimum and maximum indicator positions of a scroll bar. To use this function, add the following Declare statement to the General Declarations section of your form (note that the Declare statement must be typed as a single line of code):
+
+Private Declare Sub SetScrollRange Lib "User" (ByVal hWnd As Integer, ByVal nBar
+   As Integer, ByVal nMinPos As Integer, ByVal nMaxPos As Integer, ByVal
+   bRedraw As Integer)
+
+The SetScrollRange function requires five arguments, as follows.
+
+hWnd An integer value containing the window or scroll bar's handle 
+nBar An integer value set to one of the following values: 
+  ESB_ENABLE_BOTH Both arrows enabled 
+  ESB_DISABLE_LTUP Left or Up arrow disabled 
+  ESB_DISABLE_RTDN Right or Down arrow disabled 
+  ESB_DISABLE_BOTH Both arrows disabled 
+nMinPos An integer value containing the minimum indicator position 
+nMaxPos An integer value containing the maximum indicator position 
+bRedraw An integer value, when set to True, to redraw the scroll bar 
+
+To disable the scroll bars in this Visual Basic program, you simply call SetScrollRange with the minimum and maximum position indicators set to the same value. When you want to enable the scroll bars again, you call SetScrollRange with the minimum and maximum position indicators set to 1 and 100, respectively. When you change the position indictors to 1 and 100, you can scroll through the contents of the Text Box control regardless of the MultiLine property setting. This gives the impression that the Text Box control is MultiLine when it is indeed set to single-line status.
+
+Example Program
+This program shows how to create a Text Box control that can be switched at run time from single-line to multiline status, with or without scroll bars. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of text): 
+Private Declare Sub SetScrollRange Lib "User" (ByVal hWnd As Integer, 
+   ByVal nBar As Integer, ByVal nMinPos As Integer, 
+   ByVal nMaxPos As Integer, ByVal   bRedraw As Integer)
+Const ESB_DISABLE_BOTH = 3
+Const ESB_ENABLE_BOTH = 1
+
+Add a Text Box control to Form1. Text1 is created by default. Set its MultiLine property to True. Set its ScrollBars property to 3-Both. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Disable". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim hWnd As Integer
+    Dim Min As Integer
+    Dim Max As Integer
+    Min = 1
+    Max = Min
+    Call SetScrollRange(Text1.hWnd, ESB_DISABLE_BOTH, Min, Max, 1)
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. Set its Caption property to "Enable". 
+Add the following code to the Click event for Command2: 
+Private Sub Command2_Click()
+    Dim hWnd As Integer
+    Dim Min As Integer
+    Dim Max As Integer
+    Min = 1
+    Max = 100
+    Call SetScrollRange(Text1.hWnd, ESB_ENABLE_BOTH, Min, Max, 1)
+End Sub
+
+Run the example program by pressing F5. Click the Text Box control and type several lines of text. Notice that you can use the scroll bars to scroll through the text in the control. Click Disable. Now you cannot use the scroll bars to scroll through the Text Box control. To enable the scroll bars again, click Enable.
+

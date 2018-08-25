@@ -1,0 +1,6 @@
+'Description: Calls the "Map Network Drive Dialog" without need for an OCX
+
+'Private Declare Function WNetConnectionDialog Lib "mpr.dll" _
+(ByVal hwnd As Long, ByVal dwType As Long) As Long
+
+x% = WNetConnectionDialog(Me.hwnd, 1)

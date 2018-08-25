@@ -1,0 +1,53 @@
+Tip 108: Flashing Controls to Get the User's Attention
+June 12, 1995
+
+Abstract
+When developing an application in Microsoft® Visual Basic®, you can use the BackColor property to change the background color of a control. This article explains how you can temporarily flash a control's BackColor property to draw the user's attention to a specific control.
+
+Changing a Control's BackColor Property
+When designing a Microsoft® Visual Basic® application , you place controls such as List Boxes and Text Boxes on a form. At run time, you can move the focus to one of these objects by using Visual Basic's SetFocus method. Users can then see that that particular control needs to be addressed in some way. For example, if a Text Box receives the focus, users know they must type some text into that control.
+
+However, users may not actually notice that the focus has been set to a specific control because the "rubberband" (highlighting) around the inside of the control is not that obvious. To alert the user, you could change the background color of the control from white to, say, red, to draw the user's attention to that control. When the control loses the focus, you could reset the control's background color to white. This procedure, however, means that the control would be a different color as long as that control retained the focus. In some situations, this would not be appropriate.
+
+A far better solution would be to change the control's background color for just a few seconds. The example program below "flashes" a control by quickly changing the control's background color three times in succession. The Timer function is used to cause a short time delay in the program. Each time a 2-second interval elapses, the control's color is changed from white to red, then back to white. The For-Next loop dictates how many times the control is flashed. In this case, a value of 3 was used to flash the color three times. This creates a very visual clue to draw the user's attention to that specific control.
+
+Example Program
+This program shows how to highlight the control that has the focus. Run the example program by pressing F5. Then click the Flash Command Button. Note that the background color of the List Box control is changed to red and flashed three times. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    List1.AddItem "Item #1"
+    List1.AddItem "Item #2"
+    List1.AddItem "Item #3"
+End Sub
+
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Flash". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    FlashControl List1
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. 
+Create a new function called FlashControl. Add the following code to this function: 
+Sub FlashControl(C As Control)
+    Dim OldColor As Double
+    Dim Delay As Double
+    Dim X As Integer
+    
+    OldColor = C.BackColor
+    For X = 1 To 3
+        C.BackColor = QBColor(12)
+        Delay = Timer
+            While Timer - Delay < 0.2
+                DoEvents
+            Wend
+        C.BackColor = OldColor
+        Delay = Timer
+            While Timer - Delay < 0.2
+                DoEvents
+            Wend
+    Next X
+    C.SetFocus
+End Sub
+

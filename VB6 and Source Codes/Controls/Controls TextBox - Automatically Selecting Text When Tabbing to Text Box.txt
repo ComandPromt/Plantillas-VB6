@@ -1,0 +1,52 @@
+Tip 18: Automatically Selecting Text When Tabbing to Text Box
+Created: March 1, 1995
+
+Abstract
+When moving the focus from a control to a Text Box, the text is not selected when the Text Box receives the focus. However, you can do this automatically in your program.
+
+When a program moves the focus to a Text Box, the caret is placed at the beginning of the actual text in the control. In an application, you may want to select the text in some situations, such as when you press the TAB key to move to the Text Box. This can be accomplished by using the Windows® GetKeyState application programming interface (API) function in conjunction with the SelLength and SelStart properties of the Text Box.
+
+Selecting Text with the TAB Key
+You can move the focus to a Text Box in your application if you use the GetKeyState function, which returns the state of the most recently pressed or released key on the keyboard. To declare this Windows® function in your program, include the following Declare statement in the Global Module or the General Declarations section of a Visual Basic® form:
+
+Private Declare Function GetKeyState Lib "User" (ByVal nVirtkey As Integer)
+    As Integer
+
+Note that this Declare statement must be typed as a single line of text.
+
+The GetKeyState function requires only one parameter—the key code of the virtual key you want to test. When testing alphabetic (A-Z or a-z) or alphanumeric (0-9) keys, specify the ASCII value for that character. When testing function keys or other special keys, pass the virtual key code to the GetKeyState function. The CONSTANT.TXT file contains a list of all the key codes.
+
+By including the GetKeyState function in the GotFocus event for a Text Box, you can determine if the TAB key was pressed. If it was pressed, the SelStart and SelLength properties of the Text Box can be used to automatically highlight the text.
+
+Example Program
+The following program demonstrates how you can select text in a Text Box when the TAB key is used to move the focus to that control. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+In the general declarations section of Form1, add the following function declaration (note that this Declare statement must be typed as a single line of text): 
+Private Declare Function GetKeyState Lib "User" (ByVal nVirtkey As Integer)
+   As Integer
+
+In addition, add the following constant to the general declarations section of Form1: 
+Const VK_TAB = &H9
+
+Draw two Text Box controls on Form1. Text1 and Text2 are created by default. 
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+    Text1.Text = "Press TAB to select the text"    
+    Text2.Text = ""
+    Text2.Text = "This is a paragraph that should be selected."   
+End Sub
+
+Add the following code to the GetFocus event for Text2: 
+Sub Text2_GotFocus()
+    Dim x As Integer
+    x = GetKeyState(VK_TAB)    
+    If GetKeyState(VK_TAB) And -256 Then
+        Text2.SetFocus
+        Text2.SelStart = 0
+        Text2.SelLength = Len(Text2.Text)
+    End If
+End Sub
+
+After executing this program, Visual Basic displays the two text boxes on the form. The first text box has the focus. Press the TAB key to move the focus to the second text box. The text in that control is automatically selected.
+

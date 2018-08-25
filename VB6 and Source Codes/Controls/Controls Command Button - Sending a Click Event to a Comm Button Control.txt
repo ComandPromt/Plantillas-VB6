@@ -1,0 +1,55 @@
+Tip 110: Sending a Click Event to a Command Button Control
+June 12, 1995
+
+Abstract
+In a Microsoft® Visual Basic® application, you can simulate a Click event to a Command Button control. This article explains how to send a BN_CLICKED notification message to a control.
+
+Executing a BN_CLICKED Message
+A user who wants to carry out a command in your Microsoft® Visual Basic® application usually clicks a Command Button control. The code in the Command Button's Click event is then executed.
+
+There may be times, however, when you will want to initiate a Click event from within your Visual Basic program. You can use the Microsoft Windows® application programming interface (API) PostMessage function to send a BN_CLICKED notification message to the parent of the Command Button control. This will call the button's Click event.
+
+As you can see from the example program below, the GetDlgCtrlID function retrieves the Command Button's handle. Next, a call is made to the GetParent function, which retrieves the handle of the window that the Command Button resides on. (In other words, we must retrieve the parent window's handle.)
+
+The last step is to execute a PostMessage function. PostMessage sends a BN_CLICKED notification message to the parent window, which then processes the Click event for the Command Button.
+
+When you run the example program below, the second Command Button's Click event is executed. However, the second Command Button does not receive the focus—only its code is executed.
+
+Example Program
+This program shows how to send a Command Button click to the Windows operating system. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of text): 
+Const BN_CLICKED = 0
+Const WM_COMMAND = &H111
+Private Declare Function GetDlgCtrlID Lib "User" (ByVal hWnd As Integer) As
+   Integer
+Private Declare Function GetParent Lib "User" (ByVal hWnd As Integer) As Integer
+Private Declare Function PostMessage Lib "User" (ByVal hWnd As Integer, ByVal
+   wMsg As Integer, ByVal wParam As Integer, ByVal lParam As Long) As Integer
+
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Send". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    ClickButton Command2.hWnd
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. Set its Caption property to "Receive". 
+Add the following code to the Click event for Command2: 
+Private Sub Command2_Click()
+    MsgBox "Command2 was CLICKED!"
+End Sub
+
+Create a new function called ClickButton. Add the following code to this function: 
+Sub ClickButton(ByVal hWnd As Integer)
+    Dim Button As Integer
+    Dim ParentHwnd As Integer
+    Dim X As Integer
+    
+    Button = GetDlgCtrlID(hWnd)
+    ParentHwnd = GetParent(hWnd)
+    X = PostMessage(ParentHwnd, WM_COMMAND, Button, BN_CLICKED * &H10000 + hWnd)
+End Sub
+
+Run the example program by pressing F5. Click the Send Command Button. The Click event for the second Command Button control is immediately executed (the message box is displayed).
+

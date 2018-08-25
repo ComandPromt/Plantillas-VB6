@@ -1,0 +1,69 @@
+Private Sub Option1_Click(Index as Integer)
+   ' These OptionButtons offer two choices: Ascending (Index 0), 
+   ' and Descending (Index 1). Clicking on one of these
+   ' sets the SortOrder for the ListView control.
+   ListView1.SortOrder = Index
+   ListView1.Sorted = True ' Sort the List.
+End Sub
+
+Private Sub Form_Load()
+   ' Create an object variable for the ColumnHeader object.
+   Dim clmX As ColumnHeader
+   ' Add ColumnHeaders. The width of the columns is the width
+   ' of the control divided by the number of ColumnHeader objects.
+   Set clmX = ListView1.ColumnHeaders. _
+   Add(, , "Company", ListView1.Width / 3)
+   Set clmX = ListView1.ColumnHeaders. _
+   Add(, , "Address", ListView1.Width / 3)
+   Set clmX = ListView1.ColumnHeaders. _
+   Add(, , "Phone", ListView1.Width / 3)
+
+   ListView1.BorderStyle = ccFixedSingle ' Set BorderStyle property.
+   ListView1.View = lvwReport ' Set View property to Report.
+
+   ' Label OptionButton controls with SortOrder options.
+      Option1(0).Caption = "Ascending (A-Z)"
+      Option1(1).Caption = "Descending (Z-A)"
+      ListView1.SortOrder = lvwAscending ' Sort ascending. 
+
+   ' Create object variables for the Data Access objects.
+   Dim myDb As Database, myRs As Recordset
+   ' Set the Database to the BIBLIO.MDB database.
+   Set myDb = DBEngine.Workspaces(0).OpenDatabase("BIBLIO.MDB")
+   ' Set the recordset to the Publishers table.
+   Set myRs = myDb.OpenRecordset("Publishers", dbOpenDynaset)
+      
+   ' Create a variable to add ListItem objects.
+   Dim itmX As ListItem
+
+   ' While the record is not the last record, add a ListItem object.
+   ' Use the Name field for the ListItem object's text.
+   ' Use the Address field for the ListItem object's subitem(1).
+   ' Use the Phone field for the ListItem object's subitem(2).
+
+   While Not myRs.EOF
+      Set itmX = ListView1.ListItems.Add(, , CStr(myRs!Name))
+
+      ' If the Address field is not Null, set subitem 1 to the field.
+      If Not IsNull(myRs!Address) Then
+         itmX.SubItems(1) = CStr(myRs!Address)  ' Address field.
+      End If
+
+      ' If the Phone field is not Null, set subitem 2 to the field.
+      If Not IsNull(myRs!Telephone) Then
+         itmX.SubItems(2) = myRs!Telephone  ' Phone field.
+      End If
+
+      myRs.MoveNext   ' Move to next record.
+   Wend
+End Sub
+
+Private Sub ListView1_ColumnClick(ByVal ColumnHeader As ColumnHeader)
+   ' When a ColumnHeader object is clicked, the ListView control is
+   ' sorted by the subitems of that column.
+   ' Set the SortKey to the Index of the ColumnHeader - 1
+   ListView1.SortKey = ColumnHeader.Index - 1
+   ' Set Sorted to True to sort the list.
+   ListView1.Sorted = True
+End Sub
+

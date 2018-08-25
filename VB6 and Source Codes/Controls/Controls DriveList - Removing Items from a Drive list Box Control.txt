@@ -1,0 +1,36 @@
+Tip 137: Removing Items from a Drive List Box Control
+July 1, 1995
+
+Abstract
+The Drive List Box control in Microsoft® Visual Basic® displays a list of all disk drives attached to the computer system. This article explains how you can use the Microsoft Windows® application programming interface (API) SendMessage function to remove a selected drive entry from the Drive List Box control at run time in Visual Basic.
+
+Deleting an Entry from a Drive List Box Control
+You can display a list of all installed disk drives in a Microsoft® Visual Basic® application by using the Drive List Box control. This control displays each drive found on the computer system in alphabetic order.
+
+You can use the Drive List Box control to enable a user to easily switch to a different disk drive. You do this by clicking a specific entry in the control. The current default disk drive, however, is not actually changed—you must use the ChDir function to do this. The Drive List Box control provides a simple method that you can employ to select the actual disk drive. Typically, you would use the Drive List Box control in conjunction with the File List Box control to create a file-access system of some sort.
+
+The example program below shows how to remove the currently selected drive entry from the Drive List Box control. You can accomplish this by using the Microsoft Windows® application programming interface (API) SendMessage function to send a CB_DELETESTRING message to that control.
+
+First, however, you must determine which entry is currently selected in the Drive List Box control. The ListIndex property of this control will return the index number of the currently selected item. After you have retrieved this value, you use SendMessage to send a CD_DELETESTRING message to the Drive List Box control. This message, in turn, removes that specific entry from the control.
+
+Example Program
+This program shows how to remove a selected item from a Drive List Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Const WM_USER = &H400
+Const CB_DELETESTRING = (WM_USER + 4)
+Private Declare Function SendMessageAny Lib "user32" Alias "SendMessageA" 
+   (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Integer, 
+   lParam As Any) As Long
+
+Add a Drive List Box control to Form1. Drive1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim X As Long
+    X = SendMessageAny(Drive1.hwnd, CB_DELETESTRING, Drive1.ListIndex, 0)
+End Sub
+
+Run the example program by pressing F5. Select one of the drive letters shown in the Drive List Box control. Click the command button. The selected entry is removed from the Drive List Box control.
+

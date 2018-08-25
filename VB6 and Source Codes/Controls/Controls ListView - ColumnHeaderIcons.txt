@@ -1,0 +1,22 @@
+The example sets the ColumnHeaderIcons property an ImageList control, then sets the Icon property to the Key of a ListImage object.
+
+Option Explicit
+Private Sub Form_Load()
+   ' Assumes an ImageList control populated with at least one image.
+   Dim c As ColumnHeader
+   Dim i As Integer
+
+   For i = 1 To 4 ' Create four ColumnHeader objects.
+      ListView1.ColumnHeaders.Add , , "Col " & i
+   Next I
+
+   ListView1.View = lvwReport
+
+   ImageList1.ListImages(1).Key = "Key1" ' Set Key property of ListImage.
+   ListView1.ColumnHeaderIcons = ImageList1
+   For Each c In ListView1.ColumnHeaders
+      c.Icon = "Key1"
+   Next
+End Sub
+
+

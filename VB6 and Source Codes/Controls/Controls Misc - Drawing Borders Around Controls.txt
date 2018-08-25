@@ -1,0 +1,105 @@
+Tip 80: Drawing Borders Around Controls
+May 8, 1995
+
+Abstract
+You can draw borders of any width around controls such as Text Boxes to give the control a three-dimensional look. This article explains how to add a border to a control.
+
+Using a Pen and Brush to Draw Borders
+Through functions included in the Windows® application programming interface (API), you can draw borders around controls in your Visual Basic® application. The CreatePen function can be used to draw lines (solid, invisible, dotted) and the CreateSolidBrush function can be used to fill areas of an object.
+
+After you have created a pen and brush to use with the specific object (such as a Text Box control) that you want to draw filled lines around, you need to determine the coordinates of the bounding rectangle around the target object. Next, you must intercept the Windows WM_PAINT message. The WM_PAINT message triggers Visual Basic's Paint event. The message is sent to a window when the window needs to have its client area redrawn. The Message Blaster custom control can be used to process the WM_PAINT message. For information on the Message Blaster custom control, see the reference materials listed at the end of this article. Once the Paint event has been triggered, the control is redrawn with the desired borders around its perimeter.
+
+Example Program
+The program below shows how to add a three-dimensional look to a Text Box control. This program draws a filled line across the top and down the right-hand border of the Text Box. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. 
+From Visual Basic's Tools menu, select Custom Controls and add the MSGBLAST.VBX to your Toolbox. Add a Message Blaster control to Form1. MsgBlaster1 is created by default. 
+Add the following Dim, Constant, and Declare statements to the General Declarations section of Form1 (note that each Private Declare statement must be typed as a single line of code): 
+Const PS_SOLID = &H0
+Const WM_PAINT = &HF
+Private Declare Function DeleteObject Lib "GDI" (ByVal hObject As Integer)
+    As Integer
+Private Declare Function SelectObject Lib "GDI" (ByVal hDC As Integer, ByVal 
+    hObject As Integer) As Integer
+Private Declare Function Polygon Lib "GDI" (ByVal hDC As Integer, lpPoints As 
+    POINTAPI, ByVal nCount As Integer) As Integer
+Private Declare Function CreateSolidBrush Lib "GDI" (ByVal crColor As Long)
+    As Integer
+Private Declare Function GetDC Lib "User" (ByVal hWnd As Integer) As Integer
+Private Declare Function CreatePen Lib "GDI" (ByVal nPenStyle As Integer, ByVal 
+    nWidth As Integer, ByVal crColor As Long) As Integer
+Dim TX As Integer
+Dim TY As Integer
+Dim DC_FRM As Integer
+Dim PT1() As POINTAPI
+Dim PT2() As POINTAPI
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    MsgBlaster1.hWndTarget = Form1.hWnd
+    MsgBlaster1.MsgList(0) = WM_PAINT
+    MsgBlaster1.MsgPassage(0) = -1
+End Sub
+
+Add the following code to the Form_Activate event for Form1: 
+Private Sub Form_Activate()
+    TX = Screen.TwipsPerPixelX
+    TY = Screen.TwipsPerPixelY
+    DC_FRM = GetDC(Form1.hWnd)
+    Get_Rect
+End Sub
+
+Add the following code to the MsgBlaster1_Message event (note that the Private statement must be typed as a single line of code): 
+Private Sub MsgBlaster1_Message(MsgVal As Integer, wParam As Integer, lParam 
+   As Long, ReturnVal As Long)
+    Shadow
+End Sub
+
+Create a new procedure called Get_Rect. Add the following code to this procedure: 
+Sub Get_Rect()
+    ReDim PT1(6) As POINTAPI
+    ReDim PT2(6) As POINTAPI
+    
+    PT1(0).X = Text1.Left / TX
+    PT1(0).Y = Text1.Top / TY
+    
+    PT1(1).X = (Text1.Left) / TX + 2
+    PT1(1).Y = (Text1.Top) / TY - 2
+    
+    PT1(2).X = (Text1.Left + Text1.Width) / TX + 2
+    PT1(2).Y = (Text1.Top) / TY - 2
+    
+    PT1(3).X = (Text1.Left + Text1.Width) / TX + 2
+    PT1(3).Y = (Text1.Top + Text1.Height) / TY - 2
+    
+    PT1(4).X = (Text1.Left + Text1.Width) / TX
+    PT1(4).Y = (Text1.Top + Text1.Height) / TY
+    
+    PT1(5).X = (Text1.Left + Text1.Width) / TX
+    PT1(5).Y = (Text1.Top) / TY
+End Sub
+
+Create a new procedure called Shadow. Add the following code to this procedure: 
+Sub Shadow()
+    hbr = CreateSolidBrush(RGB(125, 125, 125))
+    hpen = CreatePen(PS_SOLID, 1, RGB(125, 125, 125))
+    
+    r = SelectObject(DC_FRM, hbr)
+    r = SelectObject(DC_FRM, hpen)
+    
+    r = Polygon(DC_FRM, PT1(0), 6)
+    
+    r = SelectObject(DC_FRM, rbrush)
+    r1 = DeleteObject(r)
+    r = SelectObject(DC_FRM, rpen)
+    r1 = DeleteObject(r)
+End Sub
+
+Add a new module to the project. Module.Bas is created by default. 
+Add the following POINTAPI structure to Module.Bas: 
+Type POINTAPI   '4 bytes
+    X As Integer
+    Y As Integer
+End Type
+

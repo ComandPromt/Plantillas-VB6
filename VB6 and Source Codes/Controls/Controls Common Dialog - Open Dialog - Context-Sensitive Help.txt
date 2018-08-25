@@ -1,0 +1,53 @@
+Tip 196: Using the Common Dialog Control to Invoke Context-Sensitive Help
+December 5, 1995
+
+Abstract
+The Common Dialog control in Microsoft® Visual Basic® allows you to invoke Help immediately and does not require that you use a dialog box. This article explains how to use the Common Dialog control to access specific Microsoft Windows® Help files.
+
+Accessing Context-Sensitive Help
+Most Microsoft® Windows® users know they can get Help at any time by pressing the F1 function key. When F1 is detected, Windows activates its WinHelp application. This application then displays Help information for the item located under the mouse pointer. This form of contextual user assistance is called context-sensitive Help.
+
+You can easily add this technique to your own Microsoft Visual Basic® applications. Tip 15: Creating a List of Directories Stored on a Disk contains a full discussion of using the Windows application programming interface (API) WinHelp function; but in this case, you will use the Common Dialog control to access Help. It is sometimes preferable to use the Help function of the Common Dialog control rather than using the WinHelp function itself. The Common Dialog control allows you to invoke Help immediately and does not require that you use a dialog box.
+
+In the example program below, you use the Common Dialog control to call up the Windows WinHelp application. To do this, you need only to set the Action property of the Common Dialog control to a value of 6. This tells the control that you want to access the Windows WinHelp application.
+
+Next, you set the HelpKey property of the Common Dialog control to the text with which you want to invoke Help. This is the word or phrase you typed in the Text Box control.
+
+Finally, you set the HelpCommand property of the Common Dialog control to HELP_KEY. This allows us to perform a context-sensitive search in the Help file.
+
+Example Program
+This program shows how to access a Windows Help file based on a specific string in a Text Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following constants to the General Declarations section of Form1: 
+Const KEY_F1 = &H70
+Const HELP_KEY = &H101
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    KeyPreview = True
+    CommonDialog1.HelpFile = "c:\vb\vb.hlp"
+End Sub
+
+Add the following code to the Form_KeyDown event for Form1: 
+Private Sub Form_KeyDown(KeyCode As Integer, Shift As Integer)
+    If KeyCode = KEY_F1 Then
+        If TypeOf Me.ActiveControl Is TextBox Then
+            If ActiveControl.SelText <> "" Then
+                CommonDialog1.HelpKey = ActiveControl.SelText
+                CommonDialog1.HelpCommand = HELP_KEY
+                CommonDialog1.Action = 6
+            Else
+                MsgBox "Error - no phrase was selected to get help for"
+            End If
+            KeyCode = 0
+        Else
+            MsgBox "The Text Box must have the focus"
+        End If
+    End If
+
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a Common Dialog control to Form1. CommonDialog1 is created by default. 
+Run the example program by pressing F5. Type some text in the Text Box control, such as "We need help on the CommonDialog Control right now." Highlight the phrase "CommonDialog Control" in the Text Box control. Press F1. The program displays the Help page for the Common Dialog control. Note that if you attempt to invoke Help without first selecting a word or phrase in the Text Box control, an error message appears. By the same token, if the Text Box control does not have the focus when you press F1, an error is generated.

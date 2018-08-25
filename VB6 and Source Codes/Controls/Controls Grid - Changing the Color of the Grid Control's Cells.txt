@@ -1,0 +1,83 @@
+Tip 183: Changing the Color of the Grid Control's Cells
+December 5, 1995
+
+Abstract
+You can present information to the user of your Microsoft® Visual Basic® application in the form of a Grid control, which displays the information in cells. This article explains how to change the color of the cells and the color of the text within the cells.
+
+Changing the Color of Cells and Cell Text
+When developing a Microsoft® Visual Basic® application, you may need to display data to your user by using the Grid control. The Grid control allows you to group related information into columns and rows.
+
+The Grid control, however, does not provide any properties or methods for changing the color of text within individual cells or the color of the cell itself. As a workaround to this shortcoming, you can use a Picture Box control to change the appearance of cells in a Grid control.
+
+In the example program below, you set the BackColor and ForeColor properties of the Picture Box control to the desired colors. Next, you use the Print method to print the original contents of a cell in the Grid control to the Picture Box control. The final step is to transfer the newly created image to the Grid control's Picture property. This, in turn, displays the cell's text in a specific color or changes the cell's color.
+
+Example Program
+This program shows how to set the color of a Grid control's cells and the text within specific cells. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+From the Visual Basic Tools menu, select Custom Controls. Select the "Microsoft Grid Control" from the list of controls to add the Grid control to your toolbox. 
+Add a Grid control to Form1. Grid1 is created by default. Set its Rows property to 5 and its Columns property to 5. 
+Add a Picture Box control to Form1. Picture1 is created by default. Size the Picture Box control so that it is slightly larger than the size of one cell in the Grid control. Set the Visible property of the Picture Box control to False. 
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Dim I As Integer
+    Dim J As Integer
+
+    For I = 1 To Grid1.Rows - 1
+        For J = 1 To Grid1.Cols - 1
+            Grid1.Row = I
+            Grid1.Col = J
+            'Fill cell text so that "(I,J)" string is
+            'Grid1.Text = "(" & CStr(I) & "," & CStr(J) & ")"
+        Next J
+    Next I
+
+End Sub
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim I As Integer
+    Dim J As Integer
+
+    For I = 1 To Grid1.Rows - 1
+        For J = 1 To Grid1.Cols - 1
+            Call SetGridCell(Grid1, I, J, QBColor(I - 1), QBColor(15))
+        Next J
+    Next I
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. 
+Add the following code to the Click event for Command2: 
+Private Sub Command2_Click()
+    Dim I As Integer
+    Dim J As Integer
+
+    For I = 1 To Grid1.Rows - 1
+        For J = 1 To Grid1.Cols - 1
+            Call SetGridCell(Grid1, I, J, QBColor(15), QBColor(J - 1))
+        Next J
+    Next I
+
+End Sub
+
+Add a third Command Button control to Form1. Command3 is created by default. 
+Add the following code to the Click event for Command3: 
+Private Sub Command3_Click()
+    Call ClearGrid(Grid1)
+End Sub
+
+Create a new subroutine called SetGridCell. Add the following code to this subroutine: 
+Sub SetGridCell(Grd As Grid, RowNum%, ColNum%, BkClr&, FrClr&)
+    Grd.Row = RowNum%
+    Grd.Col = ColNum%
+    Picture1.BackColor = BkClr
+    Picture1.ForeColor = FrClr
+    Picture1.CurrentX = 0
+    Picture1.CurrentY = 0
+    Picture1.Print Grd.Text
+    Grd.Picture = Picture1.Image
+
+End Sub
+
+Run the example program by pressing F5. Click the first Command Button control. Each row in the Grid control appears in a different color. Click the second Command Button control. The text in each column of the Grid control appears in a different color. Click the third Command Button control to restore the Grid control to its original appearance.

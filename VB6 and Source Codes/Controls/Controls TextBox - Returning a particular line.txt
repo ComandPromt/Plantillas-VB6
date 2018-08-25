@@ -1,0 +1,22 @@
+'Description: Return a particular line from a TextBox
+
+'Global Const WM_USER = &H400
+'Global Const EM_GETLINE = WM_USER + 20
+
+'Function TextBoxLine (TB As TextBox, ByVal LineNO As Integer) As String
+	Const BUFLEN = 1028
+        Dim buffer As String * BUFLEN
+        ' Set 1st 2 bytes to Buffer length
+ 	Mid(buffer, 1, 1) = Chr(BUFLEN And &HFF)
+	Mid(buffer, 2, 1) = Chr(BUFLEN \ &H100)
+	If Not TB.MultiLine Then
+        	TextBoxLine = TB.Text
+        Else
+                ret& = sendmessage(TB.hWnd, EM_GETLINE, LineNO - 1, ByVal buffer)
+                If ret& Then
+        	        TextBoxLine = Left$(buffer, ret&)
+                Else
+                        TextBoxLine = ""
+                End If
+        End If
+'End Function

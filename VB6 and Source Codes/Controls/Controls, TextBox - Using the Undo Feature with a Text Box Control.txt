@@ -1,0 +1,51 @@
+Tip 130: Using the Undo Feature with a Text Box Control
+July 1, 1995
+
+Abstract
+Almost all Microsoft® Windows®-based applications provide an Edit menu on which you can select the Undo command to reverse the most recently made changes to an edit control. This article explains how you can add this functionality to your own Microsoft Visual Basic® application.
+
+Using SendMessage to Undo Edit Control Changes
+When you modify the contents of an edit control in Microsoft® Visual Basic®, such as a Text Box control, the data you add or delete is saved in an internal buffer by the Microsoft Windows® operating system. You can use the Windows application programming interface (API) SendMessage function to allow your user to retrieve the modified text.
+
+Let's assume that you have typed some text into a Text Box control. You now want to delete some of that text. To do this, you select the text and press the DEL key. The text you selected is removed from the Text Box control. You can retrieve this text within a Visual Basic application by sending an EM_UNDO message to Windows. The EM_UNDO message tells the operating system that you want to undo the last change you made to the edit control. In this case, the edit control is the Text Box.
+
+After the EM_UNDO message is sent, the original contents of the Text Box control are restored. The modified text is still stored in the internal Windows buffer. Therefore, in your application, you need to send an EM_EMPTYUNDOBUFFER message to clear or delete the contents of this internal buffer. The EM_EMPTYUNDOBUFFER message clears the undo flag, which means that you can no longer undo your last change to the edit control.
+
+As shown in the example program below, you can also determine whether an undo operation can be performed on the edit control. The EM_CANUNDO message returns an integer value set to True if there is text in the undo buffer, or zero if no text is available. You can perform an undo operation only if the contents of an edit control have been previously modified and the data is stored in the undo buffer.
+
+Example Program
+This program shows how to add the Undo and Redo editing features to your Visual Basic application. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function SendMessage Lib "User" (ByVal hWnd As Integer, 
+   ByVal wMsg As Integer, ByVal wParam As Integer, lParam As Long) As Long
+Const WM_USER = &H400
+Const EM_CANUNDO = WM_USER + 22
+Const EM_EMPTYUNDOBUFFER = WM_USER + 29
+Const EM_UNDO = WM_USER + 23
+
+Add a Text Box control to Form1. Text1 is created by default. Set its MultiLine property to True. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Undo". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim OK As Long
+    OK = SendMessage(Text1.hWnd, EM_UNDO, 0, 0&)
+    OK = SendMessage(Text1.hWnd, EM_EMPTYUNDOBUFFER, 0, 0&)
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. Set its Caption property to "Redo". 
+Add the following code to the Click event for Command2: 
+Private Sub Command2_Click()
+    Dim OK As Long
+    OK = SendMessage(Text1.hWnd, EM_CANUNDO, 0, 0&)
+    If OK = 0 Then
+        MsgBox "Cannot undo the changes you made", 16, "Error"
+    End If
+    OK = SendMessage(Text1.hWnd, EM_UNDO, 0, 0&)
+End Sub
+
+Run the example program by pressing F5. Type some text into the Text Box control. Assume that you typed the line, "We will go shopping on Monday and Tuesday." Select the words "Monday and". Press DEL to delete the text. Click the Redo command button. The original sentence is restored. Click Redo a second time. The modified sentence is restored. The Redo function is similar to the cut-and-paste functions you see in word-processing programs.
+
+Select the words "Monday and" a second time and again delete the text. Click Undo to restore the original text. Notice that clicking the Undo command button a second time does nothing. This is because the Undo routine clears the undo flag and the edit buffer. You can only undo one change at a time.
+

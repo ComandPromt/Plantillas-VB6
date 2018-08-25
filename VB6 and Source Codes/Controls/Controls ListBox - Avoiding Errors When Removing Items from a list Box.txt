@@ -1,0 +1,73 @@
+Tip 24: Avoiding Errors When Removing Items from a List Box
+Created: March 1, 1995
+
+Abstract
+The Visual Basic® List Box control lets you create an array of items that are shown in the control at run time. Your program can add new items to the List Box or delete items from the List Box. However, care must be taken when searching through the entire list to remove items that are selected (highlighted).
+
+Deleting Items from a List Box
+When using the List Box control, you can add new items to the array by using the AddItem method. For example, to add the text "Item #1" to the List Box, you would execute the statement:
+
+List1.AddItem "Item #1"
+
+This item is added after the last entry in the List1 List Box. The ListCount property, which keeps track of the total number of items in the List Box, is incremented by a value of one each time the AddItem method is used.
+
+To delete an item from a List Box, you would use the RemoveItem method. The following statement deletes the first element, "Item #1", from the List Box:
+
+List1.RemoveItem (0)
+
+After executing the RemoveItem method, the count value stored in ListCount is automatically decremented by a value of one.
+
+As you can see, the ListCount variable keeps track of how many items are actually stored in the List Box at any given moment. ListCount numbers each item starting with zero, not with one. Therefore, if you have three items in the List Box, they are numbered 0, 1, and 2.
+
+In a Visual Basic® application, you can select (highlight) an individual item in a List Box by clicking on it. Later on in your program, you can find out which item or items were selected by issuing a statement such as:
+
+If List1.Selected(1) = True Then
+    'do something with selected item here
+Else
+    'do something else
+End If
+
+In other words, the Selected property is set to TRUE if the item was selected, or FALSE if the item was not selected.
+
+If you are using a MultiSelect List Box, your user can select more than one item at a time. When your program wants to delete all the selected items from a List Box, you simply loop through each entry in the control and issue the RemoveItem method.
+
+You might use a For-Next loop like the following to accomplish this task in Visual Basic:
+
+For X = 0 to ListCount -1
+    If List1.Selected(X) = True Then
+        List1.RemoveItem X
+    End If
+Next X
+
+However, this For-Next loop will produce an "Invalid property array index" error. This error occurs because each time the loop is executed, ListCount is reduced by one. Eventually, the value in ListCount is actually higher than the number of items stored in the List Box. Remember, each time you delete an item from a List Box, ListCount gets decremented. In the For-Next loop above, X is set to the total number of items in the List Box, but this value is not adjusted to reflect the actual number of items as each item is removed from the list. This is why Visual Basic generates the "Invalid property array index" error message.
+
+You can avoid this error in your application program if you use a Do-While loop instead of a For-Next loop. Each time through the loop, the X variable should be incremented by a value of one. If this is done, the code will successfully remove all selected items from the List Box.
+
+Example Program
+The program below shows how you can successfully remove all items that are selected (highlighted) from a List Box. When you execute this program in Visual Basic, the List Box will be filled with 16 items. Select several items to delete by clicking the mouse on the items. When you're ready to actually remove these items from the List Box, click the "Delete Selected Items" command button. After a second or two, the List Box will display only those items that were not previously selected. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add a List Box control to Form1. List1 is created by default. Set its MultiSelect property to 1-Simple. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Delete Selected Items". 
+In the General Declarations section of Form1, type the following Dim statement: 
+Dim X As Integer
+
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+    For X = 0 To 15
+        List1.AddItem "Item #" & Str$(X)
+    Next X
+End Sub
+
+Add the following code to the Click event for Command1: 
+Sub Command1_Click()
+    X = 0
+    Do While X < List1.ListCount
+        If List1.Selected(X) = True Then
+            List1.RemoveItem X
+        Else
+            X = X + 1
+        End If
+    Loop
+End Sub
+

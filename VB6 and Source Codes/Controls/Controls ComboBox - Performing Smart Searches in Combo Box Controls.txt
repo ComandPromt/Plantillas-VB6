@@ -1,0 +1,70 @@
+Tip 115: Performing Smart Searches in Combo Box Controls
+July 1, 1995
+
+Abstract
+The Combo Box control in Microsoft® Visual Basic® allows your user to easily select items by clicking the desired entry in the control. This article explains how you can add a smart search feature to the Combo Box control.
+
+Searching Combo Box Controls Quickly
+In a Microsoft® Visual Basic® application, you can use a Combo Box control to provide a list of items that the user can select from. If the desired item is not in the Combo Box control, the user can also add an additional item to the list.
+
+The drop-down style of a Combo Box control appears only as a single Text Box control with a separate arrow button to the right of the box. Clicking the arrow causes the box to drop down so that the user can see the actual entries stored in the Combo Box control.
+
+If the number of entries in the Combo Box control is relatively small, the user is able to quickly locate the desired item. However, if there are many entries in the list, scrolling through the entire list may not be the most efficient method for the user to find a specific item. In this situation, it would be much quicker to allow the user to perform a "smart search" for the desired item.
+
+A smart search means that the user can type the first few letters of an entry, and the first entry in the list that matches these characters will be displayed in the edit portion of the Combo Box control.
+
+The example program below shows how to implement a smart search routine in your Visual Basic application. The trick to doing this search lies in the KeyPress event of the Combo Box control.
+
+Each time the user presses a key on the keyboard, the KeyPress event is triggered. These keystrokes can be trapped and acted upon in whatever fashion you want. As an example, in the smart search routine we automatically ignore all keyboard characters that have an ASCII value of less than 32 or greater than 127. This lets us process only alphabetic characters (A–Z, a–z), numeric characters (0–9), and punctuation characters (exclamation point, comma, and so forth).
+
+It is a simple matter to save the characters that the user types to a string variable such as FindString and then to use the Microsoft Windows® application programming interface (API) SendMessage function to execute a CB_FINDSTRING message to the Combo Box control.
+
+The CB_FINDSTRING message lets you search a Combo Box control for an entry that matches the target string. This function requires two arguments—the number of the item in the control from which you want the search to start, and the string you want to find. To search the entire Combo Box control, you set the first argument to a value of -1.
+
+After you have executed the CB_FINDSTRING message, it will return the number of the matching entry. You can then use this to display the result to the user in the edit portion of the Combo Box control.
+
+Example Program
+This program shows how to perform a "smart search" with a Combo Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
+Const CB_ERR = (-1)
+Const CB_FINDSTRING = &H14C
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Combo1.AddItem "French fries"
+    Combo1.AddItem "Hamburgers"
+    Combo1.AddItem "Milkshakes"
+    Combo1.AddItem "Onion rings"
+    Combo1.AddItem "Ice"
+    Combo1.AddItem "Ice cream"
+End Sub
+
+Add a Combo Box control to Form1. Combo1 is created by default. Set its Style property to 0-Dropdown. 
+Add the following code to the KeyPress event for Combo1: 
+Private Sub Combo1_KeyPress(KeyAscii As Integer)
+    Dim CB As Long
+    Dim FindString As String
+    
+    If KeyAscii < 32 Or KeyAscii > 127 Then Exit Sub
+    
+    If Combo1.SelLength = 0 Then
+        FindString = Combo1.Text & Chr$(KeyAscii)
+    Else
+        FindString = Left$(Combo1.Text, Combo1.SelStart) & Chr$(KeyAscii)
+    End If
+    
+    CB = SendMessage(Combo1.hWnd, CB_FINDSTRING, -1, ByVal FindString)
+    
+    If CB <> CB_ERR Then
+        Combo1.ListIndex = CB
+        Combo1.SelStart = Len(FindString)
+        Combo1.SelLength = Len(Combo1.Text) - Combo1.SelStart
+    End If
+    KeyAscii = 0
+End Sub
+
+Run the example program by pressing F5. Type the text you want to find. As you enter each character, the KeyPress event is triggered. For example, type the letter i. The item ice appears in the Combo Box's edit window. Try again, this time typing the word ice followed by a space character. The Combo Box displays ice cream. Try typing a word that is not in the list, such as potato. The Combo Box will respond by finding the closest match—in this case, the Onion rings entry.
+

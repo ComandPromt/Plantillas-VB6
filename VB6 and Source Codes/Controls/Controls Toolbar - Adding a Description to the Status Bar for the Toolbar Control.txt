@@ -1,0 +1,114 @@
+Tip 194: Adding a Description to the Status Bar for the Toolbar Control
+December 5, 1995
+
+Abstract
+Each toolbar control in your Microsoft® Visual Basic® application can have a ToolTip, which is a small pop-up window containing the name of the control. A ToolTip appears whenever the mouse pointer is placed over a toolbar control. This article explains how to have information that further describes a toolbar control appear in the Status Bar control as well.
+
+Assigning Status Bar Descriptions to Toolbar Controls
+You can use the Toolbar control in Microsoft® Visual Basic® to perform functions within an application by simply clicking on one of the control's buttons. Each button in the Toolbar control can have a caption assigned to it or a ToolTip description that appears when the mouse pointer is over that button. Most toolbars do not assign captions to the buttons because these captions appear at the bottom of the button. The preferred method is to use a ToolTip description.
+
+To create a toolbar, you put a Toolbar control and an ImageList control on a form. Next, the ImageList control is populated with icons or other graphic images. These images are then assigned to the Buttons property of the Toolbar control.
+
+You can assign ToolTip descriptions to each button on the toolbar by setting the toolbar's ShowTips property to True and adding the text for the ToolTip description to the ToolTip text box. When the mouse pointer is moved over a button on the toolbar, the button's corresponding ToolTip text appears.
+
+As an added feature, you can add a Status Bar control to the bottom of your form. A Status Bar control contains information that is displayed to the user when certain events occur in your application.
+
+In the example program below, additional information is provided to the user when a specific button is selected on the toolbar. This information appears in the Status Bar control.
+
+In order to provide this information in the Status Bar control, a method is needed for determining which button the mouse pointer is over. You can calculate which button the mouse pointer is over by monitoring the toolbar's MouseMove event.
+
+The MouseMove event is triggered when the mouse is moved over the Toolbar control. This event indicates the current position of the mouse on the Toolbar control in its X and Y variables. If the current position of the mouse pointer corresponds to the position of a toolbar button, a description can be displayed for that button in the Status Bar control.
+
+Example Program
+This program shows how to pass a description to a Status Bar control when an item is selected on a Toolbar control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Toolbar control to Form1. Toolbar1 is created by default. 
+Add an ImageList control to Form1. ImageList1 is created by default. 
+Add a Status Bar control to Form1. StatusBar1 is created by default. 
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Dim imgX As ListImage
+
+    Set imgX = ImageList1.ListImages. _
+    Add(, "open", LoadPicture("bitmaps\tlbr_w95\open.bmp"))   ' 1
+
+    Set imgX = ImageList1.ListImages. _
+    Add(, "save", LoadPicture("bitmaps\tlbr_w95\save.bmp"))   ' 2
+
+    Toolbar1.ImageList = ImageList1
+
+    Dim btnX As Button
+    Set btnX = Toolbar1.Buttons.Add(, , , tbrSeparator)
+
+    Set btnX = Toolbar1.Buttons.Add(, "open", , tbrDefault, "open")
+    btnX.ToolTipText = "Open File"
+    btnX.Description = btnX.ToolTipText
+
+    Set btnX = Toolbar1.Buttons.Add(, , , tbrSeparator)
+
+    Set btnX = Toolbar1.Buttons.Add(, "save", , tbrDefault, "save")
+    btnX.ToolTipText = "Save File"
+    btnX.Description = btnX.ToolTipText
+
+    With Toolbar1
+        .Wrappable = True ' Buttons can wrap
+        .AllowCustomize = False
+    End With
+End Sub
+
+Add the following code to the ButtonClick event for Toolbar1: 
+Private Sub toolbar1_ButtonClick(ByVal Button As Button)
+    Select Case Button.Key
+    Case Is = "open"
+        MsgBox "Open button was clicked"
+
+    Case Is = "save"
+        MsgBox "Save button was clicked"
+    End Select
+End Sub
+
+Add the following code to the MouseMove event for Toolbar1 (note that the Private statement must be typed as a single line of code): 
+Private Sub Toolbar1_MouseMove(Button As Integer, Shift As Integer, 
+   x As Single, y As Single)
+    Dim MyPlace As Integer
+    Dim LowPoint As Long
+    Dim HighPoint As Long
+    Static LastHit As Integer
+    MyPlace = 1
+
+    Do While MyPlace < Toolbar1.Buttons.Count
+        LowPoint = Toolbar1.Buttons(MyPlace).Left
+        HighPoint = Toolbar1.Buttons(MyPlace + 1).Left
+
+        If x > LowPoint And x < HighPoint Then
+            If MyPlace <> LastHit Then
+                LastHit = MyPlace
+                 StatusBar1.Panels(1).Text = "Found " & LastHit
+                Exit Do
+            End If
+        End If
+        MyPlace = MyPlace + 1
+    Loop
+
+    If MyPlace = Toolbar1.Buttons.Count Then
+        LowPoint = Toolbar1.Buttons(MyPlace).Left
+        HighPoint = Toolbar1.Buttons(MyPlace).Left + Toolbar1.Buttons(MyPlace).Width
+        If x > LowPoint And x < HighPoint Then
+            If MyPlace <> LastHit Then
+                LastHit = MyPlace
+                StatusBar1.Panels(1).Text = "Found " & LastHit
+            End If
+        End If
+    End If
+
+    StatusBar1.Panels(1).Text = ""
+    If LastHit = 2 Then
+        StatusBar1.Panels(1).Text = "Save"
+    End If
+    If LastHit = 4 Then
+        StatusBar1.Panels(1).Text = "Open"
+    End If
+End Sub
+
+Run the example program by pressing F5. A toolbar appears at the top of Form1. The toolbar has two buttons, Save and Open. Move the mouse pointer over either one of these buttons. A description corresponding to the specific button appears in the Status Bar control. Double-click one of the buttons—a message box appears that indicates that you selected that particular function from the Toolbar control.

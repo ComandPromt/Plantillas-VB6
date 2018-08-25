@@ -1,0 +1,36 @@
+Tip 51: Displaying a Status Bar While Executing Lengthy Procedures 
+Created: April 10, 1995
+
+Abstract
+When a Visual Basic® program is executing a time-consuming task, you can display the progress of that task by using a status bar in the program. This article explains how you can use a three-dimensional control to add this feature to your Visual Basic programs.
+
+Showing the Percentage Status Bar
+To add a status bar to your Visual Basic® program, you use a three-dimensional (3D) Panel control. Your program displays a blue horizontal bar that is filled from left to right. As your program updates the percentage-completed variable, the 3D Panel is also updated. In the example program below, we set the X variable equal to the number of bytes in the TEST.COM file. As each block of 100 bytes is read from the file, the FloodPercent property of the 3D Panel control is adjusted accordingly. This is how the horizontal bar appears to grow from left to right until the entire file has been processed.
+
+Example Program
+The following program shows how you can add a percentage-completed status bar to your own Visual Basic application. It is assumed that you have a temporary file called TEST.COM in the root directory of drive C. As this program reads data from the temporary file, it displays the percentage completed on the status bar. The program ends when the entire file has been processed, showing a "100 percent completed" message in the status bar. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Label control to Form1. Label1 is created by default. 
+Add a 3D Panel control to Form1. Panel3D1 is created by default. Set its FloodType property to 1-Flood from left to right. Set its FloodShowPct property to True. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Process File". 
+Add the following code to the Click event for Command1: 
+Sub Command1_Click()
+
+   Dim inp As String * 100
+   x = FileLen("c:\test.com")
+   Open "c:\test.com" For Binary As #1
+   Label1 = "Working..."
+   Label1.Refresh
+   i = 0
+   While Not EOF(1)
+      Get #1, , inp
+      i = i + 100
+      Panel3D1.FloodPercent = 100 * i / x
+      Text1 = inp
+   Wend
+   Close #1
+   Label1 = "Done"
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. 

@@ -1,0 +1,79 @@
+Tip 74: Scrolling Through Two List Box Controls Simultaneously
+May 8, 1995
+
+Abstract
+You can add code to your Visual Basic® application to allow a user to scroll through the contents of two separate List Box controls at the same time. This article explains how you can add this functionality to your program.
+
+The TopIndex Property of List Box Controls
+When using a List Box control, the user can click the mouse on the scroll bar to move up or down the list of items. If the user clicks the mouse on an individual item, that item is said to be selected. The ListIndex property is a unique value that represents the selected item's position within the List Box.
+
+You can also scroll through a List Box control by using the TopIndex property. This property, however, can only be changed at run time, not during design time. The TopIndex property moves you through the items in the List Box control. In other words, it works just as if the user had used the scroll bar.
+
+Let's assume that you have two List Box controls on a form in your Visual Basic® application. As you scroll through the items in the first List Box control, you want to also scroll through the same items in the second List Box control.
+
+In an application, you can use the TopIndex property to move a specific item in the List Box control so that that item appears at the top of the List Box. The following statement, for example, moves the third item in the List Box to the top of the control:
+
+List1.TopIndex = (2)
+
+In the example program below, we want to scroll through both List Box controls at the same time. To do this, we use a Timer control so that the second List Box control is updated as soon as the item is selected in the first List Box control.
+
+We first use a static variable—that is, a variable whose contents do not change when we exit a procedure—to keep track of the currently selected item in the first List Box. Each time a new item is selected in the List Box, this variable is set to that item's TopIndex value.
+
+Next, we set the ListIndex property of the second List Box control equal to that of the first List Box control. This highlights the two items in each List Box that have the same ListIndex value. It doesn't matter what the actual item is—the items are both selected based on their position within the controls.
+
+Each time you select an item in the first List Box, that same item is also selected in the second List Box.
+
+Example Program
+This example program shows how to scroll through the contents of two List Box controls simultaneously. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1: 
+Option Explicit
+DefInt A-Z
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Dim X As Integer
+    'Initialize two list boxes with alphabet
+    For X = 1 To 26
+        List1.AddItem Chr$(X + 64)
+    Next X
+    For X = 1 To 26
+        List2.AddItem Chr$(X + 64)
+    Next X
+    timer1.Interval = 1
+    timer1.Enabled = True
+    
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. 
+Add a second List Box control to Form1. List2 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    End
+End Sub
+
+Add a Timer control to Form1. Timer1 is created by default. 
+Add the following code to the Timer1 event for Timer1: 
+Private Sub timer1_Timer()
+    Static PrevList1
+    Dim TopIndex_List1 As Integer
+    
+    'Get the index for the first item in the visible list.
+    TopIndex_List1 = List1.TopIndex
+    
+    'See if top index has changed.
+    If TopIndex_List1 <> PrevList1 Then
+        'Set the top index of List2 equal to List1,
+        'so that the list boxes scroll together.
+        List2.TopIndex = TopIndex_List1
+        PrevList1 = TopIndex_List1
+    End If
+    'Select the item in the same position in both list boxes.
+    If List1.ListIndex <> List2.ListIndex Then
+        List2.ListIndex = List1.ListIndex
+    End If
+    
+End Sub
+

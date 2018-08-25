@@ -1,0 +1,43 @@
+Tip 155: Scrolling Text Horizontally in a Picture Box Control
+September 5, 1995
+
+Abstract
+This article explains how to scroll text horizontally within a Picture Box control in Microsoft® Visual Basic®.
+
+Creating a Scrolling Marquee Effect in Visual Basic
+You can add visual effects to your Microsoft® Visual Basic® applications that add interest or grab the user's attention. You can do this, for example, by adding a scrolling message to your program to create a marquee effect.
+
+A scrolling message is a string of text that is continually displayed in a control. To achieve this effect in your program, you can use the Timer and Picture Box controls.
+
+The Print function lets you display a character in a Picture Box control. The character is printed at the current x- and y-coordinates within the control. Therefore, to display an entire string in the Picture Box, you first need to extract each character from the target string you want to display. Then you can use the Print function to display that character in the Picture Box control.
+
+To make the text in the Picture Box scroll continuously, you simply keep track of your position within the target string. When you reach the end of the string, set the pointer to the beginning of the string. Using the Timer control, you can send (that is, print) a character to the Picture Box at specific time intervals. This causes the message to print continuously in the Picture Box control.
+
+Example Program
+This program shows how to scroll text horizontally in a Picture Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Picture Box control to Form1. Picture1 is created by default. 
+Add a Timer control to Form1. Timer1 is created by default. Set its Interval property to 250. 
+Add the following code to the Timer1_Event: 
+Private Sub Timer1_Timer()
+    ShowMessage
+End Sub
+
+Create a new function called ShowMessage(). Add the following code to this function: 
+Sub ShowMessage()
+    Static MsgPtr As Integer
+    Static MyText As String
+    If Len(MyText) = 0 Then
+        MsgPtr = 1
+        MyText = "Welcome to Visual Basic programming!"
+    End If
+    Picture1.Cls
+    Picture1.Print Mid$(MyText, MsgPtr); MyText;
+    MsgPtr = MsgPtr + 1
+    If MsgPtr > Len(MyText) Then
+        MsgPtr = 1
+    End If
+End Sub
+
+Run the example program by pressing F5. The "Welcome to Visual Basic programming!" message will scroll across the Picture Box control continuously until you quit the program.

@@ -1,0 +1,4 @@
+'Description: Defines New Line character for use with TextBox.
+
+CR$ = Chr$(13) & Chr$(10) 
+Text1 = "First Line" & CR$ & "Second Line"

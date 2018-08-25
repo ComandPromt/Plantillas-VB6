@@ -1,0 +1,42 @@
+Tip 69: Forcing a Picture Control to Use Only a Specific Font
+May 1, 1995
+
+Abstract
+When developing an application in Visual Basic® that may be run on many different computer systems, you may want to ensure that a control such as a Picture Box is formatted correctly with regard to the size and type of font used. This article explains how you can use the Windows® application programming interface (API) SendMessage and GetStockObject functions to force a control to use a specific font when displaying text.
+
+Using the GetStockObject Function to Select a Font
+Many controls such as Picture Box and Text Box controls have a Font property. The Font property is usually set by the programmer at design time to a specific font. However, in some situations, you may want to force Windows® to use a different font at a specific time in your program for that control. In such cases, you can use the Windows application programming interface (API) SendMessage and GetStockObject functions to tell Windows that a control's Font property is to be set to a different font.
+
+To change a control's Font property to another font, you use the GetStockObject function. The Declare statement for this function is as follows:
+
+Declare Function GetStockObject Lib "GDI" (ByVal nIndex As Integer) As Integer
+
+GetStockObject requires only one argument—an integer value containing the type of stock object you want to use. In our case, we want to use the ANSI_FIXED_FONT stock object, which has a value of 11. After you call the GetStockObject function, it returns an integer value. This value is set to NULL if the function was not successful, or to a handle that identifies the logical object itself.
+
+In the example program below, we want to force the Picture Box control to use a fixed font instead of Bookman Old Style, which is set to a point size of 24, at design time. To set the font to a fixed font while the program is being executed, we issue the following statement:
+
+X = SendMessage(Picture1.hWnd, WM_SETFONT, GetStockObject(ANSI_FIXED_FONT), 1)
+
+After issuing this command, anytime we use the Print method to print text on the Picture Box control, the fixed font is used.
+
+Example Program
+The example program below displays a Picture Box control on Form1. The Print method is used to display the text "This is a test" in the Picture Box control. Note that the default Font property value is ignored and the ANSI fixed font is used when the text is displayed in the control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each Declare statement should be typed as a single line of code): 
+Declare Function SendMessage Lib "User" (ByVal hWnd As Integer, ByVal wMsg As 
+   Integer, ByVal wParam As Integer, lParam As Any) As Long
+Declare Function GetStockObject Lib "GDI" (ByVal nIndex As Integer) As Integer
+Const ANSI_FIXED_FONT = 11
+Const WM_SETFONT = &H30
+
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+    Dim X As Long
+    X = SendMessage(Picture1.hWnd, WM_SETFONT, GetStockObject(ANSI_FIXED_FONT),
+      1)
+    Picture1.Print "This is a test"
+    
+End Sub
+
+Add a Picture Box control to Form1. Set its Font property to Bookman Old Style, point size: 24. 

@@ -1,0 +1,60 @@
+Tip 150: Determining How Many Items Can Be Displayed in the List Box Control
+September 5, 1995
+
+Abstract
+The List Box control in Microsoft® Visual Basic® allows you to display a list of items to the user of your program. When you design a List Box control in a Visual Basic program, you can use the Microsoft Windows® application programming interface (API) SendMessage function to determine the size of individual items in the control. This article explains how you can calculate the number of items that can be displayed in the control, based on the size of each entry.
+
+Determining How Many Entries Can Be Stored in a List Box
+The List Box control allows you to display a list of items to your user. For example, you can store a list of vendors in a List Box control. When your Microsoft® Visual Basic® program is running, you can add or remove entries from the vendor list.
+
+When you design your application, you can set the initial size of the List Box control. Usually you would make the List Box large enough to display several entries. At run time, you can programmatically determine how many entries you can display at one time in the control. To do this, you need to determine the height of an entry in the List Box control by sending an LB_GETITEMHEIGHT message to the control.
+
+Because you want to find the height of an entry in the List Box control, you use the Microsoft Windows® application programming interface (API) SendMessage function to send an LB_GETITEMHEIGHT message to that control. After the program calls the function, the entry's height is returned as a long value. Then, to calculate how many entries can be displayed in the List Box control, you must divide the height of the List Box by the height of the entry. When making this calculation, you first need to account for the height (which is one pixel) of the top and bottom borders of the List Box. Therefore, you subtract two from the height of the List Box control. Next, you divide the height of the List Box by the height of the entry. The result of this calculation gives you the number of items you can display in the List Box control.
+
+Example Program
+This program shows how to calculate the number of items that can be displayed in a List Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" 
+   (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Integer,
+   ByVal lParam As Long) As Long
+Const LB_GETITEMHEIGHT = &H1A1
+
+Add the following code to the Form_Load event for Form1 (note that the Items = line must be typed as a single line of code): 
+Private Sub Form_Load()
+    Dim ItemHeight As Long
+    Dim Items As Integer
+    
+    ItemHeight = SendMessage(List1.hwnd, LB_GETITEMHEIGHT, 0, 0&)
+    Items = (List1.Height - 2 * Screen.TwipsPerPixelY)
+        / (Screen.TwipsPerPixelY * ItemHeight)
+    Text1.Text = "Maximum # entries : " & Str(Items)
+    
+    List1.AddItem "Item #1"
+    List1.AddItem "Item #2"
+    List1.AddItem "Item #3"
+    
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a List Box control to Form1. List1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1 (note that the Items = line must be typed as a single line of code): 
+Private Sub Command1_Click()
+    Dim ItemHeight As Long
+    Dim Items As Integer
+    Dim X As Integer
+    
+    ItemHeight = SendMessage(List1.hwnd, LB_GETITEMHEIGHT, 0, 0&)
+    Items = (List1.Height - 2 * Screen.TwipsPerPixelY)
+        / (Screen.TwipsPerPixelY * ItemHeight)
+    X = List1.ListCount
+    X = X + 1
+    If X <= Items Then
+        List1.AddItem "Item #" & Str(X)
+    End If
+End Sub
+
+Run the example program by pressing F5. Three items are displayed in the List Box control. In addition, the Text Box control shows the maximum number of items that can be displayed in the List Box control at any one time. Each time you click the command button, you add a new item to the List Box control. However, if the number of items stored in the List Box control equals the maximum number of items that can actually be displayed, you can add no more new entries to the list.
+

@@ -1,0 +1,7 @@
+'Description: Automatic selection of the contents
+'             of a text box when it gets focus.
+
+'Sub Text1_GotFocus ()
+Text1.SelStart = 0
+Text1.SelLength = 65535   'max length
+'End Sub

@@ -1,0 +1,53 @@
+Tip 163: Emulating a Double-Click Event in the Directory List Box Control
+December 5, 1995
+
+Abstract
+This article explains how to allow the user of your Microsoft® Visual Basic® application use the ENTER key, instead of double-clicking with the mouse, to select a directory.
+
+Using the ENTER Key to Select Directories
+The Microsoft® Visual Basic® Directory List Box control displays a list of all directories stored on the specified disk drive. You can select a specific directory to work with by double-clicking its entry in the control. The selected directory can then be manipulated by your Visual Basic application.
+
+You may, however, want to select a directory from the Directory List Box control by pressing the ENTER key instead of double-clicking with the mouse. This functionality can be accomplished by monitoring the KeyPress event of the Directory List Box control.
+
+Whenever a key is pressed on the keyboard, a KeyPress event is triggered in the control that has the focus. A special number representing that particular key is stored in the KeyPress event's KeyAscii variable. You can then test the KeyAscii variable to determine whether a specific key, such as ENTER, was pressed on the keyboard.
+
+In the example program below, each time a KeyPress event is triggered, the focus is set to the Directory List Box control. The KeyAscii variable is then tested to determine whether ENTER (represented by the number 13) was pressed. Next, a WM_LBUTTONDBLCLK (double-click) message is sent to the Directory List Box control by using the Microsoft Windows® application programming interface (API) SendMessage function. The KeyAscii variable is then set to a value of zero, which prevents the beep from being played on the computer's speaker. Finally, the default directory is changed to the newly selected directory.
+
+Example Program
+This program shows how to emulate a double-click event in a Directory List Box control with the ENTER key. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each statement must be typed as a single line of code): 
+Private Declare Function GetFocus Lib "user32" () As Long
+Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" 
+   (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Integer, 
+   ByVal lParam As Long) As Long
+Const WM_LBUTTONDBLCLK = &H203
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Text1.Text = ""
+    Text1.Text = CurDir$
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a Directory List Box control to Form1. Dir1 is created by default. 
+Add the following code to the Dir1_KeyPress event for Dir1: 
+Private Sub Dir1_KeyPress(KeyAscii As Integer)
+    Dim R As Long
+    Dim DirHwnd As Integer
+    Dim X As String
+    If KeyAscii = 13 Then
+        Dir1.SetFocus
+        DirHwnd = GetFocus()
+        R = SendMessage(DirHwnd, WM_LBUTTONDBLCLK, 0, 0)
+        KeyAscii = 0
+    End If
+    X = Dir1.Path
+    ChDir X
+    Text1.Text = CurDir$
+End Sub
+
+Run the example program by pressing F5. The Directory List Box control displays a list of directories found on your hard drive. The name of the default directory appears in the Text Box control.
+
+Select a directory from the Directory List Box control by pressing the first letter of the directory name or by clicking the directory name. Press ENTER. The currently selected directory is now the default directory.

@@ -1,0 +1,30 @@
+Tip 6: Displaying a File's Contents Correctly in a Text Box
+Created: March 1, 1995
+
+Abstract
+When trying to display text in a multiline text box, the carriage return and linefeed characters pose a special problem. Microsoft® Windows® version 3.0 deletes the character following Chr$(13), while version 3.1 substitutes a pipe "|" character for the Chr$(13) character. This poses a problem when reading ASCII data from a file into a text box.
+
+Wrapping Lines in Text Boxes Correctly
+To alleviate missing or replaced characters when reading ASCII data from a file, you must add both the linefeed and the carriage return characters to the end of each line of text you process.
+
+The following program retrieves the contents of the AUTOEXEC.BAT file and displays it in a multiline text box.
+
+Example Program
+Start a new project in Visual Basic. Form1 is created by default. 
+Add a text box control to Form1. Set its MultiLine property to True and its ScrollBars property to 3-Both. 
+Add the following code to Form1's Form_Load event: 
+Form_Load()
+    crlf$ = Chr(13) & Chr(10)
+    Text1.Text = ""
+    open "C:\AUTOEXEC.BAT" for input as #1
+    while not eof(1)
+        line input #1, file_data$
+        Text1.Text = Text1.Text & file_data$ & crlf$
+    wend
+    close #1
+End Sub
+
+When you execute this program, each line is read correctly from the AUTOEXEC.BAT file and added to the text already stored in the Text1 text box. If you don't specifically add the CRLF$ to the end of the string just read from the file, the text appears as one continuous line of characters when displayed in the text box.
+
+You should also be aware of another problem: Text boxes do not process the carriage return/linefeed characters properly unless you first write the Chr(13) character and then the Chr(10) character to the file or append it to the end of a string. Therefore, you must make sure that you specify CRLF$ as containing first the Chr(13) character and then the Chr(10) character.
+

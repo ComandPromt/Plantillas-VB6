@@ -1,0 +1,12 @@
+'Description: Capitalize the first letter of each word in a string
+
+  cr$ = Chr$(13) + Chr$(10)
+  t$ = Text1.Text  'the string
+  If t$ <> "" Then
+   Mid$(t$, 1, 1) = UCase$(Mid$(t$, 1, 1))
+   For i = 1 To Len(t$) - 1
+     If Mid$(t$, i, 2) = cr$ Then Mid$(t$, i + 2, 1) = UCase$(Mid$(t$, i + 2, 1))
+     If Mid$(t$, i, 1) = " " Then Mid$(t$, i + 1, 1) = UCase$(Mid$(t$, i + 1, 1))
+   Next
+   Text1.Text = t$
+  End If

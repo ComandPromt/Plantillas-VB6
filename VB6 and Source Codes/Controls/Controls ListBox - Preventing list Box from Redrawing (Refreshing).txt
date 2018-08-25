@@ -1,0 +1,59 @@
+Tip 63: Preventing List Box from Redrawing (Refreshing)
+Created: April 24, 1995 
+
+Abstract
+In a Visual Basic® application you can update the contents of a List Box control by using the AddItem or RemoveItem methods. However, if you do not want the contents of the modified List Box to be updated until all items have been added or deleted, you can use the Windows® application programming interface (API) SendMessage function to set a flag (WM_SETREDRAW) telling Windows not to update the control until you specifically ask it to do so. This article explains how you can prevent a List Box control from being updated immediately.
+
+Using the WM_SETREDRAW Message
+In a Visual Basic® application, you can use a List Box control to hold items such as names of people. When a user clicks on an item in a List Box control, that item is highlighted and is said to be selected. If a List Box's MultiSelect property is set to True, multiple items can be selected at one time. New items can be added to a List Box control by using the AddItem method, and items can be deleted using the RemoveItem method. However, as soon as you use AddItem or RemoveItem, the List Box's Refresh event is triggered, which in turn updates the contents of the control. This behavior may not be appropriate in cases where you want to suppress the updating process while adding, deleting, or changing a large number of entries.
+
+You can force your Visual Basic application to update the List Box control at a specific time by using the Windows® application programming interface (API) SendMessage and SendMessageByString functions. You must send the WM_SETREDRAW message to the control to prevent the List Box from being updated. In addition, you must also send the actual data to the List Box by using the SendMessage function—you cannot use the AddItem or RemoveItem methods, because these methods will override the WM_SETREDRAW message.
+
+Setting the redraw flag to TRUE turns the redraw function on, and setting the redraw flag to FALSE turns the redraw function off. Therefore, in a Visual Basic application that is updating a List Box, you must send the WM_SETREDRAW message before you actually begin manipulating the contents of the control. After you have finished adding or removing items from the List Box control, you can send another WM_SETREDRAW message to turn the redraw function on again. This will cause Windows to display the modified List Box control immediately.
+
+Example Program
+The program shown below displays two List Box controls on the form. You can select items from the first List Box by clicking them. Each selected item will be added to the second List Box control when you click the "Show Results" command button. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each Declare statement should be typed as a single line of code): 
+Const WM_SetRedraw = &HB
+Const LB_ADDSTRING = &H401
+
+Declare Function SendMessage Lib "User" (ByVal hWnd As Integer, ByVal wMsg As 
+   Integer, ByVal wParam As Integer, lParam As Any) As Integer
+
+Declare Function SendMessageByString Lib "User" Alias "PostMessage" (ByVal hWnd 
+   As Integer, ByVal wMsg As Integer, ByVal wParam As Integer, ByVal lParam As 
+   String) As Integer
+
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+  Dim X As Integer
+  Dim D As Integer
+  Dim S As String
+  'Add some dummy data to List1
+  For X = 0 To 15
+      List1.AddItem "Item #" + Str$(X)
+  Next X
+End Sub
+
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Show Results". 
+Add the following code to the Click event for Command1: 
+Sub Command1_Click()
+  'Show updated list box now
+  X = SendMessage(List2.hWnd, WM_SetRedraw, 1, 0)
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. Set its MultiSelect property to True. 
+Add the following code to the DblClick event for List1: 
+Sub List1_DblClick()
+    'Disable the Repaint event
+    X = SendMessage(List2.hWnd, WM_SetRedraw, 0, 0)
+    
+    S = List1.List(List1.ListIndex)
+  ' Must use SendMessageByString instead of
+  ' List2.AddItem S to prevent redrawing
+    D = SendMessageByString(List2.hWnd, LB_ADDSTRING, 0, S)
+End Sub
+
+Add a second List Box control to Form1. List2 is created by default. 

@@ -1,0 +1,26 @@
+'Description: Displays "Gridlines" in a ListView Control via API
+
+'Public Declare Function SendMessageLong Lib "user32" Alias "SendMessageA" _
+ (ByVal hwnd As Long, ByVal Msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+       
+'Public Const LVM_FIRST = &H1000
+'Public Const LVM_SETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 54)
+'Public Const LVM_GETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 55)
+'Public Const LVS_EX_FULLROWSELECT = &H20
+'Public Const LVS_EX_GRIDLINES = &H1
+
+
+'Place code in a command button
+'Click repeatedly...
+
+Static chkSelectMode As Boolean, rStyle As Long, r As Long
+rStyle = SendMessageLong(ListView1.hwnd, LVM_GETEXTENDEDLISTVIEWSTYLE, 0&, 0&)
+
+If chkSelectMode = False Then
+    rStyle = rStyle Xor LVS_EX_GRIDLINES
+ElseIf chkSelectMode = True Then
+    rStyle = rStyle Or LVS_EX_GRIDLINES
+End If
+
+r = SendMessageLong(ListView1.hwnd, LVM_SETEXTENDEDLISTVIEWSTYLE, 0&, rStyle)
+chkSelectMode = Not chkSelectMode

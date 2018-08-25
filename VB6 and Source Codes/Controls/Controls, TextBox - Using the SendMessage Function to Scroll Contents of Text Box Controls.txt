@@ -1,0 +1,47 @@
+Tip 133: Using the SendMessage Function to Scroll Contents of Text Box Controls
+July 1, 1995
+
+Abstract
+In Microsoft® Visual Basic®, you can programmatically scroll through the contents of a Text Box control without actually waiting for your user to click the Scroll Bar control. You can do this by sending one of the scrolling messages to the system with the Microsoft Windows® application programming interface (API) SendMessage function. 
+
+Scrolling Through a Text Box Control
+In the example program below, the code attached to the Left command button scrolls the contents of the Text Box control to the left by one character position. You accomplish this by sending a WM_HSCROLL message to the Text Box control. When a user clicks the horizontal scroll bar in the Text Box, this message is sent to the window. In this program, however, you send the message when the user clicks the command button.
+
+To control the direction of the scrolling action, you must tell the Microsoft® Windows® application programming interface (API) SendMessage function to send a WM_HSCROLL message to the Text Box control with a directional argument in the wParam argument. The following shows the valid settings that you can be specify for the wParam argument.
+
+SB_LEFT Scroll to the left all the way 
+SB_RIGHT Scroll to the right all the way 
+SB_LINELEFT Scroll left one unit 
+SB_LINERIGHT Scroll right one unit 
+
+As you can see from the list above, to scroll the contents of the Text Box left by one character, you set the wParam argument to SB_LINELEFT. To scroll the contents of the Text Box right by one character, you set the wParam argument to SB_LINERIGHT.
+
+Example Program
+This program shows how you can scroll the contents of a Text Box control by using the SendMessage function. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" 
+   (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Integer, 
+   ByVal lParam As Long) As Long
+Const SB_LINERIGHT = 1
+Const SB_LINELEFT = 0
+Const WM_HSCROLL = &H114
+
+Add a Text Box control to Form1. Text1 is created by default. Set its MultiLine property to True. Set its ScrollBars property to 3-Both. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Left". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim X As Long
+    X = SendMessage(Text1.hwnd, WM_HSCROLL, SB_LINELEFT, ByVal 0&)
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. Set its Caption property to "Right". 
+Add the following code to the Click event for Command2: 
+Private Sub Command2_Click()
+    Dim X As Long
+    X = SendMessage(Text1.hwnd, WM_HSCROLL, SB_LINERIGHT, ByVal 0&)
+End Sub
+
+Run the example program by pressing F5. Type some text into the Text Box control. Click the Left command button. The text scrolls to the left by one character position. Click the Right command button. The text scrolls to the right by one character position.
+

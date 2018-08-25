@@ -1,0 +1,59 @@
+Tip 111: Using Different Fonts in List Boxes That Have Tab Stops
+June 12, 1995
+
+Abstract
+The Microsoft® Visual Basic® List Box control lets you add individual items to create a list of data. This article explains how to add tab stops to create multicolumn items, no matter what type of font or font size is used.
+
+Using the GetDialogBaseUnits Function
+When adding items to a List Box control, you can create columns of data by inserting a tab stop within the control. However, the data will only be correctly aligned in the columns if you use the default font and font size used by the List Box control.
+
+As the example program below shows, you can use the Microsoft® Windows® application programming interface (API) GetDialogBaseUnits function to determine the width and height of the average character in the selected font. The width and height of the character are returned in dialog base units. From these values, you can calculate the average width of the characters in the selected font.
+
+After you know the width of the character set, you can add the tab stops to the List Box control. Then, using whatever font and font size you want, you can add new items to the control. The columns of data will appear in separate rows.
+
+Example Program
+This program shows how to add tab stops to a List Box control. No matter what font or font size is used when adding items to the control, the columns will line up correctly. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of text): 
+Private Declare Function Getfocus Lib "User" () As Integer
+Private Declare Function GetDialogBaseUnits Lib "User" () As Long
+Private Declare Sub SendMessage Lib "User" (ByVal hWnd As
+   Integer, ByVal wMsg As Integer, ByVal wParam As Integer, lParam As Any)
+Private Declare Sub APISetFocus Lib "User" Alias "SetFocus"
+   (ByVal hWnd As Integer)
+Const WM_USER = &H400
+Const LB_SETTABSTOPS = WM_USER + 19
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Dim TB As String * 1
+    Dim OldHandle As Integer
+    Dim ListHandle As Integer
+    Dim DlgWidthUnits As Integer
+    Dim I As Integer
+    ReDim TabStop(2) As Integer
+    
+    TabStop(0) = 10
+    TabStop(1) = 30
+    TabStop(2) = 50
+    
+    TB = Chr$(9)
+    Show
+    OldHandle = Getfocus()
+    List1.SetFocus
+    ListHandle = Getfocus()
+    DlgWidthUnits = (GetDialogBaseUnits() Mod 65536) / 2
+    
+    For I = 0 To 2
+        TabStop(I) = TabStop(I) * DlgWidthUnits
+    Next I
+    
+    Call SendMessage(ListHandle, LB_SETTABSTOPS, 3, TabStop(0))
+    Call APISetFocus(OldHandle)
+    List1.AddItem "Item" + TB + "Quan." + TB + "Price"
+    List1.AddItem "Disks" + TB + "10" + TB + "$9.50"
+    List1.AddItem "Paper" + TB + "12" + TB + "$22.50"
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. 

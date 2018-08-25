@@ -1,0 +1,74 @@
+Tip 177: Adding Drag-and-Drop Functionality to Your Application
+December 5, 1995
+
+Abstract
+In many Microsoft® Windows®-based applications, you can grab an item with a mouse, "drag" the item to another location on the screen, and "drop" the item at that location. This article explains how to add this drag-and-drop feature to your Microsoft Visual Basic® applications.
+
+Dragging Files Between Two List Box Controls
+Many Microsoft® Windows®-based applications allow you to move an item from one location on the screen to another location. This is called the drag-and-drop feature. For example, a list of files might be displayed in a List Box control. If you click a filename in the List Box control, you can drag the item to a Command Button control, which tells the program to print or otherwise manipulate the selected file.
+
+You can add the drag-and-drop functionality to your Microsoft Visual Basic® application by monitoring MouseUp and MouseDown events for a control. In the example program below, you can drag an item from the first List Box control and drop that item on the second List Box control.
+
+When you initiate a drag-and-drop process, you select the item you want to drag by pressing and holding down the left mouse button. You can then move (drag) the item to another location. As soon as you release the left mouse button, the item is "dropped" on its new location.
+
+The MouseDown event for the source item you want to drag tells you that the user has pressed and held the left mouse button down. In this event, you need to somehow determine which item was selected by the user. Because you want to know which item in the List1 List Box control was selected, you set the variable DraggedItem to the currently selected item in the List Box control.
+
+When the user drops the List1 item on the second List Box control, a MouseUp event is triggered for the List Box control. The code in this routine removes the selected item from the first List Box control and then uses the AddItem method to add this selected item to the destination control.
+
+The example program below shows just one of several methods you can use to add the drag-and-drop feature to your Visual Basic applications.
+
+Example Program
+This program shows how to drag items from one List Box control and drop them on another List Box control (note that each Private statement must be typed as a single line of code): 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1: 
+Dim DraggedItem As String
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    For i = 1 To 5
+        List1.AddItem "Item #" & i
+        List2.AddItem "Entry #" & i
+    Next i
+End Sub
+
+Add the following code to the MouseUp event for Form1: 
+Private Sub Form_MouseUp(Button As Integer, Shift As Integer, 
+   X As Single, Y As Single)
+    List2.Enabled = True
+    List1.Enabled = True
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. 
+Add the following code to the MouseDown event for List1: 
+Private Sub List1_MouseDown(Button As Integer, Shift As Integer, 
+   X As Single, Y As Single)
+    DraggedItem = List1.List(List1.ListIndex)
+    List1.Enabled = False
+End Sub
+
+Add the following code to the MouseUp event for List1: 
+Private Sub List1_MouseUp(Button As Integer, Shift As Integer, 
+   X As Single, Y As Single)
+    List2.Enabled = True
+    List2.RemoveItem List2.ListIndex
+    List1.AddItem DraggedItem
+End Sub
+
+Add a second List Box control to Form1. List2 is created by default. 
+Add the following code to the MouseDown event for List2: 
+Private Sub List2_MouseDown(Button As Integer, Shift As Integer, 
+   X As Single, Y As Single)
+    DraggedItem = List2.List(List2.ListIndex)
+    List2.Enabled = False
+End Sub
+
+Add the following code to the MouseUp event for List2: 
+Private Sub List2_MouseUp(Button As Integer, Shift As Integer, 
+   X As Single, Y As Single)
+    List1.Enabled = True
+    List1.RemoveItem List1.ListIndex
+    List2.AddItem DraggedItem
+End Sub
+
+Run the example program by pressing F5. Each List Box control contains five items. Click on an item in the first List Box control, and drag this item to the second List Box control. Release the mouse button to drop the item on the List Box control. The selected item is removed from the first List Box control and is added to the second List Box control. The situation can also be reversed—you can drag an item from the second List Box control to the first List Box control.

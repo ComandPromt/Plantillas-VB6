@@ -1,0 +1,51 @@
+Tip 106: Centering Text Vertically in a Text Box Control
+June 5, 1995
+
+Abstract
+The Microsoft® Visual Basic® Text Box control lets your user enter text that can later be used by your application. This article explains how you can center the text that the user types vertically within the Text Box control.
+
+Vertically Centering Text in Visual Basic
+In your application, you may need to display the text typed by the user, centered vertically within the Text Box control. The only way to accomplish this task is to place the Text Box control within a larger Picture Box control. The Text Box control allows you to type text that can later be used by your Microsoft® Visual Basic® application. As the user types the text, the text wraps to the next line (if the MultiLine property is set to True).
+
+The example program below centers the text in the text box by first setting the size of the Text Box control to the same as the size of the Picture Box control. Whenever a Change event is detected by the Text Box control, the text is redrawn in the control so that it appears vertically centered.
+
+Example Program
+This program shows how to center text vertically within a Text Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Picture Box control to Form1. Picture1 is created by default. Set its AutoRedraw property to True. 
+Add a Text Box control to Form1 over top of the Picture Box control. Text1 is created by default. Set its MultiLine property to True. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of text): 
+Private Declare Function SendMessage Lib "User" (ByVal hWnd As Integer,
+   ByVal wMsg As Integer, ByVal wParam As Integer, lParam As Any) As Long
+Const WM_USER = &H400
+Const EM_GETLINECOUNT = WM_USER + 10
+Dim NumLines As Integer
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Dim HT As Integer
+    Text1.Left = 0
+    Text1.Width = Picture1.Width
+    Text1.Height = Picture1.TextHeight("A")
+    Text1.Top = (Picture1.Height = Text1.Height) / 2
+    Text1.Visible = True
+    NumLines = 1
+End Sub
+
+Add the following code to the Change event for Text1: 
+Private Sub Text1_Change()
+    Dim Ret As Long
+    Dim HT As Integer
+Ret = SendMessage(Text1.hWnd, EM_GETLINECOUNT, 0, ByVal 0&)
+If Ret <> NumLines Then
+        HT = Picture1.TextHeight("A")
+        Text1.Height = HT * Ret
+        Text1.Top = (Picture1.Height - Text1.Height) / 2
+        NumLines = Ret
+        SendKeys "{PGUP}", True
+        Text1.SelStart = Len(Text1)
+    End If
+    
+End Sub
+

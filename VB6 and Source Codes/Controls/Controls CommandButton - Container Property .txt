@@ -1,0 +1,22 @@
+Container Property Example
+This example demonstrates moving a CommandButton control from container to container on a Form object. To try this example, paste the code into the Declarations section of a form that contains a Frame control, a PictureBox control and a CommandButton, and then press F5.
+
+Private Sub Form_Click()
+   Static intX As Integer
+   Select Case intX
+      Case 0
+         Set Command1.Container = Picture1
+         Command1.Top= 0
+         Command1.Left= 0
+      Case 1
+         Set Command1.Container = Frame1
+         Command1.Top= 0
+         Command1.Left= 0
+      Case 2
+         Set Command1.Container = Form1
+         Command1.Top= 0
+         Command1.Left= 0
+   End Select
+   intX = intX + 1
+End Sub
+

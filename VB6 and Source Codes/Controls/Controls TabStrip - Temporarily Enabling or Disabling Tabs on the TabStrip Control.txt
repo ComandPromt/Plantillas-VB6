@@ -1,0 +1,55 @@
+Tip 182: Temporarily Enabling or Disabling Tabs on the TabStrip Control
+December 5, 1995
+
+Abstract
+This article explains how to selectively enable and disable specific Tab buttons in a Microsoft® Windows® 95 application.
+
+Enabling and Disabling Tab Buttons
+The TabStrip control is one of the new controls provided in Microsoft® Windows® 95. This control lets you organize information in an orderly manner. For example, you could have a TabStrip control where one of the Tab buttons presents a page of information for selecting your program's default color options. Another Tab button could present a page where the user can select the default printer he or she wants to use. To switch between these two pages, the user simply clicks on one of the Tab buttons.
+
+In some situations, however, you may want to disable one or more of the Tab buttons temporarily from within your Microsoft Visual Basic® application. The Tab button does not have an Enabled property, but you can accomplish this functionality by maintaining such a state in code.
+
+You can use a global array to keep track of which Tab buttons are enabled and disabled. Each index in the global array corresponds to one of the Tab buttons on the TabStrip control.
+
+In your program, you check the global array index for a specific Tab button. If it is "enabled," then the SelectedItem property can be used to activate the code associated with that Tab button. On the other hand, if that button has been flagged as "disabled," you force the currently selected Tab button to remain the default Tab button—not the Tab button the user just clicked.
+
+Note that this solution for enabling and disabling individual Tab buttons does not prevent the actual click event from being triggered. The code in the Tab button's Click event does not, however, get executed if the Tab button is disabled.
+
+Example Program
+This program shows how to selectively enable and disable a specific Tab button on a TabStrip control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a TabStrip control to Form1. TabStrip1 is created by default. Select the TabStrip control by clicking it. Click the right mouse button once to bring up the TabStrip control's pop-up menu. Click once on the Tabs option. Click on the Insert tab. Type the Caption as Tab1. Create four more Tabs with the Captions set to Tab2, Tab3, Tab4, and Tab5, respectively. Click the OK command button when done. 
+Add the following code to the General Declarations section of Form1: 
+Dim PrevTab As Object
+Dim TabState(1 To 5) As Integer
+Dim FakeNext As Integer
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    For i = 1 To 5 Step 2
+        TabState(i) = True
+    Next i
+    Set PrevTab = TabStrip1.Tabs(1)
+    FakeNext = False
+End Sub
+
+Add the following code to the Click event for TabStrip1: 
+Private Sub TabStrip1_Click()
+    If FakeNext Then
+        FakeNext = False
+        MsgBox "Cannot click on this TAB"
+    Else
+        For i = 1 To 5
+            If TabStrip1.Tabs(i).Selected And Not TabState(i) Then
+                FakeNext = True
+                TabStrip1.SelectedItem = PrevTab
+                Exit Sub
+            End If
+        Next i
+        Set PrevTab = TabStrip1.SelectedItem
+        MsgBox "Can click on this TAB"
+    End If
+End Sub
+
+Run the example program by pressing F5. The TabStrip control appears on the screen. Notice that you can click on the Tab buttons numbered 1, 3, and 5. A message box appears telling you that you clicked one of these three Tab buttons. However, when you click the second and fourth Tab buttons, no click event is actually activated. A message box appears indicating that you cannot click on the Tab2 or Tab4 button.

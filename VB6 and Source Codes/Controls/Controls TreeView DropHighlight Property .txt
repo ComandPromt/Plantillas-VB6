@@ -1,0 +1,66 @@
+DropHighlight Property Example
+This example adds several Node objects to a TreeView control. After you select a Node object, you can drag it to any other Node. To try the example, place TreeView and ImageList controls on a form and paste the code into the form's Declaration section. Run the example and drag Node objects around to see the result.
+
+Note   The graphics files in the code below can be found on Disk 1 of the Visual Basic or Visual Studio CDs, in the Common\Graphics directory. Change the path in the code, or copy the graphics files to your hard disk before running the code. 
+
+' Declare global variables.
+Dim indrag As Boolean ' Flag that signals a Drag Drop operation.
+Dim nodX As Object ' Item that is being dragged.
+
+Private Sub Form_Load()
+   ' Load a bitmap into an Imagelist control.
+   Dim imgX As ListImage
+   Dim BitmapPath As String
+   BitmapPath = "icons\mail\mail01a.ico" ' Change to a valid path.
+   Set imgX = imagelist1.ListImages.Add(, , LoadPicture(BitmapPath))
+   
+   ' Initialize TreeView control and create several nodes.
+   TreeView1.ImageList = imagelist1
+   Dim nodX As Node   ' Create a tree.
+   Set nodX = TreeView1.Nodes.Add(, , , "Parent1", 1)
+   Set nodX = TreeView1.Nodes.Add(, , , "Parent2", 1)
+   Set nodX = TreeView1.Nodes.Add(1, tvwChild, , "Child 1", 1)
+   Set nodX = TreeView1.Nodes.Add(1, tvwChild, , "Child 2", 1)
+   Set nodX = TreeView1.Nodes.Add(2, tvwChild, , "Child 3", 1)
+   Set nodX = TreeView1.Nodes.Add(2, tvwChild, , "Child 4", 1)
+   Set nodX = TreeView1.Nodes.Add(3, tvwChild, , "Child 5", 1)
+   nodX.EnsureVisible ' Expand tree to show all nodes.
+End Sub
+
+Private Sub TreeView1_MouseDown_
+(Button As Integer, Shift As Integer, x As Single, y As Single)
+   Set nodX = TreeView1.SelectedItem ' Set the item being dragged.
+End Sub
+
+Private Sub TreeView1_MouseMove _
+(Button As Integer, Shift As Integer, x As Single, y As Single)
+   If Button = vbLeftButton Then ' Signal a Drag operation.
+      indrag = True ' Set the flag to true.
+      ' Set the drag icon with the CreateDragImage method.
+      TreeView1.DragIcon = TreeView1.SelectedItem.CreateDragImage
+      TreeView1.Drag vbBeginDrag ' Drag operation.
+   End If
+End Sub
+
+Private Sub TreeView1_DragDrop_ 
+(Source As Control, x As Single, y As Single)
+   If TreeView1.DropHighlight Is Nothing Then
+      Set TreeView1.DropHighlight = Nothing
+      indrag = False
+      Exit Sub
+   Else
+      If nodX = TreeView1.DropHighlight Then Exit Sub
+      Cls
+      Print nodX.Text & " dropped on " & TreeView1.DropHighlight.Text
+      Set TreeView1.DropHighlight = Nothing
+      indrag = False
+   End If
+End Sub
+
+Private Sub TreeView1_DragOver(Source As Control, x As Single, y As Single, State As Integer)
+   If indrag = True Then
+      ' Set DropHighlight to the mouse's coordinates.
+      Set TreeView1.DropHighlight = TreeView1.HitTest(x, y)
+   End If
+End Sub
+
