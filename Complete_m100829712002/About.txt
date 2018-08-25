@@ -1,0 +1,6 @@
+See the readme.txt for quickstart information.
+
+Complete mailserver! Full implementation of a POP3 server and SMTP server! EVEN a webmail interface! Be your own email service! Multiple conections! SMS notification!
+
+An SMTP server, POP3 server, and Webmail service! All written in pure VB6! Ideal for a small-medium company with a spare machine sitting around! Unlimited # of mailboxes! Works directly with outlook, or any other email client, and supports everything that a large server does, even SMS notification and account sizes (ie bounced messages saying 'sorry, account is over quota' (also SMS's you when your account is over quota)). Email to/from other dommains, ie, someone at hotmail can send an email to 'me@mydommain.com', and it'll arive in my maildrop, ready to be downloaded into my email client or view via the webmail. It works just like a normal server, ie, it doesn't try to send an email once, fail, and give up, it tries for hours, giving status reports after the first try, 4 hours, and 4 days. The webmail has some missing features (it was a 2AM to 5:30AM Job), ie reply/forward/attachment support, but these are all supported by the POP3/SMTP servers. Even secure passwords are supported by this server! Check it out!
+

@@ -1,0 +1,6 @@
+app.path & "\Recent Invoices\"
+save each invoice to this folder as "invoice#.rtf"
+each time frmInvoice is opened to view the invoice, automatically save it to dir
+use a feature where u type in the invoice number into a textbox and it checks to see if
+  the file exists (text1.text & ".rtf"),  if it does, it loads the file into frmInvoice
+  otherwise an error comes up with a msgbox saying it cannot find the file.
