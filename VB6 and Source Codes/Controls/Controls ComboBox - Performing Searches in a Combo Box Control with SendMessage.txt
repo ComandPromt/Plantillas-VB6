@@ -1,0 +1,41 @@
+Tip 180: Performing Searches in a Combo Box Control with SendMessage
+December 5, 1995
+
+Abstract
+This article explains how to design your Microsoft® Visual Basic® application so that the user can search for an item in a Combo Box control.
+
+Searching for Items in a Combo Box Control
+Microsoft® Visual Basic® Combo Box and List Box controls let you display a list of related items. For example, you might have a Combo Box control that displays a list of colors to the user. The user can select any color he or she wants to use by clicking that particular item in the Combo Box control.
+
+When your Combo Box or List Box control contains a large number of items, it may be time-consuming to scroll through the items. An alternative solution to this problem can be found by allowing your user to type the item he or she wants to find. Then you can search through each entry in the control until you find the target item.
+
+The Microsoft Windows® application programming interface (API) SendMessage function allows you to send a specific message to a window. In the example program below, a CB_FINDSTRING message is sent to the Combo Box control. This message tells Windows to search the Combo Box control for the value specified in the lParam variable.
+
+The lParam variable must be set to the text string you want to locate in the Combo Box control. When the CB_FINDSTRING message is sent to the Combo Box control, the message will return the index number of the item that actually exists in the control. You must be aware, however, that the index number returned is zero-based. Therefore, if a value of 5 is returned, this actually corresponds to the fourth entry in the Combo Box control.
+
+Example Program
+This program shows how to find an individual item in a Combo Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" 
+   (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) 
+   As Long
+Const CB_FINDSTRING = &H14C
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    For X = 1 To 10
+        Combo1.AddItem "Item" & X
+    Next
+End Sub
+
+Add a Combo Box control to Form1. Combo1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    X = SendMessage(Combo1.hwnd, CB_FINDSTRING, -1, ByVal "Item5")
+    MsgBox "Index number for this entry is: " & Str$(X)
+End Sub
+
+Run the example program by pressing F5. Click the Command Button control to search the Combo Box control for the item "Item5". A message box appears that identifies the index number (in this case, a value of 4) that corresponds to the item that was found in the Combo Box control. A value of 4 is returned because index numbers begin at zero.

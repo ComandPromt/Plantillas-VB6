@@ -1,0 +1,21 @@
+'Description: Calls the "Copy Drive Dialog" without need for an OCX
+
+'Private Declare Function SHFormatDrive Lib "shell32" (ByVal hwnd As Long, ByVal Drive As Long, ByVal fmtID As Long, ByVal options As Long) As Long
+'Private Declare Function GetDriveType Lib "kernel32" Alias "GetDriveTypeA" (ByVal nDrive As String) As Long
+
+
+'Place the following code in under a command button or in a menu, etc...
+
+' DiskCopyRunDll takes two parameters- From and To
+    Dim DriveLetter$, DriveNumber&, DriveType&
+    Dim RetVal&, RetFromMsg&
+    DriveLetter = UCase(Drive1.Drive)
+    DriveNumber = (Asc(DriveLetter) - 65)
+    DriveType = GetDriveType(DriveLetter)
+    If DriveType = 2 Then  'Floppies, etc
+        RetVal = Shell("rundll32.exe diskcopy.dll,DiskCopyRunDll " _
+            & DriveNumber & "," & DriveNumber, 1) 'Notice space after
+    Else   ' Just in case                         'DiskCopyRunDll
+        RetFromMsg = MsgBox("Only floppies can" & vbCrLf & _
+            "be diskcopied!", 64, "DiskCopy Example")
+    End If

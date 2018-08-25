@@ -1,0 +1,48 @@
+Tip 2: Detecting the Cancel Button When Using the Common Dialog Box
+Created: March 1, 1995
+
+Abstract
+To give your programs a professional look and to make them consistent with other Microsoft® Windows®-based applications, Visual Basic® provides the common dialog control. This control allows you to include standard dialog boxes (Open, Save As, Printer, Font, Color and Help) in your application programs.
+
+When the dialog box is displayed, users can make various selections, depending on which dialog box is displayed. After users make their decisions, they click the OK command button, which returns control to your application program. Your program can then retrieve the specific values the users specified in the dialog box and use these in your program to perform some action.
+
+However, if a user clicked the Cancel command button in the dialog box, your program must be able to process this condition appropriately so that special error conditions can be monitored. The CancelError property of the dialog box provides a method of error-checking in your applications.
+
+Common Dialog Box Control
+Using the common dialog box control is straightforward. It provides easy access to six of the most commonly used dialog boxes. Setting the Action property of the common dialog control tells Visual Basic which dialog box you want to display in your application. As shown below, there are six dialog boxes that are considered to be standard controls.
+
+DLG_FILE_OPEN Open 
+DLG_FILE_SAVE Save As 
+DLG_COLOR Color 
+DLG_FONT Font 
+DLG_PRINT Print 
+DLG_HELP Help 
+
+Let's assume that you want to include the Color dialog box in your own application program. First, you would draw a common dialog control on your form. When your program is executed, the common dialog control is invisible. Therefore, you can place the control anywhere on your form because it won't interfere with your program's appearance. Also, note that you need only place one common dialog control on your form to call any or all of the six dialog boxes—you don't need a separate control for each type of dialog box you want to display.
+
+Next, you set the Action property of the common dialog control to specify which dialog box you want to use. If you want to call up the Color dialog box, for example, you would set the Action property to a value of 3.
+
+When you execute your application program, you set values for the various properties of the dialog box you are using. Once the Action property statement is executed at run time, the dialog box will be displayed on your form. After the user has clicked the dialog box's OK command button, your program regains control and you can test the various options the user selected in the dialog box.
+
+To prevent errors from occurring in your application, such as specifying a nonexistent color in the Color dialog box, you can use the CancelError property. This property lets you know if the user clicked the Cancel button on the dialog box. Each of the six dialog boxes uses the CancelError property. The CancelError property lets you set a trap for the Cancel button. When this property is set to True, Visual Basic generates an error (CDERR_CANCEL or 32755) that you can trap in your program. If CancelError is set to False, no error occurs—the dialog box simply closes and returns a NULL value.
+
+Example Program
+The following program demonstrates how you can set a trap to find out if the user pressed the Cancel button of a dialog box. 
+
+Start a new project. Form1 is created by default. 
+Draw a common dialog control on Form1. 
+Draw a command button on your form. Command1 is created by default. 
+Add the following lines of code to the click event of Command1: 
+Sub Command1_Click()
+    CMDialog1.CancelError = True
+     On Error GoTo ErrButton
+    CMDialog1.Flags = CC_RGBINIT Or CC_FULLOPEN
+    CMDialog1.Action = 3
+    On Error GoTo 0
+    Form1.BackColor = CMDialog1.Color
+ErrButton:
+Exit Sub
+
+This program displays a single command button on your form. When you click this command button, the Color dialog box is displayed. You can select a new color for the form's background color and press the OK command button. In this case, the color of Form1 will be changed to the color you selected.
+
+On the other hand, if you click the Cancel button in the Color dialog box, the program does nothing. The trap set by CancelError allows your application to detect when the Cancel button is pressed and to process this condition accordingly.

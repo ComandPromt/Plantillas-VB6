@@ -1,0 +1,44 @@
+Tip 82: Retrieving Multiple Filenames from the Common Dialog Control
+May 15, 1995
+
+Abstract
+The Common Dialog control in Visual Basic® allows you to display an Open File dialog box. You can select one or more filenames from the Open File dialog box to use within your Visual Basic program. This article explains how you can retrieve multiple filenames from the dialog box, parse them into separate strings, and display them in a List Box control.
+
+Parsing Filenames from the Common Dialog Control
+In a Visual Basic® application, you can use an Open File dialog box to allow your users to select a file. Using the Open File dialog box, users can select the drive and directory, as well as the individual files they want to use. To select a file, the user simply clicks the filename. The dialog box’s FileName property can be used in your program to determine the name of the selected file.
+
+If the Flags property of the Common Dialog control is set to a value of 512 (&H200), the user can select a group of files to work with. To select multiple files, the user would hold the Shift key down while clicking the mouse on each filename. As with selecting a single file, the FileName property of the dialog box would return the names of all the selected files. Each filename is separated by a space character.
+
+The InStr function can be used within a Do-While loop to parse, or extract, each individual filename from the FileName property. Assuming that the filenames are stored in the string called FileNames, we can tell the InStr function to search through the string until it finds a space character. To extract a single filename, you need to first save the position in the target string that you are starting to search from (this is the beginning of the filename). Then you would use the InStr function to search for the first space character in the string. If a space character is found, you can use the starting position and the position returned by InStr to extract that single filename.
+
+Example Program
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Common Dialog control to Form1. CommonDialog1 is created by default. 
+Add a List Box control to Form1. List1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim DelimPos As Integer
+    Dim FileNames As String
+    Dim NextName As String
+    
+    CommonDialog1.Flags = &H200&
+    CommonDialog1.Action = 1
+    CommonDialog1.Filter = 1
+    
+    FileNames = CommonDialog1.FileName
+    
+    Do While Len(FileNames) > 0
+        DelimPos = InStr(FileNames, " ")
+        If DelimPos = 0 Then
+            NextName = FileNames
+            FileNames = ""
+        Else
+            NextName = Mid$(FileNames, 1, DelimPos - 1)
+            FileNames = Mid$(FileNames, DelimPos + 1)
+        End If
+    List1.AddItem NextName
+    Loop
+End Sub
+
+Run the example program by pressing the F5 function key. Click the command button to call up the Open File dialog box. Type a filename such as “*.*” and click the OK command button. Select several files from the file list by holding the SHIFT key down and clicking each individual filename. Click the OK command button when you have selected several files. The files you selected will be displayed in the List Box control.

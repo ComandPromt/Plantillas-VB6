@@ -1,0 +1,53 @@
+'Description: Calls the "Format Drive Dialog" without need for an OCX
+
+'fmtID-
+'   3.5"    5 1/4"
+'----------------
+' 0 1.44    1.2
+' 1 1.44    1.2
+' 2 1.44    1.2
+' 3 1.44    360
+' 4 1.44    1.2
+' 5 720     1.2
+' 6 1.44    1.2
+' 7 1.44    1.2
+' 8 1.44    1.2
+' 9 1.44    1.2
+
+'options (sfo= system files only)
+' 0 Quick Quick
+' 1 Full  Full
+' 2 sfo   sfo
+' 3 sfo   sfo
+' 4 Quick Quick
+' 5 Full  Full
+' 6 sfo   sfo
+' 7 sfo   sfo
+' 8 Quick Quick
+' 9 Full Full
+'------------------------------------
+
+'Private Declare Function SHFormatDrive Lib "shell32" (ByVal hwnd As Long, ByVal Drive As Long, ByVal fmtID As Long, ByVal options As Long) As Long
+'Private Declare Function GetDriveType Lib "kernel32" Alias "GetDriveTypeA" (ByVal nDrive As String) As Long
+
+
+'Place the following code in under a command button or in a menu, etc...
+
+    Dim DriveLetter$, DriveNumber&, DriveType&
+    Dim RetVal&, RetFromMsg%
+    DriveLetter = UCase(Drive1.Drive)
+    DriveNumber = (Asc(DriveLetter) - 65) ' Change letter to Number: A=0
+    DriveType = GetDriveType(DriveLetter)
+    If DriveType = 2 Then  'Floppies, etc
+        RetVal = SHFormatDrive(Me.hwnd, DriveNumber, 0&, 0&)
+    Else
+        RetFromMsg = MsgBox("This drive is NOT a removeable" & vbCrLf & _
+            "drive! Format this drive?", 276, "SHFormatDrive Example")
+        Select Case RetFromMsg
+            Case 6   'Yes
+                ' UnComment to do it...
+                'RetVal = SHFormatDrive(Me.hwnd, DriveNumber, 0&, 0&)
+            Case 7   'No
+                ' Do nothing
+        End Select
+    End If

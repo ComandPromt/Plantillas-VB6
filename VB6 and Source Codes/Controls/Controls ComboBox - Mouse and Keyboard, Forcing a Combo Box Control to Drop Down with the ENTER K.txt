@@ -1,0 +1,49 @@
+Tip 202: Forcing a Combo Box Control to Drop Down with the ENTER Key
+February 28, 1996
+
+Abstract
+This article explains how to force a Combo Box control to drop down its list box when the ENTER key is pressed in a Microsoft® Visual Basic® application.
+
+Monitoring the KeyPress Event
+The Microsoft® Visual Basic® Combo Box control lets your user select from its list box or optionally add a new item to the list box. A Combo Box control has three possible styles—Dropdown Combo, Simple Combo, and Dropdown List.
+
+The Dropdown Combo style of the Combo Box control is displayed with the arrow and text box portion of the control slightly separated. You must click the down arrow to select items from the Combo Box control.
+
+The Simple Combo style of the Combo Box control displays its list box immediately. The disadvantage of this style is that it takes up more space in your window.
+
+The Dropdown List style of the Combo Box control is almost identical to the Dropdown Combo style. However, this style does not allow you to modify the Text property of this control.
+
+Note that most applications use a Combo Box control with its Style property set to Dropdown Combo. Instead of clicking on the arrow to cause the Combo Box control to display its list box, it is more convenient to press the ENTER key.
+
+Each time a key is pressed, the Combo Box control's KeyPress event is triggered (providing that the Combo Box control has the focus, of course). By monitoring this event, you can determine whether a user pressed ENTER. You know the user pressed ENTER if the KeyAscii value is 13.
+
+After you have determined that ENTER was indeed pressed, you send a CB_SHOWDROPDOWN message to the Combo Box control by using the Microsoft Windows® application programming interface (API) SendMessage function. If this message is sent to the control with a parameter of True, the Combo Box control drops down its list box. If this message is sent to the Combo Box control with a parameter of False, however, the list box would not be dropped down.
+
+Example Program
+This program shows how to force a Combo Box control to drop down when the ENTER key is pressed. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Const WM_USER = &H400
+Const CB_SHOWDROPDOWN = &H14F
+Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" 
+   (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As 
+   Long) As Long
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Combo1.AddItem "Oranges"
+    Combo1.AddItem "Peaches"
+    Combo1.AddItem "Apples"
+End Sub
+
+Add a Combo Box control to Form1. Combo1 is created by default. 
+Add the following code to the KeyPress event for Combo1: 
+Private Sub Combo1_KeyPress(KeyAscii As Integer)
+    Dim I As Long
+    If KeyAscii = 13 Then
+        I = SendMessage(Combo1.hwnd, CB_SHOWDROPDOWN, True, 0&)
+    End If
+End Sub
+
+Run the example program by pressing F5. While the Combo Box control has the focus, press ENTER. The Combo Box control displays its list box.

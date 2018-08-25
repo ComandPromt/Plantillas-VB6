@@ -1,0 +1,73 @@
+Tip 107: Detecting Double-Click Events in Combo Box Controls
+June 5, 1995
+
+Abstract
+When developing an application in Microsoft® Visual Basic®, you may want to let the user double-click the edit portion of a Combo Box control. This article explains how to process this double-click event by using the Message Blaster custom control.
+
+Using Message Blaster to Detect Double-Clicks on Combo Boxes
+In a Microsoft® Visual Basic® application, you can use a Combo Box control to allow your user to easily select an item. Unfortunately, the Combo Box control only responds to single-click events, not to double-click events in the box's edit portion.
+
+You can, however, use a subclassing control such as Message Blaster to detect when a user has double-clicked the combo box. Before you can do this, you need to use two Microsoft Windows® application programming interface (API) functions—GetWindow and GetClassName.
+
+The GetWindow function retrieves the handle of a window that has a specific relationship to the source window. In other words, we need to determine the Combo Box's handle. The Combo Box window is actually a sibling window of our Visual Basic application's main form. Next, we need to call the GetClassName function to make sure that the edit portion of the Combo Box is the window we are dealing with.
+
+If you are using a combo box with its Style property set to 0 - Drop Down Combo, detecting a double-click message is relatively straightforward. Just retrieve the handle of the Combo Box's edit window, and then tell Message Blaster to intercept the Windows WM_LBUTTONDBLCLK message.
+
+On the other hand, if you are using a Combo Box with its Style property set to 1 - Simple Combo, the procedure is a little different. Because the edit portion of the Combo Box is already displayed, you need to call GetWindow to retrieve the handle of the edit window.
+
+After you have retrieved the edit window's handle, you must call the GetClassName function. This function is called so that we can be certain we are processing a double-click message for only the edit portion of the Combo Box. 
+
+Example Program
+This program shows how your Visual Basic application can respond to a double-click event when such an event is detected in the edit portion of a Combo Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+From the Insert menu, select Custom Control. Add the Message Blaster custom control to this project. 
+Add a Message Blaster control to Form1. MsgBlast1 is created by default. 
+Add the following code to the Message event for MsgBlaster1 (note that the first two lines of code must be typed as a single line of text): 
+Private Sub MsgBlaster1_Message(MsgVal As Integer, wParam As Integer,
+   lParam As Long, ReturnVal As Long)
+    MsgBox "Combo1 box double-clicked"
+End Sub
+
+Add a Combo Box control to Form1. Combo1 is created by default. Set its Style property to 1-Simple Combo. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of text): 
+Private Declare Function GetWindow Lib "User" (ByVal hWnd As Integer,
+   ByVal wCmd As Integer) As Integer
+Private Declare Function GetClassName Lib "User" (ByVal hWnd As Integer,
+ByVal lpClassName As String, ByVal nMaxCount As Integer) As Integer
+Const WM_LBUTTONDBLCLK = &H203
+Const GW_CHILD = 5
+Const GW_HWNDNEXT = 2
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Dim hWndList As Integer
+    Dim hWndEdit As Integer
+    Dim Buf As String * 10
+    Dim X As Integer
+    
+    Combo1.AddItem "Item #1"
+    Combo1.AddItem "Item #2"
+    Combo1.AddItem "Item #3"
+    
+    hWndList = GetWindow(Combo1.hWnd, GW_CHILD)
+    Select Case Combo1.Style
+    
+    Case 0
+        MsgBlaster1.hWndTarget = hWndList
+        MsgBlaster1.MsgList(0) = WM_LBUTTONDBLCLK
+    Case 1
+        hWndEdit = GetWindow(hWndList, GW_HWNDNEXT)
+        Buf = ""
+        X = GetClassName(hWndEdit, Buf, Len(Buf))
+        
+        If StrComp(Trim(Buf), "Edit" & Chr$(0)) = 0 Then
+            MsgBlaster1.hWndTarget = hWndEdit
+            MsgBlaster1.MsgList(0) = WM_LBUTTONDBLCLK
+        End If
+    End Select
+    
+End Sub
+
+Run the example program by pressing F5. When you double-click the edit portion of the Combo Box control, a message box will confirm this action. You can also change the Style property of the Combo Box to 0 - Drop Down Combo to get the same effect.
+

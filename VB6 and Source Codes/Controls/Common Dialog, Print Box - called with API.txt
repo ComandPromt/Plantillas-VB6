@@ -1,0 +1,53 @@
+'Description: Calls the "Print Dialog" without need for an OCX
+
+'Private Type PrintDlg
+        lStructSize As Long
+        hwndOwner As Long
+        hDevMode As Long
+        hDevNames As Long
+        hdc As Long
+        flags As Long
+        nFromPage As Integer
+        nToPage As Integer
+        nMinPage As Integer
+        nMaxPage As Integer
+        nCopies As Integer
+        hInstance As Long
+        lCustData As Long
+        lpfnPrintHook As Long
+        lpfnSetupHook As Long
+        lpPrintTemplateName As String
+        lpSetupTemplateName As String
+        hPrintTemplate As Long
+        hSetupTemplate As Long
+'End Type
+
+'Private Declare Function PrintDlg Lib "comdlg32.dll" Alias "PrintDlgA" (pPrintdlg As PrintDlg) As Long
+
+
+'Place the following code in under a command button or in a menu, etc...
+
+    Dim tPrintDlg As PrintDlg
+    tPrintDlg.lStructSize = Len(tPrintDlg)
+    tPrintDlg.hwndOwner = Me.hwnd
+    tPrintDlg.hdc = hdc
+    tPrintDlg.flags = 0
+    tPrintDlg.nFromPage = 0
+    tPrintDlg.nToPage = 0
+    tPrintDlg.nMinPage = 0
+    tPrintDlg.nMaxPage = 0
+    tPrintDlg.nCopies = 1
+    tPrintDlg.hInstance = App.hInstance
+    lpPrintTemplateName = "Print Page"
+    
+    Dim a
+    a = PrintDlg(tPrintDlg)
+        
+    If a Then
+            lFromPage = tPrintDlg.nFromPage
+            lToPage = tPrintDlg.nToPage
+            lMin = tPrintDlg.nMinPage
+            lMax = tPrintDlg.nMaxPage
+            lCopies = tPrintDlg.nCopies
+	    PrintMyPage 'Custom printing Subroutine    
+    End If

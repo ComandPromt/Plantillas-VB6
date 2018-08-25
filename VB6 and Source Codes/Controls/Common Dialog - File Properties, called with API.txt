@@ -1,0 +1,73 @@
+'Description: Invokes the File Explorer "Properties" dialog without OCX
+
+'Type SHELLEXECUTEINFO
+'       cbSize As Long
+'       fMask As Long
+'       hwnd As Long
+'       lpVerb As String
+'       lpFile As String
+'       lpParameters As String
+'       lpDirectory As String
+'       nShow As Long
+'       hInstApp As Long
+'       lpIDList As Long 'Optional parameter
+'       lpClass As String 'Optional parameter
+'       hkeyClass As Long 'Optional parameter
+'       dwHotKey As Long 'Optional parameter
+'       hIcon As Long 'Optional parameter
+'       hProcess As Long 'Optional parameter
+'End Type
+
+'Const SEE_MASK_INVOKEIDLIST = &HC
+'Const SEE_MASK_NOCLOSEPROCESS = &H40
+'Const SEE_MASK_FLAG_NO_UI = &H400
+
+'Declare Function ShellExecuteEX Lib "shell32.dll" Alias "ShellExecuteEx" _
+        (SEI As SHELLEXECUTEINFO) As Long
+
+'Public Function ShowProperties(filename As String, OwnerhWnd As Long) As Long
+
+        
+       '     'open a file properties property page for specified file if return value
+       '     '<=32 an error occurred
+       '     'From: Delphi code provided by "Ian Land" (iml@dircon.co.uk)
+       Dim SEI As SHELLEXECUTEINFO
+       Dim r As Long
+        
+       '     'Fill in the SHELLEXECUTEINFO structure
+       With SEI
+       .cbSize = Len(SEI)
+       .fMask = SEE_MASK_NOCLOSEPROCESS Or SEE_MASK_INVOKEIDLIST Or SEE_MASK_FLAG_NO_UI
+       .hwnd = OwnerhWnd
+       .lpVerb = "properties"
+       .lpFile = filename
+       .lpParameters = vbNullChar
+       .lpDirectory = vbNullChar
+       .nShow = 0
+       .hInstApp = 0
+       .lpIDList = 0
+End With
+
+ 
+'     'call the API
+r = ShellExecuteEX(SEI)
+ 
+'     'return the instance handle as a sign of success
+ShowProperties = SEI.hInstApp
+ 
+'End Function
+
+
+'Paste the following into a command button, etc.
+'Needs one textbox named Text1
+
+        Dim r As Long
+        Dim fname As String
+       '      'get the filename and path from Text1
+        fname = (Text1)
+       '      'show the properties dialog, passing the filename
+       '      'and the owner of the dialog
+        r = ShowProperties(fname, Me.hwnd)
+        
+       '      'Display an error message if things didn't go as planned
+        If r <= 32 Then MsgBox "Error"

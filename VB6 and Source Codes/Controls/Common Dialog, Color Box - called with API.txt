@@ -1,0 +1,47 @@
+'Description: Calls the "Choose Color Dialog" without need for an OCX
+
+'Private Type ChooseColor
+'    lStructSize As Long
+'    hwndOwner As Long
+'    hInstance As Long
+'    rgbResult As Long
+'    lpCustColors As String
+'    flags As Long
+'    lCustData As Long
+'    lpfnHook As Long
+'    lpTemplateName As String
+'End Type
+
+'Private Declare Function ChooseColor Lib "comdlg32.dll" Alias "ChooseColorA" (pChoosecolor As ChooseColor) As Long
+
+'Place the following code in under a command button or in a menu, etc...
+
+	Dim cc As ChooseColor
+        Dim CustColor(16) As Long
+        cc.lStructSize = Len(cc)
+        cc.hwndOwner = Form1.hWnd
+        cc.hInstance = App.hInstance
+        cc.flags = 0
+        cc.lpCustColors = String$(16 * 4, 0)
+        Dim a
+        Dim x
+        Dim c1
+        Dim c2
+        Dim c3
+        Dim c4
+        a = ChooseColor(cc)
+        Cls
+        If (a) Then
+	        MsgBox "Color chosen:" & Str$(cc.rgbResult)
+
+                For x = 1 To Len(cc.lpCustColors) Step 4
+                        c1 = Asc(Mid$(cc.lpCustColors, x, 1))
+                        c2 = Asc(Mid$(cc.lpCustColors, x + 1, 1))
+                        c3 = Asc(Mid$(cc.lpCustColors, x + 2, 1))
+                        c4 = Asc(Mid$(cc.lpCustColors, x + 3, 1))
+                        CustColor(x / 4) = (c1) + (c2 * 256) + (c3 * 65536) + (c4 * 16777216)
+                        MsgBox "Custom Color " & Int(x / 4) & " = " & CustColor(x / 4)
+                Next x
+        Else
+                MsgBox "Cancel was pressed"
+        End If
