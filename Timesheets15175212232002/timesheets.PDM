@@ -1,0 +1,126 @@
+[Root]
+Most Recent Package=Standard Setup Package 1
+
+[Package|Standard Setup Package 1|Applidyne]
+Icon1=Applidyne.exe
+Title1=Applidyne
+StartIn1=$(AppPath)
+Key1=Icon1
+
+
+[Package|Standard Setup Package 1|Root]
+SubWizProgID=PDWizard.SetupPkgSubWiz
+BuildFolder=M:\COMMON\Innovation Team\markn\Timesheets Lite\Setup
+
+[Package|Standard Setup Package 1|Configure DAO ISAMs]
+Applicable=No
+
+[Package|Standard Setup Package 1|Configure DAO ODBC]
+JetWorkspace=
+ODBCDirect=
+
+[Package|Standard Setup Package 1|Files Found]
+
+[Package|Standard Setup Package 1|Files Released]
+
+[Package|Standard Setup Package 1|Missing Dependency Information]
+C:\Program Files\Microsoft Office\Office\EXCEL9.OLB=
+C:\Program Files\Common Files\System\ado\msado25.tlb=
+
+[Package|Standard Setup Package 1|Out-of-Date Dependency Information]
+
+[Package|Standard Setup Package 1|Files Added]
+m:\common\innovation team\markn\applidyne\applidyne.mdb=
+m:\common\innovation team\markn\applidyne\applidyne.ini=
+M:\COMMON\Innovation Team\markn\Timesheets Lite\timesheets.ini=
+M:\COMMON\Innovation Team\markn\Timesheets Lite\timesheets.mdb=
+
+[Package|Standard Setup Package 1|Files Removed]
+m:\common\innovation team\markn\applidyne\applidyne.ini=
+m:\common\innovation team\markn\applidyne\applidyne.mdb=
+
+[Package|Standard Setup Package 1|Files In Project]
+C:\WINNT\system32\msvbvm60.dll=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=Yes
+C:\Program Files\Common Files\System\ado\msado25.tlb=Yes
+C:\WINNT\system32\MSSTDFMT.DLL=Yes
+C:\Program Files\Microsoft Office\Office\EXCEL9.OLB=Yes
+C:\WINNT\system32\MSCOMCTL.OCX=Yes
+C:\WINNT\system32\COMDLG32.OCX=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=Yes
+C:\WINNT\system32\VB6STKIT.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=Yes
+M:\COMMON\Innovation Team\markn\Applidyne\applidyne.mdb=No
+M:\COMMON\Innovation Team\markn\Applidyne\applidyne.ini=No
+M:\COMMON\Innovation Team\markn\Timesheets Lite\timesheets.exe=Yes
+M:\COMMON\Innovation Team\markn\Timesheets Lite\timesheets.ini=Yes
+M:\COMMON\Innovation Team\markn\Timesheets Lite\timesheets.mdb=Yes
+
+[Package|Standard Setup Package 1|Configure Registry Files]
+Applicable=No
+
+[Package|Standard Setup Package 1|Configure Remote Servers]
+Applicable=No
+
+[Package|Standard Setup Package 1|Install Locations]
+M:\COMMON\Innovation Team\markn\Applidyne\Applidyne.exe=$(AppPath)
+C:\WINNT\system32\msvbvm60.dll=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Common Files\System\ado\msado25.tlb=$(WinSysPath)
+C:\WINNT\system32\MSSTDFMT.DLL=$(WinSysPath)
+C:\Program Files\Microsoft Office\Office\EXCEL9.OLB=$(WinSysPath)
+C:\WINNT\system32\MSCOMCTL.OCX=$(WinSysPath)
+C:\WINNT\system32\COMDLG32.OCX=$(WinSysPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\WINNT\system32\VB6STKIT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+M:\COMMON\Innovation Team\markn\Applidyne\applidyne.mdb=$(AppPath)
+M:\COMMON\Innovation Team\markn\Applidyne\applidyne.ini=$(AppPath)
+M:\COMMON\Innovation Team\markn\Timesheets Lite\timesheets.exe=$(AppPath)
+M:\COMMON\Innovation Team\markn\Timesheets Lite\timesheets.ini=$(AppPath)
+M:\COMMON\Innovation Team\markn\Timesheets Lite\timesheets.mdb=$(AppPath)
+
+[Package|Standard Setup Package 1|Configure Shared Files]
+Applicable=Yes
+M:\COMMON\Innovation Team\markn\Applidyne\Applidyne.exe=No
+M:\COMMON\Innovation Team\markn\Applidyne\applidyne.mdb=No
+M:\COMMON\Innovation Team\markn\Applidyne\applidyne.ini=No
+M:\COMMON\Innovation Team\markn\Timesheets Lite\timesheets.exe=No
+M:\COMMON\Innovation Team\markn\Timesheets Lite\timesheets.ini=No
+M:\COMMON\Innovation Team\markn\Timesheets Lite\timesheets.mdb=No
+
+[Package|Standard Setup Package 1|Distribution]
+Type=single
+Size=
+Title=Timesheets Lite
+
+[Package|Standard Setup Package 1|IconGroups]
+Group0=Timesheets Lite
+PrivateGroup0=0
+Parent0=$(Programs)
+
+[Package|Standard Setup Package 1|Timesheets Lite]
+Icon1=timesheets.exe
+Title1=Timesheets Lite
+StartIn1=$(AppPath)
+Key1=Icon4
+
+[Package|Standard Setup Package 1|Package]
+PackageFolder=M:\COMMON\Innovation Team\markn\Timesheets Lite\Setup
+ProjectFolder=M:\COMMON\Innovation Team\markn\Timesheets Lite
+ServerSideCab=
+File1=M:\COMMON\Innovation Team\markn\Timesheets Lite\Setup\setup.exe
+File2=M:\COMMON\Innovation Team\markn\Timesheets Lite\Setup\Setup.Lst
+File3=M:\COMMON\Innovation Team\markn\Timesheets Lite\Setup\timesheets.CAB
+Handler1=PDWizard.FolderDplySubWiz
+Handler2=PDWizard.WebPostDplySubWiz

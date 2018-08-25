@@ -1,0 +1,430 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>Computer Base Testing (CBT) Application Program</TITLE>
+</HEAD>
+<BODY>
+
+<DIR>
+<DIR>
+
+<B><U><FONT SIZE=4><P ALIGN="CENTER">Data Dictionary</P>
+</B></U></FONT><FONT SIZE=2>
+<P>&nbsp;</P>
+</FONT><P>The following are the details of the Tables based on which this Application works.  </P>
+
+<FONT SIZE=4><P>1.Login</FONT><BR>
+This Table responsible for storing of all the user information both Instructor and Student, UserID Field is the Primary Key, Instructor is a Boolean Field (True/False) if True then user is Instructor else He is a Student.</P><DIR>
+<DIR>
+
+<P>   </P></DIR>
+</DIR>
+</DIR>
+</DIR>
+
+<P ALIGN="CENTER"><CENTER><TABLE BORDER CELLSPACING=1 CELLPADDING=7 WIDTH=371>
+<TR><TD WIDTH="11%" VALIGN="TOP" HEIGHT=21>
+<B><P>Sno</B></TD>
+<TD WIDTH="29%" VALIGN="TOP" HEIGHT=21>
+<B><P>Field Name</B></TD>
+<TD WIDTH="26%" VALIGN="TOP" HEIGHT=21>
+<B><P>Data Type</B></TD>
+<TD WIDTH="34%" VALIGN="TOP" HEIGHT=21>
+<B><P>Constraints</B></TD>
+</TR>
+<TR><TD WIDTH="11%" VALIGN="TOP" HEIGHT=77>
+<P>1.</P>
+<P>2.</P>
+<P>3.</P>
+<P>4.</P>
+<P>5.</TD>
+<TD WIDTH="29%" VALIGN="TOP" HEIGHT=77>
+<P>User ID</P>
+<P>First Name</P>
+<P>Last Name</P>
+<P>Password</P>
+<P>Instructor</TD>
+<TD WIDTH="26%" VALIGN="TOP" HEIGHT=77>
+<P>Text(10)</P>
+<P>Text(20)</P>
+<P>Text(20)</P>
+<P>Text(10)</P>
+<P>Boolean</TD>
+<TD WIDTH="34%" VALIGN="TOP" HEIGHT=77>
+<P>Primary Key</P>
+<P>Not Null</P>
+<P>Not Null</P>
+<P>Not Null</P>
+<P>Not Null</TD>
+</TR>
+</TABLE>
+</CENTER></P>
+
+
+<P>&nbsp;</P><DIR>
+<DIR>
+
+<B><FONT SIZE=4><P>2.Test_Assign</P>
+</B></FONT><P>This Table is used to keep all Assigned Test Information of the Students, it has a Composite Key (more than one Primary key) of UserID, Test_Name and File_Path, UserID refers to UserID of login Table having a One to Many relation.<BR>
+E_date Field holds the Expire Date of the Test.</P>
+<P>Attempt Field shows wether the Student has attempted the Test or not if True then Score_p Field has the percentage he scored and A_date stores the date when attempted the Test.  </P>
+</DIR>
+</DIR>
+
+<P ALIGN="CENTER"><CENTER><TABLE BORDER CELLSPACING=1 CELLPADDING=7 WIDTH=372>
+<TR><TD WIDTH="11%" VALIGN="TOP" HEIGHT=24>
+<B><P>Sno</B></TD>
+<TD WIDTH="28%" VALIGN="TOP" HEIGHT=24>
+<B><P>Field Name</B></TD>
+<TD WIDTH="27%" VALIGN="TOP" HEIGHT=24>
+<B><P>Data Type</B></TD>
+<TD WIDTH="33%" VALIGN="TOP" HEIGHT=24>
+<B><P>Constraints</B></TD>
+</TR>
+<TR><TD WIDTH="11%" VALIGN="TOP" HEIGHT=65>
+<P>1.</P>
+<P>2.</P>
+<P>3.</P>
+<P>4.</P>
+<P>5.</P>
+<P>6.</P>
+<P>7.</TD>
+<TD WIDTH="28%" VALIGN="TOP" HEIGHT=65>
+<P>User ID </P>
+<P>Test_Name</P>
+<P>File_Path</P>
+<P>Attempt</P>
+<P>Score_p</P>
+<P>E_date</P>
+<P>A_date</TD>
+<TD WIDTH="27%" VALIGN="TOP" HEIGHT=65>
+<P>Text(10)</P>
+<P>Text(50)</P>
+<P>Text(50)</P>
+<P>Boolean</P>
+<P>Integer</P>
+<P>Date</P>
+<P>Date</TD>
+<TD WIDTH="33%" VALIGN="TOP" HEIGHT=65>
+<P>Primary Key</P>
+<P>Primary Key</P>
+<P>Primary Key</P>
+
+<P>&nbsp;</P>
+<P>Not Null</TD>
+</TR>
+</TABLE>
+</CENTER></P>
+
+
+<P>&nbsp;</P>
+<B><P>&nbsp;</P>
+<P>&nbsp;</P>
+<FONT SIZE=4><P>3.Q_bank</P><DIR>
+<DIR>
+
+</B></FONT><P>This is the actual Question Bank Table which holds all the Questions and their optional answers and also the correct answer, the Type Field holds information about the type of question Multiple choice or True/False.</P>
+
+<P>&nbsp;</P></DIR>
+</DIR>
+
+<P ALIGN="CENTER"><CENTER><TABLE BORDER CELLSPACING=1 CELLPADDING=7 WIDTH=372>
+<TR><TD WIDTH="11%" VALIGN="TOP" HEIGHT=23>
+<B><P>Sno</B></TD>
+<TD WIDTH="27%" VALIGN="TOP" HEIGHT=23>
+<B><P>Field Name</B></TD>
+<TD WIDTH="27%" VALIGN="TOP" HEIGHT=23>
+<B><P>Data Type</B></TD>
+<TD WIDTH="34%" VALIGN="TOP" HEIGHT=23>
+<B><P>Constraints</B></TD>
+</TR>
+<TR><TD WIDTH="11%" VALIGN="TOP" HEIGHT=80>
+<P>1.</P>
+<P>2.</P>
+<P>3.</P>
+<P>4.</P>
+<P>5.</P>
+<P>6.</P>
+<P>7.</P>
+<P>8.</TD>
+<TD WIDTH="27%" VALIGN="TOP" HEIGHT=80>
+<P>Q_ID</P>
+<P>Question</P>
+<P>Type</P>
+<P>OptA</P>
+<P>OptB</P>
+<P>OptC</P>
+<P>OptD</P>
+<P>Answer</TD>
+<TD WIDTH="27%" VALIGN="TOP" HEIGHT=80>
+<P>Integer</P>
+<P>Text(250)</P>
+<P>Text(1)</P>
+<P>Text(100)</P>
+<P>Text(100)</P>
+<P>Text(100)</P>
+<P>Text(100)</P>
+<P>Text(1)</TD>
+<TD WIDTH="34%" VALIGN="TOP" HEIGHT=80>
+<P>Primary Key</P>
+<P>Not Null</P>
+<P>Not Null</P>
+<P>Not Null</P>
+<P>Not Null</P>
+
+<P>&nbsp;</P>
+<P>Not Null</TD>
+</TR>
+</TABLE>
+</CENTER></P>
+
+
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P><DIR>
+<DIR>
+
+<B><FONT SIZE=4><P>4.Test Paper Table</P>
+</B></FONT><P>When we intend to create a new Test Paper based on a Question Bank the this Table is dynamically created a stores the information about the Test.<BR>
+Q_ID is the Primary Key and also refers to Q_ID of Q_Bank Table, this is a One to One relationship.<BR>
+Time Field is the time in seconds allotted for that particular Question, P_mark is Positive marks and N_mark is the Negative marks awarded for that Question.    </P>
+</DIR>
+</DIR>
+
+<P ALIGN="CENTER"><CENTER><TABLE BORDER CELLSPACING=1 CELLPADDING=7 WIDTH=372>
+<TR><TD WIDTH="11%" VALIGN="TOP" HEIGHT=19>
+<B><P>Sno</B></TD>
+<TD WIDTH="27%" VALIGN="TOP" HEIGHT=19>
+<B><P>Field Name</B></TD>
+<TD WIDTH="27%" VALIGN="TOP" HEIGHT=19>
+<B><P>Data Type</B></TD>
+<TD WIDTH="34%" VALIGN="TOP" HEIGHT=19>
+<B><P>Constraints</B></TD>
+</TR>
+<TR><TD WIDTH="11%" VALIGN="TOP" HEIGHT=74>
+<P>1.</P>
+<P>2.</P>
+<P>3.</P>
+<P>4.</TD>
+<TD WIDTH="27%" VALIGN="TOP" HEIGHT=74>
+<P>Q_ID</P>
+<P>Time</P>
+<P>P_mark</P>
+<P>N_mark</TD>
+<TD WIDTH="27%" VALIGN="TOP" HEIGHT=74>
+<P>Integer</P>
+<P>Integer</P>
+<P>Integer</P>
+<P>Integer</TD>
+<TD WIDTH="34%" VALIGN="TOP" HEIGHT=74>
+<P>Primary Key</P>
+
+<P>Not Null</TD>
+</TR>
+</TABLE>
+</CENTER></P>
+
+
+<P>&nbsp;</P><DIR>
+<DIR>
+
+<B><FONT SIZE=4><P>5.All_Test</P>
+</B></FONT><P>This Table gets a row each time we create a Test Paper, having details of that Test Paper like Date of creation, UserID of the creator and the Pass Percentage (PP). UserID refers to UserID of login Table having a One to Many relationship.<BR>
+</P></DIR>
+</DIR>
+
+<P ALIGN="CENTER"><CENTER><TABLE BORDER CELLSPACING=1 CELLPADDING=7 WIDTH=372>
+<TR><TD WIDTH="11%" VALIGN="TOP" HEIGHT=23>
+<B><P>Sno</B></TD>
+<TD WIDTH="27%" VALIGN="TOP" HEIGHT=23>
+<B><P>Field Name</B></TD>
+<TD WIDTH="27%" VALIGN="TOP" HEIGHT=23>
+<B><P>Data Type</B></TD>
+<TD WIDTH="34%" VALIGN="TOP" HEIGHT=23>
+<B><P>Constraints</B></TD>
+</TR>
+<TR><TD WIDTH="11%" VALIGN="TOP" HEIGHT=44>
+<P>1.</P>
+<P>2.</P>
+<P>3.</P>
+<P>4.</TD>
+<TD WIDTH="27%" VALIGN="TOP" HEIGHT=44>
+<P>Test_Name</P>
+<P>Date</P>
+<P>User_ID</P>
+<P>PP</TD>
+<TD WIDTH="27%" VALIGN="TOP" HEIGHT=44>
+<P>Text(50)</P>
+<P>Date</P>
+<P>Text(10)</P>
+<P>Integer</TD>
+<TD WIDTH="34%" VALIGN="TOP" HEIGHT=44>
+<P>Primary Key</P>
+<P>Not Null</P>
+<P>Foreign Key </P>
+<P>Not Null</TD>
+</TR>
+</TABLE>
+</CENTER></P>
+
+
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<B><U><FONT SIZE=4><P ALIGN="CENTER">Description </P>
+</B></U></FONT><FONT SIZE=2>
+<P>&nbsp;</P>
+</FONT><P>A brief description of how the Application runs its features and options are listed below.    </P>
+<P>Sample Instructor </P>
+<P>User ID    : SYSTEM &#9;&#9;Password : 123456</P>
+<P>Sample Student</P>
+<P>User ID    : ssi&#9;&#9;&#9;Password : 123456</P>
+
+<P>The first form that pops up is the Login Form it asks of a UserID and a Password.<BR>
+There a two modes in which a user can log in, An Instructor Mode or A Student Mode.<BR>
+<BR>
+</P>
+<B><FONT SIZE=4><P>Instructor Mode<BR>
+</P>
+
+<UL>
+</B></FONT><LI>Assuming that the Instructor has entered a valid UserID and Password, the next form that appears is the Test Creator Form. <BR>
+</LI></UL>
+
+
+<UL>
+<LI>To open a Question Bank file, use File &gt;Open Question Bank thus all the Questions get loaded into the List Box on the right hand side.<BR>
+</LI>
+<LI>To create a new file, use File&gt;New Question Bank this will invoke the Question Bank Editor Form or use Edit Question Bank Button.<BR>
+</LI>
+<FONT SIZE=2><LI>Once in the Question Bank Editor Form Instructor can Add, Delete, Update and Save Questions to a Data base file(.mdb). <BR>
+</LI></UL>
+
+</FONT>
+<P>The Test Creator Form has a number options for creating the Test Paper.</P>
+
+
+<UL>
+<LI>Creating Test Paper.<BR>
+Go to File&gt;New Test Paper, similarly Instructor can open an existing Test Paper File&gt;Open Test Paper.</LI></UL>
+
+
+
+<UL>
+<LI>Time Options.<BR>
+Instructor can choose either Unlimited or Limited Time, for Limited Time option the Instructor has to give the number of seconds moreover he can give different Time (number of seconds) for different Questions.<BR>
+</LI>
+<LI>Mark Options.<BR>
+Positive value is the Marks awarded for a correct answer.<BR>
+Negative value is the Marks deducted for an incorrect answer (its optional).<BR>
+</LI>
+<LI>Pass Percentage.<BR>
+Using the scroll bar one can specify the percentage the Student has to score to Pass the particular Test.</LI></UL>
+
+
+<P>&nbsp;</P>
+<P>Once the Test Paper has been created, the Instructor now needs to Assign this test to Students using Test Assignor.</P>
+<P ALIGN="CENTER"></P>
+
+<UL>
+<LI>Assign Test.<BR>
+Select a Student from the list box on the left hand side and then clicking Assign Test Button will assign the test to that particular Student.<BR>
+</LI></UL>
+
+
+<UL>
+<LI>Expire Date.<BR>
+Each Test is assigned with an Expire Date, it is the time limit within which the student must Attempt the test. </LI></UL>
+
+
+<P>&nbsp;</P>
+<P>Instructors can create New Student Logins using User ID manager.</P>
+<I><U><P ALIGN="CENTER"></P>
+<P ALIGN="CENTER">&nbsp;</P>
+
+<UL>
+</I></U><LI>New Student Login.<BR>
+Using User ID manager form Instructors can Add new Students, by simply entering the required fields and clicking Create Account button.</LI></UL>
+
+
+
+<UL>
+<LI>New Instructor Login.<BR>
+Similarly New Instructor can also be created from the Login menu  Login&gt;New Instructor login .</LI></UL>
+
+
+
+<UL>
+<LI>Changing Password.<BR>
+An Instructor can change password of any Student Login from the menu Login&gt;Edit Student Login, but he cannot edit other Instructor logins.</LI></UL>
+
+<P><BR>
+<BR>
+<B><FONT SIZE=4>Student Mode</P>
+</B></FONT><P><BR>
+If the user has a valid Student ID and Password then he logs in as a Student.<BR>
+All the test that have been assigned to him appear in combo box and by selecting the name and clicking the Start Test button the Student can start the test.<BR>
+<BR>
+</P>
+
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P ALIGN="CENTER">The Test Paper Form gives all the Information to about the test to the User<BR>
+</P>
+
+<UL>
+<LI>The question appears in the text box with the four options given below<BR>
+the Student has to choose any one Option  and the click Next Question Button.</LI></UL>
+
+
+
+<UL>
+<LI>If the Student fails to answer the Question in the given time then the next Question gets loaded up.</LI></UL>
+
+
+
+<UL>
+<LI>If the Student chooses NO ATTEMPT option then no negative marks will be deducted from his total.</LI></UL>
+
+
+
+<UL>
+<LI>Abort Test will abort the test marking all the answers as NO ATTEMPT.</LI></UL>
+
+<P><BR>
+  </P>
+
+<B><U><FONT SIZE=4><P ALIGN="CENTER">Reports</P>
+
+</B></U></FONT><P>Reports are summarized information in a well-formatted manner meant for higher managerial levels to help them in Decision-making.</P>
+<P>  </P>
+<P>The current Application creates a total of four such reports.<BR>
+1. Test Result Report.<BR>
+2. Student Report.<BR>
+3. Instructor Report.<BR>
+4. Test Report.</P>
+
+<OL>
+
+<B><FONT SIZE=4><LI>Test Result Report</B></FONT>.</LI>
+<P>This Report is created as soon as the student completes the Test, it gives information about what question did the Student attempt and the Positive or Negative marks  scored and did the Student Pass of Fail In the Test.</P>
+<P ALIGN="CENTER"></P>
+<B><FONT SIZE=4><LI>Student Report</B></FONT>.<BR>
+This report gives the over all Performance of a student, how many test did he attempt, date when he took the test, what percentage he scored in each and finally his Average Score. This Report can be generated from the Test Creator Report menu Report&gt;Student Report.<BR>
+</LI>
+<B><FONT SIZE=4><LI>Instructor Report</B></FONT>.<BR>
+This Report give the details of a particular Instructor, the total number of test he created, the average score of the student in each test. This Report can be generated from the Test Creator Report menu Report&gt;Instructor Report.</LI>
+<B><FONT SIZE=4><LI>Test Report</B></FONT>.<BR>
+This Report gives the details of a particular Test, the total number of students who took the test, the average score of the all student. This Report can be generated from the Test Creator Report menu Report&gt;Test Report.<BR>
+</LI></OL>
+
+<P ALIGN="CENTER"></P>
+<P>&nbsp;</P>
+<P>  </P>
+<P>  </P></BODY>
+</HTML>

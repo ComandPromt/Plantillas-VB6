@@ -1,0 +1,10 @@
+[History]
+B0=HTMLInvoice/frmMain/FormatHTMLInvoice
+B1=HTMLInvoice/frmMain/Initialise
+B2=HTMLInvoice/frmMain/cmdCreateInvoice_Click
+B3=HTMLInvoice/frmMain/Form_Load
+B4=HTMLInvoice/frmMain
+B5=HTMLInvoice/frmMain/InvoiceItems
+B6=HTMLInvoice/frmMain/Form_Activate
+B7=HTMLInvoice/frmMain/AddressInfo
+B8=HTMLInvoice/modData
