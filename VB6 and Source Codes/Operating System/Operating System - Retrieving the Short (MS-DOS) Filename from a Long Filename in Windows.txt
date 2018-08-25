@@ -1,0 +1,148 @@
+Tip 207: Retrieving the Short (MS-DOS) Filename from a Long Filename in Windows 95
+February 28, 1996
+
+Abstract
+Under the Microsoft® Windows® 95 operating system, you can assign a long filename to a file instead of being limited to an 8.3 format. This article explains how to retrieve the short (MS-DOS®) filename assigned to a long filename from within a Microsoft Visual Basic® version 4.0 application.
+
+Short and Long Filenames
+When you save a file to disk in MS-DOS® or the Microsoft® Windows® 3.x operating system, you need to specify the filename in an 8.3 format (that is, the name of the file is limited to an eight-character name followed by a period and a three-character filename extension). However, the Microsoft Windows 95 operating system lets you assign a long filename to any file or directory you create.
+
+A long filename can be up to 255 characters in length and can contain individual words describing the file you are creating. For example, a word-processing document might be assigned a long filename (for example, Chapter 1: Working with Long Filenames).
+
+In a Microsoft Visual Basic® version 4.0 application, you may need to manipulate a file by its short (MS-DOS) filename. The example program below provides one method of retrieving the short filename when you know the file's long filename.
+
+Example Program
+This program shows how to retrieve the short (MS-DOS) filename assigned to a long filename. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim ShortName As String
+    Dim LongName As String
+    Dim I As Integer
+
+    For I = 0 To File1.ListCount - 1
+        If File1.Selected(I) = True Then
+            LongName = "c:\" & File1.List(I)
+        End If
+    Next I
+
+    ShortName = GetShortNameFromLongName(LongName)
+    Text1.Text = LongName
+    Text2.Text = ShortName
+
+End Sub
+
+Add a File List Box control to Form1. File1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a second Text Box control to Form1. Text2 is created by default. 
+Create a new function called GetShortNameFromLongName. Add the following code to this function: 
+Function GetShortNameFromLongName(strLFN As String) As String
+On Error GoTo Err_GetShortNameFromLongName
+
+    Dim strWork As String
+    Dim strSFNWork As String
+    Dim strConvertedFN As String
+    Dim strPathPart As String
+    Dim strChar As String
+    Dim strPathWork As String
+    Dim I As Integer
+    Dim intFirstSlash As Integer
+    Dim fWork As Boolean
+
+    intFirstSlash = InStr(strLFN, "\")
+
+    If intFirstSlash = 0 Then
+        GetShortNameFromLongName = ""
+        Exit Function
+    End If
+
+    strWork = Left(strLFN, intFirstSlash)
+
+    I = intFirstSlash + 1
+
+    fWork = True
+
+    Do While fWork
+        If I > Len(strLFN) Then
+        fWork = False
+    Else
+        strPathPart = sfnGetToken(Mid(strLFN, I), "\")
+        strSFNWork = strWork & strPathPart
+        strConvertedFN = GetShortNameSection(strSFNWork)
+        If Len(strConvertedFN) = 0 Then
+        GetShortNameFromLongName = ""
+        Exit Function
+        Else
+        strWork = strWork & strConvertedFN & "\"
+        End If
+
+        I = I + Len(strPathPart) + 1
+    End If
+
+    Loop
+
+    GetShortNameFromLongName = Left(strWork, Len(strWork) - 1)
+
+Exit_GetShortNameFromLongName:
+    Exit Function
+
+Err_GetShortNameFromLongName:
+    MsgBox "Error: " & Err & ", " & Error$, , "GetShortNameFromLongName_Err"
+    Resume Exit_GetShortNameFromLongName
+
+End Function
+
+Create a new function called GetShortNameSection. Add the following code to this function (note that each line of code must be typed as a single line of text): 
+Private Function GetShortNameSection(strLFN As String) As String
+On Error GoTo Err_GetShortNameSection
+
+    Const INVALID_HANDLE_VALUE = -1
+
+    Dim lngRet As Long
+    Dim intNullPos As Integer
+    Dim WFD As WIN32_FIND_DATA
+
+    lngRet = FindFirstFile(strLFN, WFD)
+    If lngRet = INVALID_HANDLE_VALUE Then
+        GetShortNameSection = ""
+    Else
+
+        intNullPos = InStr(WFD.cAlternate, vbNullChar)
+
+        If intNullPos <> 1 Then
+            GetShortNameSection = Left(WFD.cAlternate, intNullPos - 1)
+    Else
+
+        GetShortNameSection = Left(WFD.cFileName, InStr(WFD.cFileName, 
+           vbNullChar) - 1)
+    End If
+
+    End If
+
+Exit_GetShortNameSection:
+    Exit Function
+
+Err_GetShortNameSection:
+    MsgBox "Error: " & Err & ", " & Error$, , "GetShortNameSection_Err"
+    Resume Exit_GetShortNameSection
+
+End Function
+
+Create a new function called sfnGetToken. Add the following code to this function (note that the Private line must be typed as a single line of code): 
+Private Function sfnGetToken(strTest As String, strDelimiter As String) 
+   As String
+    Dim intPos As Integer
+
+    intPos = InStr(strTest, strDelimiter)
+    If intPos = 0 Then
+        sfnGetToken = strTest
+    Else
+        sfnGetToken = Left(strTest, intPos - 1)
+    End If
+
+End Function
+
+Run the example program by pressing Select a long filename from the File List Box control. Click the Command Button control. The long filename appears in the first Text Box control, and the short (MS-DOS) filename is displayed in the second Text Box control.
+

@@ -1,0 +1,5 @@
+'Description: Exits Windows95 like the Shutdown option does
+
+'Const EWX_LogOff As Long = 0
+'Declare Function ExitWindows Lib "User32" Alias "ExitWindowsEx" (ByVal dwOptions As Long, ByVal dwReserved As Long) As Long
+ExitWindows EWX_LogOff, &HFFFFFFFF

@@ -1,0 +1,44 @@
+Tip 197: Preventing a Right-Click from Displaying a Context Menu
+December 5, 1995
+
+Abstract
+This article explains how to prevent the context menu from appearing when the user of your Microsoft® Visual Basic® application uses the right mouse button to click a Text Box control.
+
+Using Message Blaster to Ignore Right-Clicks
+A unique feature provided in the Microsoft® Windows® 95 operating system is its ability to display a context menu for specific controls when you click with the right mouse button (right-click) over a control. When developing a Microsoft Visual Basic® application, however, you may not want this context menu to appear.
+
+Each time you right-click, the system receives a WM_RBUTTONDOWN message. Using a third-party custom control such as Message Blaster, you can tell the operating system to ignore this WM_RBUTTONDOWN message.
+
+In the example program below, you want to ignore all right-clicks for the Text Box control. To accomplish this, you supply Message Blaster with the handle of the Text Box control and the message you want to trap.
+
+If a right-click is detected while the program is running, the Message Blaster custom control fools the operating system into believing that no such action was received. Message Blaster is used to send an EATMESSAGE message to the operating system. This, in effect, prevents the context menu from appearing.
+
+Example Program
+This program shows how to prevent the context menu from appearing when you right-click on a Text Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1: 
+Const EATMESSAGE = 0
+Const WM_RBUTTONDOWN = &H204
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    MsgBlaster1.hWndTarget = Text1.hWnd
+    MsgBlaster1.AddMessage WM_RBUTTONDOWN, POSTPROCESS
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a Message Blaster custom control to Form1. MsgBlaster1 is created by default. 
+Add the following code to the MsgBlaster1_Message event: 
+Private Sub MsgBlaster1_Message(ByVal hWnd As Long, ByVal Msg As Long, 
+   wParam As Long, lParam As Long, nPassage As Integer, lReturnValue As Long)
+    Select Case Msg
+
+    Case WM_RBUTTONDOWN
+        'MsgBox "right mouse was clicked on text box"
+        nPassage = EATMESSAGE
+
+    End Select
+End Sub
+
+Run the example program by pressing F5. While typing text in the Text Box control, click the right mouse button. The context menu does not appear on the screen.

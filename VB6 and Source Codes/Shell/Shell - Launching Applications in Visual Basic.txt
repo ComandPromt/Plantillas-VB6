@@ -1,0 +1,105 @@
+Tip 173: Launching Applications in Visual Basic
+December 5, 1995
+
+Abstract
+This article explains how to control the way in which a launched Microsoft® Visual Basic® application is run.
+
+Using the CreateProcess Function to Launch Applications
+Under the Microsoft® Windows® 95 operating system, you can use the Windows application programming interface (API) CreateProcess function to load and run any application (or process) you want. Using this function, you have complete control over how the launched application is run.
+
+To use the CreateProcess function, add the following Declare statement to the General Declarations section of your Microsoft Visual Basic® project or to a BAS module:
+
+Declare Function CreateProcessA Lib "kernel32" (ByVal lpApplicationName As Long, 
+   ByVal lpCommandLine As String, ByVal lpProcessAttributes As Long, ByVal 
+   lpThreadAttributes As Long, ByVal bInheritHandles As Long, ByVal 
+   dwCreationFlags As Long, ByVal lpEnvironment As Long, ByVal 
+   lpCurrentDirectory As Long, lpStartupInfo As STARTUPINFO, 
+   lpProcessInformation As PROCESS_INFORMATION) As Long
+
+As you can see, the CreateProcess function requires ten arguments, as follows:
+
+lpApplicationName The name of the process you want to launch. 
+LpCommandLine The command line to be passed to the launched process. 
+LpProcessAttributes Points to a SECURITY_ATTRIBUTES structure for the created process. 
+LpThreadAttributes Points to a SECURITY_ATTRIBUTES structure for the primary thread of the created process. 
+BInheritHandle If True, the created process inherits handles from the calling application. 
+DwCreationFlags A combination of one or more creation flags for controlling the priority class and the creation of the process. 
+LpEnvironment Points to an environment block for the new process. If set to NULL, the new process uses the calling process's environment block. 
+LpCurrentDirectory A string containing the drive and directory for the new process. If NULL, the calling process's drive and directory are used. 
+LpStartupInfo A STARTUPINFO structure that specifies the appearance of the main window for the new process. 
+LpProcessInformation A PROCESS_INFORMATION structure that receives identification information about the new process. 
+
+The example program below launches the Windows 95 Notepad application. Note that you specify the complete path to Notepad and launch the application as a normal process (NORMAL_PRIORITY_CLASS).
+
+After you call the CreateProcess function to launch the Notepad application, notice that Notepad retains the focus. You cannot switch to another running application. This is accomplished by executing the Windows API WaitForSingleObject function.
+
+The WaitForSingleObject function forces the system to wait until a specific process has finished its work. You pass the handle of the process you want to wait for and the length of time, in milliseconds, to pause. In the example program below, the time-out value is set to INFINITE, which means that the system will not resume running until the user has quit Notepad.
+
+The final step you must perform, after the user has quit Notepad, is to close the open handle for the just-launched process. This removes all references to Notepad having been launched.
+
+Example Program
+This program shows how to launch a Windows or MS-DOS® application from within Microsoft Visual Basic. Control remains with the launched application until you quit that application. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim AppToLaunch As String
+    AppToLaunch = "c:\windows\notepad.exe"
+    Call ExecuteAndWait(AppToLaunch)
+End Sub
+
+Create a new subroutine called ExecuteAndWait. Add the following code to this subroutine: 
+Public Sub ExecuteAndWait(cmdline$)
+    Dim NameOfProc As PROCESS_INFORMATION
+    Dim NameStart As STARTUPINFO
+    Dim X As Long
+
+    NameStart.cb = Len(NameStart)
+    X = CreateProcessA(0&, cmdline$, 0&, 0&, 1&, NORMAL_PRIORITY_CLASS, 
+       0&, 0&, NameStart, NameOfProc)
+    X = WaitForSingleObject(NameOfProc.hProcess, INFINITE)
+    X = CloseHandle(NameOfProc.hProcess)
+End Sub
+
+From the Visual Basic Insert menu, select Module to add a new module to your project. Module1.Bas is created by default. 
+Add the following code to Module1.Bas (note that each Declare statement must be typed as a single line of code): 
+Type STARTUPINFO
+    cb As Long
+    lpReserved As String
+    lpDesktop As String
+    lpTitle As String
+    dwX As Long
+    dwY As Long
+    dwXSize As Long
+    dwYSize As Long
+    dwXCountChars As Long
+    dwYCountChars As Long
+    dwFillAttribute As Long
+    dwFlags As Long
+    wShowWindow As Integer
+    cbReserved2 As Integer
+    lpReserved2 As Long
+    hStdInput As Long
+    hStdOutput As Long
+    hStdError As Long
+End Type
+Type PROCESS_INFORMATION
+    hProcess As Long
+    hThread As Long
+    dwProcessID As Long
+    dwThreadID As Long
+End Type
+Global Const NORMAL_PRIORITY_CLASS = &H20&
+Global Const INFINITE = -1&
+Declare Function CloseHandle Lib "kernel32" (hObject As Long) As Boolean
+Declare Function WaitForSingleObject Lib "kernel32" (ByVal hHandle As Long, 
+   ByVal dwMilliseconds As Long) As Long
+Declare Function CreateProcessA Lib "kernel32" (ByVal lpApplicationName As Long, 
+   ByVal lpCommandLine As String, ByVal lpProcessAttributes As Long, ByVal 
+   lpThreadAttributes As Long, ByVal bInheritHandles As Long, ByVal 
+   dwCreationFlags As Long, ByVal lpEnvironment As Long, ByVal 
+   lpCurrentDirectory As Long, lpStartupInfo As STARTUPINFO, 
+   lpProcessInformation As PROCESS_INFORMATION) As Long
+
+Run the example program by pressing F5. Click the Command Button control. This immediately starts the Windows Notepad application. Notice that you are unable to switch to another running application until you quit Notepad.

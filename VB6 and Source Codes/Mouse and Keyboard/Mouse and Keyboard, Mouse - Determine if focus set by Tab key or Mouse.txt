@@ -1,0 +1,15 @@
+'Description: Determine if a control got focus by Tab key
+'             or mouse click
+
+
+'Declare Function GetKeyState% Lib "User" (ByVal nVirtKey%)
+'Const VK_TAB = 9
+
+'Sub Text1_GotFocus ()
+If GetKeyState(VK_TAB) < 0 Then
+	Text1.SelStart = 0
+        Text1.SelLength = Len(Text1.Text)
+Else
+        Text1.SelLength = 0
+End If
+'End Sub

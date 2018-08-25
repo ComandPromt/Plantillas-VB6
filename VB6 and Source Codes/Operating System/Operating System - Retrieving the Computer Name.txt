@@ -1,0 +1,50 @@
+Tip 179: Retrieving the Computer Name
+December 5, 1995
+
+Abstract
+This article explains how you can use the Microsoft® Windows® GetComputerName function to retrieve the computer name.
+
+Using the GetComputerName Function
+When you initially install the Microsoft® Windows® operating system on your computer, a default name is assigned to your computer. This name is initialized when you start your computer. The actual name is stored in the registration database (registry).
+
+You can use the Windows application programming interface (API) GetComputerName function in your Microsoft® Visual Basic® application to retrieve the name assigned to your computer. To use this function, include the following Declare statement in your project:
+
+Private Declare Function GetComputerName Lib "kernel32" Alias 
+   "GetComputerNameA" (ByVal sBuffer As String, lSize As Long) 
+   As Long
+
+The GetComputerName function requires two arguments. The first argument, sBuffer, is the buffer that will hold the computer name after the function is executed. The size of the buffer should be large enough to hold the entire name. The second argument, lSize, must be initialized to the size of sBuffer.
+
+After you have executed the GetComputerName function, the lSize variable will be set to a count of the actual number of characters stored in the sBuffer string. This count value does not include the terminating NULL character.
+
+Example Program
+This program shows how to retrieve the name assigned to a computer. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Declare statement to the General Declarations section of Form1 (note that this Declare statement must be typed as a single line of code): 
+Private Declare Function GetComputerName Lib "kernel32" Alias 
+   "GetComputerNameA" (ByVal sBuffer As String, lSize As Long) As Long
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim PCName As String
+    Dim P As Long
+
+    P = NameOfPC(PCName)
+    text1.Text = PCName
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Create a new function called NameOfPC. Add the following code to this function: 
+Function NameOfPC(MachineName As String) As Long
+
+    Dim NameSize As Long
+    Dim X As Long
+
+    MachineName = Space$(16)
+    NameSize = Len(MachineName)
+    X = GetComputerName(MachineName, NameSize)
+End Function
+
+Run the example program by pressing F5. Click the Command Button control. The name assigned to the computer appears in the Text Box control.

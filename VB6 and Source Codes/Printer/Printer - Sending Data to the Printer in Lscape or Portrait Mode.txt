@@ -1,0 +1,88 @@
+Tip 116: Sending Data to the Printer in Landscape or Portrait Mode
+July 1, 1995
+
+Abstract
+In a Microsoft® Visual Basic® application, you can send data to the printer by using the Print method. The printed output appears in the default portrait orientation. This article shows how to change the orientation of the printer from its default portrait mode to landscape mode.
+
+Sending Commands to the Printer
+When you create a report in a Microsoft® Visual Basic® application, the output is usually sent to the printer in portrait mode. However, by using two Microsoft Windows® application programming interface (API) functions, you can tell the printer to print the report in landscape mode.
+
+Most printers manufactured today support a number of functions such as changing the print orientation to landscape mode. You tell the printer driver to select landscape printing by sending specific control code commands to the device. In Windows terminology, these control code commands are called Escape operations.
+
+The example program below shows how to use the Windows API Escape function to change the orientation of the printer. When you run this program, notice that a blank piece of paper is not ejected when the setting takes effect.
+
+How do we prevent the blank sheet of paper from being ejected? The AbortDoc function tells Windows to ignore the previous print request. This generates a printer error, which is trapped by the On Error Resume Next statement. Therefore, the printer is set to the new orientation without ejecting a blank piece of paper.
+
+The Escape function can be used to send specific control codes to a printer device. The CONSTANT.TXT file contains a list of the most commonly used escape codes that can be used with printers, display screens, and other devices.
+
+To use the Escape function within your program, include the following Declare statement in the General Declarations section of your form (note that this Declare statement must be typed as a single line of text):
+
+Private Declare Function Escape Lib "GDI" (ByVal hDC As Integer, ByVal nEscape
+   As Integer, ByVal nCount As Integer, lpInData As Any, lpOutData As Any) As
+   Integer
+
+The Escape function requires five arguments, as follows.
+
+hDC An integer value containing the device context's handle 
+nEscape An integer value containing the specific escape code to be sent to the device context 
+nCount An integer value set to the size of the lpInData argument 
+lpInData Varies—see below 
+lpOutData Varies—see below 
+
+The arguments lpInData and lpOutData are set according to which escape code is being sent to the printer. Because we want to set the printer to either landscape or portrait mode, we specify the nEscape argument as GETSETPRINTORIENT. The GETSETPRINTORIENT operation requires that the arguments lpInData and lpOutData point to a 20-byte structure. To actually set the orientation, the first long value in this structure must be set to the specific orientation you want to use.
+
+After the escape code (landscape or portrait) is sent to the printer, you must use the Windows API AbortDoc function. This function tells the printer to abort the print request. Calling the AbortDoc function sets the printer to the new mode. All subsequent output to the printer will then print in whichever print orientation you selected. This means that you may have to issue another Escape statement to reset the printer to portrait mode to return the printer to its default state.
+
+Example Program
+This program shows how to set the printer to landscape (or portrait) mode. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Private Declare Function AbortDoc Lib "GDI" (ByVal hDC As Integer) As Integer
+Private Declare Function Escape Lib "GDI" (ByVal hDC As Integer, ByVal
+   nEscape As Integer, ByVal nCount As Integer, lpInData As Any, lpOutData As
+   Any) As Integer
+Const PORTRAIT = 1
+Const LANDSCAPE = 2
+Const GETSETPAPERORIENT = 30
+Const NULLVALUE = 0&
+
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Landscape". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    PrintOrient LANDSCAPE, "This is landscape printing."
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. Set its Caption property to "Portrait". 
+Add the following code to the Click event for Command2: 
+Private Sub Command2_Click()
+    PrintOrient PORTRAIT, "This is portrait printing."
+End Sub
+
+Create a new procedure called PrintOrient. Add the following code to this procedure: 
+Sub PrintOrient(Mode As Integer, PrintThis As String)
+    Dim Orient As OrientStructure
+    Dim Ret As Integer
+    Dim X As Integer
+       
+    Printer.Print ""
+    Orient.Orientation = Mode
+    X = Escape(Printer.hDC, GETSETPAPERORIENT, Len(Orient), Orient, NULLVALUE)
+    On Error Resume Next
+    Ret = AbortDoc(Printer.hDC)
+    On Error Resume Next
+    
+    Printer.EndDoc
+    Printer.Print PrintThis
+    Printer.EndDoc
+End Sub
+
+From the Visual Basic Insert menu, click Module to create a new module. Module1.Bas is created by default. 
+Add the following Type structure to Module1.Bas: 
+Type OrientStructure
+    Orientation As Long
+    Pad As String * 16
+End Type
+
+Run the example program by pressing F5. Click the Landscape command button to print a test sheet in landscape mode. Next, click the Portrait command button to print a test sheet in portrait mode. Notice that each time you change the orientation of the printer, a blank sheet of paper is not ejected needlessly.
+

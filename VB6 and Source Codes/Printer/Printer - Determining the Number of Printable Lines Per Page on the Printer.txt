@@ -1,0 +1,30 @@
+Tip 185: Determining the Number of Printable Lines Per Page on the Printer
+December 5, 1995
+
+Abstract
+This article explains how to determine the total number of text lines that a printer can accommodate on a single sheet of paper.
+
+Using the TextHeight and ScaleHeight Methods
+When sending data to a printer, you often need to determine how many lines of text can be printed on a single sheet of paper. The Microsoft® Visual Basic® TextHeight method indicates how much space is used when text is actually sent to the printer. The TextHeight method, in other words, tells you the vertical height of the output string. Among other things, you can use this information to center a line of text vertically on the printer.
+
+The ScaleHeight property tells you the horizontal coordinates for a single printed page.
+
+If you need to determine how many lines of text can be printed on the default printer, you must first retrieve the TextHeight method's value for the printer. Next, you retrieve the ScaleHeight property's value for the printer and divide this value by the height of the text string. The result is the total number of lines per page that you can send to the printer.
+
+Example Program
+This program tells you how many lines of text can be printed on a single sheet of paper. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim PrinterHeight As Integer
+    Dim NumberOfLines As Integer
+
+    PrinterHeight = Printer.TextHeight("Sample string")
+    NumberOfLines = Printer.ScaleHeight / PrinterHeight
+    Text1.Text = "Lines per page = " & Str$(NumberOfLines)
+End Sub
+
+Run the example program by pressing F5. Click the Command Button control. The number of lines the printer can accommodate, using the currently selected font, is displayed in the Text Box control.

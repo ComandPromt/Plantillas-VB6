@@ -1,0 +1,69 @@
+Tip 12: Redirecting the Output of a Shelled DOS Program
+Created: March 1, 1995
+
+Abstract
+When you execute a DOS program through the Visual Basic® shell command, the only way you can use the redirection capabilities of DOS is to save the DOS program output to a text file. Then your Visual Basic program can read the data from the text file and perform program operations based on this same data.
+
+Retrieving Output from a DOS Program
+Saving the output of a DOS command that is executed from within your Visual Basic® program may be necessary. For example, if you execute the dir command, you will obviously want to save the file list so that you can use it in your Visual Basic application. Or, if the DOS program returns an ErrorLevel value, you may need to perform tasks depending on this value.
+
+The redirection facility provided in DOS allows you to send the output of a DOS command to a text file. Unfortunately, the Visual Basic shell command will not allow you to specify DOS commands that have command line parameters telling it to redirect the output in this manner. However, if you first create a batch file that contains the DOS command and then use shell to execute the batch file, the desired results can be achieved.
+
+Another problem occurs when executing DOS commands or programs via shell: You need to know when the DOS program has finished executing. This problem can be solved by calling the Windows® GetNumTasks application programming interface (API) function. GetNumTasks tells you how many programs are currently being executed on the computer system in both DOS and Windows.
+
+Therefore, to determine when your batch file has finished executing, you simply call GetNumTasks first, saving the value it returns in a variable. After executing the shell statement, you call GetNumTasks again to find out if the number of tasks has decreased by one. If it has, you know that your batch file (or other DOS program) has finished doing its work.
+
+To use the GetNumTasks function in your Visual Basic applications, include the following Declare statement in the Global Module or General Declarations section of your form:
+
+Declare Function GetNumTasks Lib "Kernel" () As Integer
+
+Note that this Declare statement must be typed as one single line of text.
+
+The GetNumTasks function does not require any arguments; you simply call it. It returns an integer value set to the number of tasks that are currently running.
+
+Example Program
+This program creates a batch file that contains the DOS command "DIR C:\*.* > C:\DIRLIST.DAT". This batch file tells DOS to issue a dir command on drive C and send the output of that command to the text file called DIRLIST.DAT. The Visual Basic program then displays the contents of DIRLIST.BAT in the Text Box. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+In the general declarations section of Form1, add the following Declare statement (note that this statement should be typed as a single line of text): 
+Declare Function GetNumTasks Lib "Kernel" () As Integer
+
+Add a command button control to Form1. Command1 is created by default. Set its Caption property to "Execute DIR". 
+Add the following code to the Click event of Command1: 
+Sub Command1_Click()
+    Dim Num_Apps As Integer, NewFile As Integer
+    Dim File_Data As String, DosCmd As String
+    Dim X As Integer
+    'Create a batch file with the DIR *.EXE command
+    'and redirect the output to a textfile DIRLIST.TXT.
+    DosCmd = "DIR C:\*.* > c:\DIRLIST.DAT"
+    NewFile = FreeFile
+    Open "C:\DIRBAT.BAT" For Output As #NewFile
+    Print #NewFile, DosCmd
+    Close #NewFile
+    'Call the Shell command to execute DIRBAT.BAT.
+    Num_Apps = GetNumTasks()
+    X = Shell("C:\DIRBAT.BAT", 2)
+    'Wait until DIR has finished doing its thing.
+    Do While GetNumTasks() <> Num_Apps
+            X = DoEvents()
+    Loop
+    'Display the filenames in the Text Box.
+    NewFile = FreeFile
+    Open "C:\DIRLIST.DAT" For Input As #NewFile
+    Text1.Text = ""
+    While Not EOF(NewFile)
+            Line Input #NewFile, File_Data
+            Text1.Text = Text1.Text & File_Data & Chr(13) & Chr(10)
+    Wend
+    Close #NewFile
+End Sub
+
+Add another command button to Form1. Command2 is created by default. Set its Caption property to "Exit". 
+Add the following code to the Click Event of Command2: 
+Sub Command2_Click()
+    End
+End Sub
+
+Add a Text Box to Form1. Text1 is created by default. Set its MultiLine property to True. Make sure the text box is large enough to display a directory list. 
+Execute this demonstration program by pressing the F5 function key. Click the "Execute DIR" command button. After a second or two, a list of the files found on drive C will be shown in the Text Box. Click the Exit command button to terminate the application.

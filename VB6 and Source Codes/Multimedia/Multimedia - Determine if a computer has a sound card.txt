@@ -1,0 +1,6 @@
+'Description: Determine if a computer has a sound card
+
+
+'Declare Function waveOutGetNumDevs Lib "MMSYSTEM" () As Integer
+i% = waveOutGetNumDevs()
+If i% > 0 Then MsgBox "You Can Play Wave Data" Else MsgBox "Cannot Play Wave Data"

@@ -1,0 +1,52 @@
+Tip 158: Retrieving the Windows Directory
+December 5, 1995
+
+Abstract
+The Microsoft® Windows® directory contains such files as Windows-based application files, initialization files, and Help files. This article explains how to retrieve the path of the Windows directory from within your Microsoft Visual Basic® application.
+
+Using the GetWindowsDirectory Function
+From within a Microsoft® Visual Basic® application, you can determine the path of the Microsoft Windows® directory. To do this, you use the Windows application programming interface (API) GetWindowsDirectory function. You must include the following Declare statement in the General Declarations section of your form:
+
+Private Declare Function GetWindowsDirectory Lib "kernel32" 
+   Alias "GetWindowsDirectoryA" (ByVal lpBuffer As String, ByVal nSize As Long)
+   As Long
+
+The GetWindowsDirectory function requires two arguments: a buffer that will hold the path of the directory after the function is called, and the length of the directory's buffer. You must make sure that the buffer is long enough to hold the path—otherwise, an error will occur.
+
+After calling this function, the path of the Windows directory is stored in the lpBuffer argument.
+
+Example Program
+This program shows how to retrieve the path of the Windows directory. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Declare statement to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function GetWindowsDirectory Lib "kernel32" Alias 
+   "GetWindowsDirectoryA" (ByVal lpBuffer As String, ByVal nSize As Long) 
+   As Long
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim DirName As String
+    DirName = GetWindowsDir()
+    text1.Text = DirName
+End Sub
+
+Create a new function called GetWindowsDir. Add the following code to this function: 
+Function GetWindowsDir() As String
+    Dim Temp As String
+    Dim Ret As Long
+    Const MAX_LENGTH = 145
+
+    Temp = String$(MAX_LENGTH, 0)
+    Ret = GetWindowsDirectory(Temp, MAX_LENGTH)
+    Temp = Left$(Temp, Ret)
+    If Temp <> "" And Right$(Temp, 1) <> "\" Then
+        GetWindowsDir = Temp & "\"
+    Else
+        GetWindowsDir = Temp
+    End If
+End Function
+
+Run the example program by pressing F5. The path of the Windows directory appears in the Text Box control.

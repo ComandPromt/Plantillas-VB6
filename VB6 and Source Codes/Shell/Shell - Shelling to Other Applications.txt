@@ -1,0 +1,57 @@
+Tip 191: Shelling to Other Applications
+December 5, 1995
+
+Abstract
+This article explains how to run MS-DOS®-based and Microsoft Windows®-based applications from within a Microsoft Visual Basic® application.
+
+Running MS-DOS and Windows Applications
+When you want to run an MS-DOS®-based or Microsoft® Windows®-based application, you can use the Windows application programming interface (API) OpenProcess function. The OpenProcess function allows you to control how the application is run.
+
+In the example program below, you use the OpenProcess function to launch the Notepad application. The OpenProcess function returns the handle of the newly opened process (that is, application). When you have the process handle for Notepad, you can use the Windows API GetExitCodeProcess function to determine whether Notepad is still running in memory.
+
+The GetExitCodeProcess function returns a value of STILL_ACTIVE if the opened process is still running in memory. Knowing this, you can periodically check the status of the Notepad application in a Do-While loop. When the example program finds that Notepad is not running, the example program displays a message that Notepad was indeed terminated.
+
+Example Program
+This program shows how to run an MS-DOS-based or Windows-based application in the background. The application continues running in the background until the user terminates it. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Private Declare Function OpenProcess Lib "kernel32" 
+   (ByVal dwDesiredAccess As Long, ByVal bInheritHandle 
+   As Long, ByVal dwProcessId As Long) As Long
+Private Declare Function GetExitCodeProcess Lib "kernel32" 
+   (ByVal hProcess As Long, lpExitCode As Long) As Long
+Private Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds 
+   As Long)
+Const STILL_ACTIVE = &H103
+Const PROCESS_QUERY_INFORMATION = &H400
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim JobToDo As String
+    JobToDo = "c:\windows\notepad.exe"
+    Shell32Bit JobToDo
+End Sub
+
+Create a new subroutine called Shell32Bit. Add the following code to this subroutine: 
+Sub Shell32Bit(ByVal JobToDo As String)
+    Dim hProcess As Long
+    Dim RetVal As Long
+    'The next line launches JobToDo as icon,
+    'captures process ID
+    hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, Flase, Shell(JobToDo, 6))
+    Do
+        'Get the status of the process
+        GetExitCodeProcess hProcess, RetVal
+        'Sleep command recommended as well
+        'as DoEvents
+        DoEvents: Sleep 100
+    'Loop while the process is active
+    Loop While RetVal = STILL_ACTIVE
+    MsgBox "Notepad terminated by user"
+End Sub
+
+Run the example program by pressing F5. Click the Command Button control. The example program runs the Windows Notepad application. Notice that the Notepad icon appears in the Windows taskbar.
+
+Notepad runs in the background until you quit it. The example program displays a message box that indicates that Notepad was terminated.

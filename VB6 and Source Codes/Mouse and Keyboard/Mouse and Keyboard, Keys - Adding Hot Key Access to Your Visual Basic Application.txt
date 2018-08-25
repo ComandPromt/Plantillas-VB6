@@ -1,0 +1,49 @@
+Tip 190: Adding Hot Key Access to Your Visual Basic Application
+December 5, 1995
+
+Abstract
+This article explains how to add a hot key that allows the user of a running application to quickly switch to your Microsoft® Visual Basic® application.
+
+Providing Task Switching by Adding a Hot Key
+Under the Microsoft® Windows® 95 operating system, you can easily switch between running applications by clicking on an application's icon on the taskbar or by pressing the ALT+TAB key combination. When developing a Microsoft Visual Basic® application, you may want to provide a quick method for the user to switch to the application. This can be done by adding a hot key to your application.
+
+Whenever the user presses the specific hot key that you have assigned to your Visual Basic application, your application receives the focus and is maximized. The user does not have to use ALT+TAB or the Windows 95 taskbar to activate your application.
+
+Suppose that whenever the user presses the PAUSE key, you want to activate your Visual Basic application. Therefore, you need to monitor the computer system so that the application is activated only when this keystroke is detected on the keyboard. This can be accomplished by using the Windows application programming interface (API) SendMessage function.
+
+The SendMessage function can be used to send a specific message to a window. To use this function, add the following Declare statement to the General Declarations section of your form:
+
+Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" 
+   (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, 
+   lParam As Long) As Long
+
+The SendMessage function takes the following four arguments:
+
+hWnd A long value containing the window's handle. The message is sent to this window. 
+wMsg A long value containing the message you want to send to hWnd. 
+wParam A long value containing additional message-dependent information. 
+lParam A long value containing additional message-dependent information. 
+
+In the example program below, you want to set PAUSE as the hot key to your application. Because you want the application to be activated when PAUSE is pressed, you need to send a WM_SETHOTKEY message to the application's window—in this case, Form1. A WM_SETHOTKEY message is used to assign a specific key as an application's hot key. Therefore, we need to use the SendMessage function to send a WM_HOTKEY message to the application. This message is placed at the top of the thread's message queue, which in turn allows the PAUSE key to gain immediate attention when it is detected.
+
+Note that a window can have only one hot key associated with it at any one time. In addition, child windows cannot have hot keys associated with them. Finally, if you assign a hot key to a window that already has a hot key assigned to it, the new hot key replaces the original one.
+
+Example Program
+This program below shows how to add hot key access to your Visual Basic applications. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" 
+   (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, 
+   lParam As Long) As Long
+Const WM_SETHOTKEY = &H32
+Const VK_PAUSE = &H13
+
+Add the following code to the Click event for Form1: 
+Private Sub Form_Click()
+    Dim I As Long
+    I = SendMessage(Me.hwnd, WM_SETHOTKEY, VK_PAUSE, 0)
+    MsgBox "The Pause key was pressed"
+End Sub
+
+Run the example program by pressing F5. Each time you click the mouse on the form, the "The Pause key was pressed" message box is displayed. Now, minimize the example program. Control returns to the Visual Basic design environment. Press PAUSE on the keyboard. The example program is immediately maximized and receives the focus.

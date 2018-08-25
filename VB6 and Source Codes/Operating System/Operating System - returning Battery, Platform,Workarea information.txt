@@ -1,0 +1,36 @@
+'Description: Utilizes SysInfo.ocx to show battery, platform, and workarea information.
+
+'Subroutine needs one listbox. Keep the default name of both controls.
+        List1.AddItem "BatteryFullTime = " & Format$(SysInfo1.BatteryFullTime)
+        List1.AddItem "BatteryLifeTime = " & Format$(SysInfo1.BatteryLifeTime)
+        List1.AddItem "BatteryLifePercent = " & Format$(SysInfo1.BatteryLifePercent / 100, "Percent")
+
+        Select Case SysInfo1.BatteryStatus
+        Case 1
+        List1.AddItem "BatteryStatus = HIGH"
+        Case 2
+        List1.AddItem "BatteryStatus = LOW"
+        Case 4
+        List1.AddItem "BatteryStatus = CRITICAL"
+        Case 128
+        List1.AddItem "BatteryStatus = NO BATTERY"
+        Case 255
+        List1.AddItem "BatteryStatus = UNKNOWN"
+        End Select
+
+        Select Case SysInfo1.OSPlatform
+        Case 0
+        List1.AddItem "OSPlatform = Unknown 32-Bit Windows"
+        Case 1
+        List1.AddItem "OSPlatform = Windows 95"
+        Case 2
+        List1.AddItem "OSPlatform = Windows NT"
+        End Select
+
+        List1.AddItem "OSVersion = " & SysInfo1.OSVersion
+        List1.AddItem "OSBuild = " & SysInfo1.OSBuild
+        List1.AddItem "ScrollBarSize = " & SysInfo1.ScrollBarSize
+        List1.AddItem "WorkAreaHeight = " & SysInfo1.WorkAreaHeight
+        List1.AddItem "WorkAreaTop = " & SysInfo1.WorkAreaTop
+        List1.AddItem "WorkAreaLeft = " & SysInfo1.WorkAreaLeft
+        List1.AddItem "WorkAreaWidth = " & SysInfo1.WorkAreaWidth

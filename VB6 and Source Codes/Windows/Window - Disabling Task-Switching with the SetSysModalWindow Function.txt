@@ -1,0 +1,67 @@
+Tip 66: Disabling Task-Switching with the SetSysModalWindow Function
+Created: April 24, 1995
+
+Abstract
+When developing an application in Visual Basic®, you may need to perform a task that should not be interrupted. This article explains how to use the Windows® application programming interface (API) SetSysModalWindow and LockInput functions to disable task-switching.
+
+Preventing a User from Switching to Another Application
+The Windows® application programming interface (API) SetSysModalWindow function can be used to prevent a user from switching to a different Windows-based application while your program is executing. The ALT+TAB, CTRL+ESC, ALT+F4, and ALT+ESC keystroke combinations will not bring up the Task Manager or any other application—these keystrokes will simply be ignored. For a discussion of the SetSysModalWindow function, see "Additional References" below.
+
+In addition, the LockInput function can be used to force all input to your Visual Basic® application only. No other application will receive any mouse or keyboard data. The Declare statement for the LockInput function is as follows (note that it must be typed as a single line of code):
+
+Declare Function LockInput Lib "User" (ByVal hReserved As Integer, ByVal 
+   hwndInput As Integer, ByVal fLock As Integer) As Integer
+
+The LockInput function requires three arguments:
+
+hReserved An integer value that must be set to a value of zero. 
+hwndInput An integer value containing the window's handle. This is the window that will receive all input. 
+fLock An integer value set to TRUE (nonzero) to lock input or FALSE (zero) to unlock input. 
+
+When your program is terminated, you must use the LockInput function to restore input to other Windows-based programs. In addition, you must destroy the system modal window; otherwise the user will not be able to switch to any other Windows-based applications and will have to reboot the computer system.
+
+Example Program
+The program below shows how you can prevent a user from switching to another Windows-based application while your program is executing. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Set the following properties for Form1: 
+ClipControls = False
+ControlBox = false
+MaxButton = False
+MinButton = False
+
+Add the following Dim and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Declare Function GetActiveWindow Lib "User" () As Integer
+Declare Function SetFocusAPI Lib "User" Alias "SetFocus" (ByVal Hwnd As Integer) 
+   As Integer
+Declare Function SetSysModalWindow Lib "User" (ByVal Hwnd As Integer) As Integer
+Declare Function LockInput Lib "User" (ByVal hReserved As Integer, ByVal 
+   hwndInput As Integer, ByVal fLock As Integer) As Integer
+Dim TopHwnd As Integer
+
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+
+  Dim X As Integer
+    
+  Show
+  DoEvents
+  TopHwnd = GetActiveWindow()
+    
+  X = SetFocusAPI(TopHwnd)
+  X = SetSysModalWindow(TopHwnd)
+  X = LockInput(0, TopHwnd, 1)
+End Sub
+
+Add the following code to the Form_Unload event for Form1: 
+Sub Form_Unload(Cancel As Integer)
+  X = LockInput(0, TopHwnd, 0)
+End Sub
+
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Quit". 
+Add the following code to the Click event for Command1: 
+Sub Command1_Click()
+    X = LockInput(0, TopHwnd, 0)
+    End
+End Sub
+

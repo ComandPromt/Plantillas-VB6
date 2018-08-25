@@ -1,0 +1,11 @@
+'Description: Gives application splash screen capability
+
+'Place the following code in a Form_Load()
+
+Show
+Splash.show
+'Splash is the name of your start-up logo form
+Doevents
+Initialize
+'Your subroutine that performs time-consuming initializations
+Unload Splash

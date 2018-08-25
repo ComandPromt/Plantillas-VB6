@@ -1,0 +1,151 @@
+Tip 55: Diagnosing "Error in Loading DLL" with LoadLibrary
+Created: April 17, 1995
+
+Abstract
+When developing applications in Visual Basic® that run on different computer systems, you must process error conditions such as missing dynamic-link library (.DLL) files. The Windows® application programming interface (API) LoadLibrary, FreeLibrary, and SetErrorMode functions can be used to create an error-handling routine that will capture and process the "Error in Loading DLL" error message returned when Windows cannot find the specified .DLL file on the target machine. This article explains how your application can determine if a .DLL is on the user's system.
+
+Trapping Errors When DLLs Are Missing
+When an application calls a function in a dynamic-link library (.DLL) file, it loads the .DLL into memory and executes the specified function. However, if the .DLL file does not exist on the user's machine, Windows® responds by displaying an "Error in loading DLL" error message.
+
+In a Visual Basic® application, you can write your own routine to determine if the specified .DLL file exists and prevent Windows from generating its own critical error message (Int 24h). This can be done by using the Windows application programming interface (API) LoadLibrary, FreeLibrary, and SetErrorMode functions.
+
+The LoadLibrary function loads the specified .DLL into memory. To use this function in your Visual Basic program, include the following Declare statement in the General Declarations section of your form:
+
+Declare Function LoadLibrary Lib "Kernel" (ByVal f$) As Integer
+
+The LoadLibrary function requires only one argument—the name of the library file you want to load. After calling this function, LoadLibrary returns an integer value that contains the instance handle of the .DLL or an error code (the value returned is less than 32, indicating an error has occurred). The following error codes and their meanings are returned by the LoadLibrary function.
+
+0 System was out of memory, executable file was corrupt, or relocations were invalid. 
+2 File was not found. 
+3 Path was not found 
+5 Attempt was made to dynamically link to a task, or there was a sharing or network-protection error. 
+6 Library required separate data segments for each task. 
+8 There was insufficient memory to start the application. 
+10 Windows version was incorrect. 
+11 Executable file was invalid. Either it was not a Windows-based application or there was an error in the .EXE image. 
+12 Application was designed for a different operating system. 
+13 Application was designed for MS-DOS® version 4.0. 
+14 Type of executable file was unknown. 
+15 Attempt was made to load a real-mode application (developed for an earlier version of Windows). 
+16 Attempt was made to load a second instance of an executable file containing multiple data segments that were not marked read-only. 
+19 Attempt was made to load a compressed executable file. The file must be decompressed before it can be loaded. 
+20 Dynamic-link library (.DLL) file was invalid. One of the .DLLs required to run this application was corrupt. 
+21 Application requires Microsoft® Windows 32-bit extensions. 
+
+The Windows API FreeLibrary function unloads a previously loaded .DLL. The FreeLibrary function should be called after you have tried to load a .DLL file with the LoadLibrary function. This function's declaration statement is as follows:
+
+Declare Sub FreeLibrary Lib "Kernel" (ByVal h As Integer)
+
+To unload a .DLL from memory, you simply call the FreeLibrary function with the module's instance handle.
+
+If your Visual Basic application attempts to load a .DLL that does not exist, Windows will respond with a critical-error-handler message box. You can use the Windows API SetErrorMode function to tell Windows to handle the error or to tell Windows that your program will process the error condition itself. The declaration statement for SetErrorMode is as follows:
+
+Declare Function SetErrorMode Lib "Kernel" (ByVal wMode As Integer) As Integer
+
+This function requires only one argument: a constant value that tells Windows how to handle Interrupt 24h errors. The value you pass to SetErrorMode may be a combination of these values:
+
+SEM_FAILCRITICALERRORS Windows does not display the critical-error-handler message box and so returns the error to the calling application. 
+SEM_NOGPFAULTERRORBOX Windows does not display the general-protection-fault message box. This flag should be set only by debugging applications that handle GP faults themselves. 
+SEM_NOOPENFILERRORBOX Windows does not display a message box when it fails to find a file. 
+
+After calling the SetErrorMode function, an integer value is returned. This value is the previous state of the error-mode flag.
+
+In a Visual Basic application, you can use the SetErrorMode function in conjunction with the LoadLibrary and FreeLibrary functions to determine if a user's system has the .DLL files your program needs.
+
+Example Program
+The following program shows how to trap Error Code 48, "Error in loading DLL", from within your Visual Basic application. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of text): 
+Declare Function LoadLibrary Lib "Kernel" (ByVal f$) As Integer
+Declare Sub FreeLibrary Lib "Kernel" (ByVal h As Integer)
+Declare Function SetErrorMode Lib "Kernel" (ByVal wMode As Integer) As Integer
+
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+  Dim NameofDLL As String
+  Dim IsThere As Integer
+  Dim ErrNumber As Integer
+  Dim ErrText As String
+    
+  NameofDLL = "kernel.dll"
+  IsThere = DoesLibraryExist(NameofDLL, ErrNumber, ErrText)
+    
+  If IsThere = True Then
+       text1.Text = "DLL exists!"
+    Else
+      text1.Text = Str$(ErrNumber) + " " + ErrText
+  End If
+    
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Create a new function called DoesLibraryExist. Add the following code to this function (note that the first line, the OriginalErrorValue% lines, and all Explain$ lines must be typed as a single line of code): 
+Function DoesLibraryExist(DllName$, ErrorReturned%, ErrorExplanation$)
+   As Integer
+Dim hInst As Integer
+Dim ReturnValue As Integer
+Dim Explain$
+Dim OriginalErrorValue%
+Const SEM_NOOPENFILEERRORBOX = &H8000
+Const SEM_FAILCRITICALERRORS = &H1
+
+  ReturnValue = True
+  OriginalErrorValue% = SetErrorMode(SEM_NOOPENFILEERRORBOX Or 
+     SEM_FAILCRITICALERRORS)
+  hInst = LoadLibrary(DllName$)
+  OriginalErrorValue% = SetErrorMode(OriginalErrorValue)
+  If hInst > 32 Then
+     ReturnValue = True
+     FreeLibrary (hInst)
+  Else
+     ReturnValue = False
+     Select Case hInst
+       Case 0
+         Explain$ = "System is out of memory, executable file is corrupt, or 
+             relocations are invalid."
+       Case 2
+         Explain$ = "File not found."
+       Case 3
+         Explain$ = "Path not found."
+       Case 5
+         Explain$ = "Sharing or network protection error."
+       Case 6
+         Explain$ = "Library required separate data segments for each task."
+       Case 8
+         Explain$ = "Insufficient memory."
+       Case 10
+         Explain$ = "Incorrect Windows version."
+       Case 11
+         Explain$ = "It was either not a Windows application or there was an 
+             error in the file."
+       Case 12
+         Explain$ = "It was designed for a different operating system."
+       Case 13
+         Explain$ = "It was designed for MS-DOS 4.0."
+       Case 14
+         Explain$ = "File type unknown."
+       Case 15
+         Explain$ = "The file was designed for an earlier Version of Windows."
+       Case 16
+         Explain$ = "An attempt was made to load a second instance of an 
+		executable file containing multiple data segments not marked 
+           read-only."
+       Case 19
+         Explain$ = "Attempt was made to load a compressed file. It must be 
+            decompressed before it can be loaded."
+       Case 20
+         Explain$ = "DLL file is invalid. This file or one called by it is corrupt."
+       Case 21
+         Explain$ = "The file requires Microsoft Windows 32-bit extensions."
+       Case Else
+         Explain$ = "The reason it wouldn't load is unclear. Error code " & 
+            Trim(Str(hInst)) & "."
+     End Select
+     ErrorReturned = Int(hInst)
+     ErrorExplanation$ = Explain$
+  End If
+DoesLibraryExist = ReturnValue
+End Function
+
+When you run this program, it should display the message "DLL Exists" in the Text Box. Change the NameofDLL string variable to "WIN.COM" and run the application a second time. You should receive an error number and error message in the Text Box because there is no .DLL file by the name of WIN.COM.

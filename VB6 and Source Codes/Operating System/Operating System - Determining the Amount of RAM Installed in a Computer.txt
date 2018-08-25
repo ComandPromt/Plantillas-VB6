@@ -1,0 +1,55 @@
+Tip 77: Determining the Amount of RAM Installed in a Computer
+May 8, 1995
+
+Abstract
+You can use the Windows® application programming interface (API) MemManInfo function to determine how much random access memory (RAM) is installed in the computer system. This article explains how to retrieve the amount of RAM.
+
+How Much Memory Do You Have?
+The Windows® application programming interface (API) MemManInfo function can be called to determine how much random access memory (RAM) is installed in your computer. This function is included in the TOOLHELP.DLL file.
+
+To use the MemManInfo function in a Visual Basic® application, you must declare the function as follows:
+
+Private Declare Function MemManInfo% Lib "Toolhelp.dll" (lpmmi As TagMemManInfo)
+
+The MemManInfo function takes only one argument: a structure that will hold information about the memory manager. The number of pages of memory is stored in the wPageSize field of this structure. We need only multiply the number of pages found by a value of 4 to calculate how much RAM is installed.
+
+Example Program
+The example program below shows how to retrieve the amount of RAM installed in the computer system. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Dim R As Long
+    Text1.Text = "Total RAM installed: "
+    R = GetRAMSize
+    Text1.Text = Text1.Text + Str(R)
+    
+End Sub
+
+Add a new module to the project. Module.Bas is created by default. 
+Add the following code to the Module.Bas file: 
+Type TagMemManInfo
+    dwSize As Long
+    dwLargestFreeBlock As Long
+    dwMaxPagesAvailable As Long
+    dwMaxPagesLockable As Long
+    dwTotalLinearSpace As Long
+    dwTotalUnlockedPages As Long
+    dwFreePages As Long
+    dwTotalPages As Long
+    dwFreeLinearSpace As Long
+    wPageSize As Integer
+End Type
+Private Declare Function MemManInfo% Lib "Toolhelp.dll" (lpmmi As TagMemManInfo)
+Function GetRAMSize() As Long
+    Dim mmi As TagMemManInfo
+    mmi.dwSize = Len(mmi)
+    x% = MemManInfo(mmi)
+    If x% <> 0 Then
+        GetRAMSize = mmi.dwTotalPages * 4
+    Else
+        GetRAMSize = 0
+    End If
+End Function
+
+Add a Text Box control to Form1. Text1 is created by default. 

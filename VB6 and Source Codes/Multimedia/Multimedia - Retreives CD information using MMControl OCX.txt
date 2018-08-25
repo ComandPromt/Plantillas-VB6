@@ -1,0 +1,20 @@
+'Description: Retreives CD Audio information with the MMControl OCX
+
+'Place the following code in a Form_Load()
+
+Dim DiskID As Long
+Dim Track As Integer
+MMControl1.DeviceType = "CDAudio"
+MMControl1.Command = "open"
+DiskID = MMControl1.Tracks
+
+For Track = 1 To MMControl1.Tracks
+MMControl1.Track = Track
+DiskID = DiskID + MMControl1.TrackLength  
+DiskID = DiskID + MMControl1.Length       
+Next Track
+
+label1(1).Caption = "CD ID#: " & DiskID
+label1(2).Caption = "Tracks: " & MMControl1.Tracks
+label1(3).Caption = "Tracklength: " & MMControl1.TrackLength
+label1(4).Caption = "CD Length: " & MMControl1.Length

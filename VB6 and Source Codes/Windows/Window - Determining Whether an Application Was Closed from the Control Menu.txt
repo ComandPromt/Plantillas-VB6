@@ -1,0 +1,41 @@
+Tip 187: Determining Whether an Application Was Closed from the Control Menu
+December 5, 1995
+
+Abstract
+This article explains how to prevent the user of your Microsoft® Visual Basic® application from unintentionally quitting the application.
+
+The Query_Unload Event
+When running an application, you can select the Close command from the Control-menu box in the upper-left corner of a window to quit the application. When running a Microsoft® Windows® 95–based application, you can click the Close button located at the right end of the title bar. These actions terminate the application immediately.
+
+In a Microsoft Visual Basic® application, the Query_Unload event is triggered when the user tries to quit an application that is running. The UnloadMode variable in the Query_Unload event indicates how this event was triggered by containing one of the five values in the following table.
+
+Value Description 
+0 The user chose the Close command on the Control-menu box. 
+1 The application used the Query_Unload method itself. 
+2 The operating system is being shut down. 
+3 The application is being shut down by the Task Manager. 
+4 An MDI form, which closes all child forms belonging to it, is being closed. 
+
+For example, when the user chooses the Close command from the Control-menu box to quit an application, the UnloadMode variable contains a value of zero.
+
+Example Program
+This program shows how to prevent a user from accidentally choosing the Close command on the program's Control-menu box. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Query_Unload event for Form1: 
+Private Sub Form_QueryUnload(Cancel As Integer, UnloadMode As Integer)
+    Dim I As Integer
+    If (UnloadMode = FORM_CONTROLMENU) Then
+        I = MsgBox("Exit " & App.Title & " ?", 4, App.EXEName)
+        If I = 7 Then
+            Cancel = True
+            MsgBox "Program was not terminated"
+        End If
+        If I = 6 Then
+            Cancel = False
+            MsgBox "Program was terminated"
+        End If
+    End If
+End Sub
+
+Run the example program by pressing F5. Form1 appears on the screen. Either click the File menu and click the Close command or click the Close button in the upper right-hand corner of the form. The program displays a message box asking whether you really want to quit the program. If you click the Yes button, the program is immediately terminated. If you click the No button, however, the program continues to run.

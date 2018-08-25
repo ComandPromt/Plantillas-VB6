@@ -1,0 +1,12 @@
+Tip 136: Using Keyboard and Mouse Shortcuts
+July 1, 1995
+
+Abstract
+This article describes several undocumented keyboard and mouse features of Microsoft® Visual Basic®.
+
+Using Undocumented Keyboard and Mouse Techniques
+When you are in the Microsoft® Visual Basic® code window, you can click in the left margin of the window to select a specific line, or you can double-click in the left margin to select an entire function or procedure. Similarly, you can press the CTRL key while clicking in the left margin to select all functions. 
+When designing an application, you can move a control's position within the form up, down, left, or right by holding down CTRL while pressing the appropriate arrow key. 
+When designing an application, you can manually adjust the size of a control by one pixel by holding down the SHIFT key while pressing the appropriate arrow key. 
+In the code window, pressing CTRL+SHIFT+F2 moves the cursor back to its previous location. 
+A context-sensitive menu is displayed for the toolbar, toolbox, form, control, code window, debug window, and project window when you right-click that object. 

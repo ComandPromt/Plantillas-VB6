@@ -1,0 +1,162 @@
+Tip 93: Retrieving the Names of Installed Printers
+May 22, 1995
+
+Abstract
+The Windows® initialization file, WIN.INI, contains a list of all printers attached to the computer system. This article contains an example program that retrieves the name of each printer stored in the WIN.INI initialization file.
+
+Using GetProfileString and GetPrivateProfileString
+The Devices section of the WIN.INI initialization file contains the names of all printers attached to your computer system. You can retrieve this list of printer names by using two Windows® application programming interface (API) functions.
+
+The Windows API GetProfileString and GetPrivateProfileString functions can be used to retrieve the name of a printer as stored in the WIN.INI file. For a complete discussion of these functions, see the articles listed in the "Additional References" section of this article.
+
+Example Program
+This program retrieves the names of all installed printers from the WIN.INI initialization file. The printer names are displayed in a List Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant, Declare, and Type statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of text): 
+Option Explicit
+Private Type WindowsDevice
+   WindowsDeviceUserName As String
+   WindowsDeviceShortName As String
+   WindowsDevicePortName As String
+End Type
+Private Declare Function GetProfileString Lib "Kernel" (ByVal lpAppName 
+   As String, ByVal lpKeyName As String, ByVal lpDefault As String, ByVal 
+   lpReturnedString As String, ByVal nSize As Integer) As Integer
+Private Declare Function GetPrivateProfileString Lib "Kernel" (ByVal lpAppName 
+   As String, ByVal lpKeyName As String, ByVal lpDefault As String, ByVal 
+   lpReturnedString As String, ByVal nSize As Integer, ByVal lpFileName As 
+   String) As Integer
+Private Declare Function GetProfileKeys Lib "Kernel" Alias "GetProfileString" 
+   (ByVal lpAppName As String, ByVal lpKeyName As Long, ByVal lpDefault As 
+    String, ByVal lpReturnedString As String, ByVal nSize As Integer) As Integer
+Private Declare Function GetPrivateProfileKeys Lib "Kernel" Alias 
+   "GetPrivateProfileString" (ByVal lpAppName As String, ByVal lpKeyName As 
+   Long, ByVal lpDefault As String, ByVal lpReturnedString As String, ByVal 
+   nSize As Integer, ByVal lpFileName As String) As Integer
+Const WINDOWS_SECTION_NAME = "windows"
+Const DEVICES_SECTION_NAME = "devices"
+Const DEVICE_KEY_NAME = "device"
+Const NO_PRINTER = "(none)"
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1 (note that the List1.AddItem statement must be typed as a single line of code): 
+Private Sub Command1_Click()
+Dim OrgPrinter As WindowsDevice
+Call GetDefaultPrinter(OrgPrinter)
+Text1.Text = OrgPrinter.WindowsDeviceUserName
+
+Dim NumPrinters As Integer
+ReDim InstalledPrinters(0) As WindowsDevice
+Call GetInstalledPrinters(InstalledPrinters())
+For NumPrinters = 1 To UBound(InstalledPrinters)
+List1.AddItem InstalledPrinters(NumPrinters).WindowsDeviceUserName + " 
+on " + InstalledPrinters(NumPrinters).WindowsDevicePortName
+Next
+List1.AddItem NO_PRINTER, 0
+End Sub
+
+Create a new function called GetDefaultPrinter. Add the following code to this function: 
+Private Sub GetDefaultPrinter(recDefaultPrinter As WindowsDevice)
+Dim StrPos As Integer
+Dim DefaultPrinter As String
+Dim RC As Integer
+DefaultPrinter = GetString(WINDOWS_SECTION_NAME, DEVICE_KEY_NAME, "", "")
+StrPos = InStr(DefaultPrinter, ",")
+recDefaultPrinter.WindowsDeviceUserName = Left$(DefaultPrinter, StrPos - 1)
+DefaultPrinter = Mid$(DefaultPrinter, StrPos + 1)
+StrPos = InStr(DefaultPrinter, ",")
+recDefaultPrinter.WindowsDeviceShortName = Left$(DefaultPrinter, StrPos - 1)
+recDefaultPrinter.WindowsDevicePortName = Mid$(DefaultPrinter, StrPos + 1)
+End Sub
+
+Create a new function called GetInstalledPrinter. Add the following code to this function (note that the InstalledPrinter lines must be typed as a single line of code): 
+Private Sub GetInstalledPrinters(recInstalledPrinters() As WindowsDevice)
+Dim StrPos As Integer
+Dim PrtSub As Integer
+Dim InstalledPrinter As String
+ReDim PrinterNames(0) As String
+Call GetKeyNames(DEVICES_SECTION_NAME, PrinterNames(), "")
+ReDim recInstalledPrinters(UBound(PrinterNames))
+For PrtSub = 1 To UBound(PrinterNames)
+InstalledPrinter = GetString(DEVICES_SECTION_NAME, PrinterNames(PrtSub), 
+"", "")
+StrPos = InStr(InstalledPrinter, ",")
+recInstalledPrinters(PrtSub).WindowsDeviceUserName = 
+PrinterNames(PrtSub)
+recInstalledPrinters(PrtSub).WindowsDeviceShortName = 
+Left$(InstalledPrinter, StrPos - 1)
+InstalledPrinter = Mid$(InstalledPrinter, StrPos + 1)
+StrPos = InStr(InstalledPrinter, ",")
+If StrPos > 0 Then
+recInstalledPrinters(PrtSub).WindowsDevicePortName = 
+Left$(InstalledPrinter, StrPos - 1)
+Else
+recInstalledPrinters(PrtSub).WindowsDevicePortName = 
+InstalledPrinter
+End If
+Next
+End Sub
+
+Create a new function called GetString. Add the following code to this function (note that the Function and KeyValueLength lines must each be typed as a single line of code): 
+Function GetString(SectionName As String, KeyName As String, DefaultValue 
+As String, ProfileName As String) As String
+Dim KeyValueLength As Integer
+Dim KeyValue As String
+KeyValue = Space$(256)
+If Trim$(ProfileName) = "" Then
+KeyValueLength = GetProfileString(SectionName, KeyName, DefaultValue, 
+KeyValue, Len(KeyValue))
+Else
+KeyValueLength = GetPrivateProfileString(SectionName, KeyName, 
+DefaultValue, KeyValue, Len(KeyValue), ProfileName)
+End If
+GetString = Left$(KeyValue, KeyValueLength)
+End Function
+
+Create a new function called GetKeyName. Add the following code to this function (note that the Sub and KeyNamesLength lines must each be typed as a single line of code): 
+Sub GetKeyNames(SectionName As String, KeyNames() As String, ProfileName 
+   As String)
+    Dim StrPos As Integer
+    Dim KeyCount As Integer
+    Dim Start As Integer
+    Dim KeyNamesLength As Integer
+    Dim KeyNameString As String
+    KeyNameString = Space$(1024)
+    If Trim$(ProfileName) = "" Then
+        KeyNamesLength = GetProfileKeys(SectionName, 0, "", KeyNameString, 
+            Len(KeyNameString))
+    Else
+        KeyNamesLength = GetPrivateProfileKeys(SectionName, 0, "", 
+            KeyNameString, Len(KeyNameString), ProfileName)
+    End If
+    KeyCount = 0
+    ReDim KeyNames(0)
+    If KeyNamesLength > 0 Then
+        KeyNameString = Left$(KeyNameString, KeyNamesLength)
+        If Right$(KeyNameString, 1) <> Chr$(0) Then
+            KeyNameString = KeyNameString + Chr$(0)
+        End If
+        KeyNamesLength = Len(KeyNameString)
+        Start = 1
+        Do
+            StrPos = InStr(Start, KeyNameString, Chr$(0))
+            If StrPos > 0 Then
+                KeyCount = KeyCount + 1
+                ReDim Preserve KeyNames(KeyCount)
+                KeyNames(KeyCount) = Mid$(KeyNameString, Start, StrPos - Start)
+                If StrPos < KeyNamesLength Then
+                    Start = StrPos + 1
+                Else
+                    Exit Do
+                End If
+            Else
+                Exit Do
+            End If
+        Loop
+        End If
+End Sub
+
+Run the example program by pressing the F5 function key. Click the Command Button control. The name of the default printer is displayed in the Text Box control, and a list of all installed printers is displayed in the List Box control.
+

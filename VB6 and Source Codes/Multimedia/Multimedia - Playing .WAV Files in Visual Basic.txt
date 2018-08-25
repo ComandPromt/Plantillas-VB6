@@ -1,0 +1,43 @@
+Tip 166: Playing .WAV Files in Visual Basic
+December 5, 1995
+
+Abstract
+This article explains how to play a waveform-audio (.WAV) file in your Microsoft® Visual Basic® application.
+
+Using the sndPlaySound Function
+Adding sound to your Microsoft® Visual Basic® application is one of the ways you can add more interest to your application. You can play a waveform-audio file by calling the Microsoft Windows® application programming interface (API) sndPlaySound function. This function's Declare statement is:
+
+Private Declare Function sndPlaySound Lib "winmm.dll" Alias "sndPlaySoundA" 
+   (ByVal lpszSoundName As String, ByVal uFlags As Long) As Long
+
+The first argument for the sndPlaySound function is a string containing the name of the waveform-audio file. Alternatively, this string can contain an entry from the registry or WIN.INI file.
+
+The second argument for the sndPlaySound function specifies how you want the file to be played. You can use one or a combination of the following values for this argument:
+
+SND_ASYNC The function returns after immediately playing the file. The file is played asynchronously. 
+SND_LOOP Used with SND_ASYNC, the file is played repeatedly until you call the sndPlaySound function with the first argument set to NULL. 
+SND_MEMORY The file to be played is stored in memory. 
+SND_NODEFAULT If the specified file cannot be found, the function returns. The default sound file is not played. 
+SND_NOSTOP The function returns without playing the specified sound file if a sound file is currently being played. 
+SND_SYNC The function does not return until the sound file has finished playing. 
+
+In the example program below, the TADA.WAV waveform-audio file is played. The second argument to the sndPlaySound function tells the function to play the specified sound file only, without playing the default sound.
+
+Example Program
+This program shows how to play a .WAV file in Visual Basic. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each statement must be typed as a single line of code): 
+Private Declare Function sndPlaySound Lib "winmm.dll" Alias "sndPlaySoundA" 
+   (ByVal lpszSoundName As String, ByVal uFlags As Long) As Long
+Const SND_SYNC = &H0         '  play synchronously (default)
+Const SND_NODEFAULT = &H2    '  silence not default, if sound not found
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim X As Long
+    X = sndPlaySound("c:\windows\media\tada.wav", SND_SYNC Or SND_NODEFAULT)
+End Sub
+
+Run the example program by pressing F5. Click the Command Button control. The TADA.WAV file is played.

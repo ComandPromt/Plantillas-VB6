@@ -1,0 +1,28 @@
+Tip 5: Removing the Desktop Wallpaper
+Created: March 1, 1995
+
+Abstract
+Within your own application, you can change various Windows® settings that are usually modified by using the Control Panel. One of these settings allows you to change the Desktop wallpaper. The SystemParametersInfo function can be used to select a new wallpaper for the Desktop from within your application.
+
+The SystemParametersInfo function can also be used to remove the Desktop wallpaper so that no wallpaper will be used at all.
+
+How to Remove the Desktop Wallpaper
+The following code shows how to remove the Desktop wallpaper and set the default to None. 
+
+Create a new Visual Basic project. Form1 is created by default. Add a command button to the form (Command1) and set its Caption property to "Remove Wallpaper". 
+Add the following code to the general declarations section of Form1: 
+Const SPIF_UPDATEINIFILE = &H1
+Const SPI_SETDESKWALLPAPER = 20
+Const SPIF_SENDWININICHANGE = &H2
+
+Next, add the following Declare statement to the General Declarations section (type this statement as one single line of text): 
+Declare Function SystemParametersInfo Lib "User" (ByVal uAction As Integer, ByVal uparam As Integer, ByVal lpvParam As String, ByVal fuWinIni As Integer) As Integer
+
+Add the following code to the Command1_Click event: 
+Sub Command1_Click()
+    filenm$ = "(none)"
+    x% = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0&, filenm$, SPIF_UPDATEINIFILE Or SPIF_SENDWININICHANGE)
+End Sub
+
+After executing this program, the current wallpaper should be removed from the Desktop.
+

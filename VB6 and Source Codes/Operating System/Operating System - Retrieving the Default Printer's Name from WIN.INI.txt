@@ -1,0 +1,67 @@
+Tip 30: Retrieving the Default Printer's Name from WIN.INI
+Created: March 1, 1995
+
+Abstract
+The WIN.INI initialization file contains many settings used by Windows® when it is first loaded into memory. These settings tell Windows, among many other things, what type of printer you have attached to the computer system. You can retrieve the name of the printer from the WIN.INI file and use it in your Visual Basic® application. This article explains how you can determine the printer's name.
+
+Using GetProfileString to Determine Printer Name
+The WIN.INI initialization file is divided into sections. Each section's name is surrounded by bracket ([ ]) characters. Directly below the section name are one or more entries and their parameters, separated by an equal sign. Windows® stores the name of the printer in the WINDOWS section of the WIN.INI file. The "device=" entry contains the printer's name, as follows:
+
+[windows]
+device=Canon Bubble-Jet BJ-300,CANON330,LPT1:
+
+In a Visual Basic® application, the Windows application programming interface (API) GetProfileString function can be used to retrieve the printer's name from the WIN.INI file. In the example above, the printer's name is Canon 330.
+
+To declare this function within your program, include the following Declare statement in the Global Module or General Declarations section of your Visual Basic program:
+
+Declare Function GetProfileString Lib "Kernel" (ByVal lpAppName As String, ByVal 
+   lpKeyName As Any, ByVal lpDefault As String, ByVal lpReturnedString
+   As String, ByVal nSize As Integer) As Integer
+
+Note that this Declare statement must be typed as one single line of text.
+
+To call the GetProfileString function, you must pass five arguments that describe which section and entry of the WIN.INI file you want to retrieve information from. These parameters are as follows:
+
+lpApplicationName A string containing the section name. Not case-sensitive. 
+lpKeyName A string containing the entry name to retrieve. Not case-sensitive. If this is a long value set to zero, a list of all entries found in the specified section will be returned in lpReturnedString. 
+lpDefault A string containing the default value to return if no entry is found. 
+lpReturnedString A string buffer that will hold the information the function retrieves. 
+nSize An integer value set to the maximum number of characters to be stored in lpReturnedString 
+
+After calling the GetProfileString function, an integer value is returned that is set to the number of characters that were stored in the lpReturnedString buffer. This count value does not include the terminating NULL byte. Each entry returned in lpReturnedString is terminated by a NULL character. When retrieving more than one entry at a single time, The last entry in the buffer is marked with two NULL bytes to signal the end of the list.
+
+In our case, we want to call the GetProfileString function to retrieve the printer's name. Therefore, we execute the following statement:
+
+RC = GetProfileString("windows", "device", "", Temp, 255)
+
+This statement tells GetProfileString that we want to retrieve the parameter for the DEVICE entry in the WINDOWS section of the WIN.INI initialization. It also tells the function to store the information in the Temp string buffer and that this buffer is set to a maximum length of 255 characters.
+
+Example Program
+The following Visual Basic program shows how you can retrieve the name of the printer from the WIN.INI initialization file. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. 
+Add the following Declare statement to the general declarations section of Form1 (note that this Declare statement must be typed as one single line of text): 
+Declare Function GetProfileString Lib "Kernel" (ByVal lpAppName As String, ByVal 
+   lpKeyName As Any, ByVal lpDefault As String, ByVal lpReturnedString
+   As String, ByVal nSize As Integer) As Integer
+
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+    Dim Temp As String
+    Dim RC As Integer
+    Dim P1 As Integer, P2 As Integer   'Get current printer device name
+    Temp = Space$(255)
+    RC = GetProfileString("windows", "device", "", Temp, 255)
+    Temp = Left$(Temp, RC)
+    
+    If RC = 0 Then         'no printer
+        Text1.Text = "No default printer"
+        Exit Sub
+    End If        'Extract just the driver name
+    P1 = InStr(Temp, ",")
+    P2 = InStr(P1 + 1, Temp, ",")
+    Text1.Text = Mid$(Temp, P1 + 1, P2 - P1 - 1)
+End Sub
+
+To execute this demonstration program, press the F5 function key. Visual Basic will display the name of your printer in the text box.

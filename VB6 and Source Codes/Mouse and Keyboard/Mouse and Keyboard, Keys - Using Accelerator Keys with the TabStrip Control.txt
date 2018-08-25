@@ -1,0 +1,37 @@
+Tip 144: Using Accelerator Keys with the TabStrip Control
+August 31, 1995
+
+Abstract
+The TabStrip control in Microsoft® Visual Basic® does not provide built-in support for using accelerator keys. This article explains how you can add this functionality to your Visual Basic application.
+
+Adding Accelerator Key Support to the TabStrip Control
+The TabStrip control in Microsoft® Visual Basic® version 4.0 allows you to present information to your user in an organized manner. The TabStrip control allows you to present, or query the user for, information relating to a single concept. For example, if your user must choose certain ptions to customize his or her Visual Basic program, you could present these options by using one tab of a TabStrip control. Then, on another tab, you could ask the user for his or her name, company, and so on. 
+
+The user can select a tab either by pressing the TAB key to move the focus to the next tab or by clicking the desired tab. Although there is no direct support provided when using the TabStrip control, you can add accelerator keys to the TabStrip control. This will allow your user to switch the focus between tabs by pressing and holding down the ALT key and then pressing another key.
+
+In the demonstration program below, the TabStrip control displays three tabs: Control, Settings, and Parameters. Notice that an ampersand ("&") has been used in the tabs' Caption property. At run time, the character immediately following the ampersand will be underlined. In the example program, the Control tab will be shown with the letter "C" underlined. Under the Microsoft Windows® operating system, the underlined character tells users that they can press the underlined character while holding down the ALT key to invoke that option. In this case, the user would press and hold down ALT and then press C to move the focus to the Control tab.
+
+You can add this functionality to your Visual Basic program by trapping each key that is pressed on the keyboard. This is done by first determining the ASCII keycode value of the key that was just pressed. If this key is one of the keys you want to trap (C, S, or P in our example program below), set the Selected property of that tab to True. This moves the focus to that individual tab. On the other hand, if the ALT key was not held down or if the key is not one of the accelerator keys, no action is performed.
+
+Example Program
+This program shows how to add support for accelerator keys to the Visual Basic TabStrip control. 
+
+Create a new project in Visual Basic. Form1 is created by default. Set its KeyPreview property to True. 
+Add the following code to the Form_Load event for Form1. 
+Private Sub Form_Load()
+    TabStrip1.Tabs(1).Caption = "&Control"
+    TabStrip1.Tabs.Add 2, , "&Settings"
+    TabStrip1.Tabs.Add 3, , "&Parameters"
+End Sub
+
+Add the following code to the KeyDown event for Form1. 
+Private Sub Form_KeyDown(keycode As Integer, shift As Integer)
+    AccessKey$ = "CSP"
+    Code% = InStr(AccessKey$, Chr$(keycode))
+    If shift = vbAltMask And Code% Then
+        TabStrip1.Tabs(Code%).Selected = True
+    End If
+End Sub
+
+Add a TabStrip control to Form1. TabStrip1 is created by default. 
+Run the example program by pressing F5. The TabStrip control is displayed with three tabs set—one for Control, one for Settings, and one for Parameters. You can move the focus from one tab to another by pressing and holding down the ALT key and then pressing the appropriate accelerator key (the underlined character) for the new tab.

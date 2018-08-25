@@ -1,0 +1,55 @@
+Tip 148: Using OLE Automation to Check Spelling
+August 31, 1995
+
+Abstract
+Microsoft® Word for Windows® includes a spelling checker that you can invoke from within your Microsoft Visual Basic® application. This article shows how you can use OLE Automation in a Visual Basic program to check the spelling of text.
+
+Spell Checking Text in Visual Basic
+Within a Microsoft® Visual Basic® program, you can use Microsoft Word for Windows® as an OLE Automation server to check the spelling in a Text Box control. Your Visual Basic program can send commands to Microsoft Word, which in turn carries out those commands. When the spelling checker has finished its work, the focus of control returns to your Visual Basic program.
+
+In the example program below, the contents of the Text Box control need to be checked for spelling. To do this, you execute a CreateObject statement to tell Microsoft Windows to run Microsoft Word. Next, you need to tell Word to create a new document and to copy the text from the Text Box to this document. You accomplish both of these functions by running the WordBasic FileNew and Insert commands, respectively.
+
+After the text has been copied to the Word document, it can be checked for spelling. You run the ToolsSpelling command in Microsoft Word to start the spelling checker.
+
+When you have finished checking the document for spelling errors, click the OK command button to close the spelling checker in Microsoft Word. Then, run the EditSelectAll and FileExit commands to copy the newly revised text back to your Visual Basic Text Box, which ends the OLE Automation process.
+
+Example Program
+This program shows how to use the spelling checker in Microsoft Word from within a Visual Basic application. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. Set its MultiLine property to True. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim WB As Object
+    Dim OldText As String
+    Dim NewText As String
+    Dim I As Integer
+    Dim CH As String * 1
+        
+    NewText = ""
+    On Error Resume Next
+    Set WB = CreateObject("Word.Basic")
+    
+    If Err Then
+        MsgBox Error$
+        Exit Sub
+    End If
+    
+    WB.FileNew
+    WB.Insert Text1.Text
+    WB.ToolsSpelling
+    WB.EditSelectAll
+    OldText = WB.selection()
+    WB.FileExit 2
+    
+    For I = 1 To Len(OldText)
+        CH = Mid$(OldText, I, 1)
+        NewText = NewText + CH
+        If CH = Chr$(13) Then NewText = NewText + Chr$(10)
+    Next I
+    
+    Text1.Text = NewText
+End Sub
+
+Run the example program by pressing F5. Type some text in the Text Box control and then click the Command Button control. Visual Basic runs Microsoft Word, copies the text from the Text Box control to a new document, and invokes Word's spelling checker. After you have finished checking the text, the newly revised text is copied back to the Text Box control.

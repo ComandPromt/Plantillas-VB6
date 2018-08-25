@@ -1,0 +1,116 @@
+Tip 35: Determining a Window's Size and Position
+Created: March 1, 1995
+
+Abstract
+You can use two Windows® application programming interface (API) functions to determine the exact size and position of a window within your Visual Basic® application: The GetWindowRect function returns the screen coordinates of the window's normal position, and the GetWindowPlacement function reports the window's position both when minimized or maximized, in addition to the window's normal position. This article explains how you can use these two functions in a Visual Basic application.
+
+Retrieving a Window's Size and Position
+The Windows® GetWindowRect application programming interface (API) function returns the specified window's position. You can also determine the exact size, in screen coordinates, of the window by using this function.
+
+To declare this function within your program, include the following Declare statement in the Global Module or General Declarations section of your application's form:
+
+Declare Sub GetWindowRect Lib "User" (ByVal hWnd As Integer, lpRect As RECT)
+
+Note that this Declare statement must be typed as one single line of text.
+
+The GetWindowRect function can be called by passing it two arguments. The hWnd argument must contain the handle of the window that you want to retrieve information for. After calling GetWindowRect, the function stores the window information in the second argument—a rectangle (RECT) structure. Call the GetWindowRect function with the following statement:
+
+Call GetWindowRect(Form1.hWnd, lpRect)
+
+This function stores its results in the RECT structure (in this case, lpRect). The RECT structure is defined as follows:
+
+Type RECT       '8 bytes
+    Left As Integer
+    Top As Integer
+    Right As Integer
+    Bottom As Integer
+End Type
+
+These values represent the position of the window, in screen coordinates. To calculate the exact size of the window (including the borders, title bars, and so forth), you would issue the following statements:
+
+FormWidth = lpRect.Right - lpRect.Left
+FormHeight = lpRect.Bottom - lpRect.Top
+
+On the other hand, the GetWindowPlacement function is a little more involved. Its Declare statement is:
+
+Declare Sub GetWindowPlacement Lib "User" (ByVal hWnd As Integer, lpWnd As WINDOWPLACEMENT)
+
+You specify the first argument as the window's handle, and the second argument as a pointer to the WINDOWPLACEMENT structure. This structure will be filled with the window's minimized, maximized, and normal position coordinates. The WINDOWPLACEMENT structure uses the RECT and POINTAPI structures as well, and looks like this:
+
+Type WINDOWPLACEMENT    '22 bytes
+    Length As Integer
+    Flags As Integer
+    ShowCmd As Integer
+    PtMinPosition As POINTAPI
+    PtMaxPosition As POINTAPI
+    RcNormalPosition As RECT
+End Type
+
+where the POINTAPI structure is:
+
+Type POINTAPI       '4 bytes
+    X As Integer
+    Y As Integer
+End Type 
+
+The following table describes each field in the WINDOWPLACEMENT structure.
+
+Length An integer value that must be set to 22, the length of the structure. 
+Flags An integer value containing either WPF_SETMINPOSITION (the ptMinPosition specifies the X, Y location of the window when minimized) or WPF_RESTORETOMAXIMIZED (the SW_SHOWMINIMIZED constant must be specified in the ShowCmd parameter. It indicates the window should be maximized the next time it is restored). 
+ShowCmd An integer value that describes the visibility flags. 
+ptMinPosition A POINTAPI structure containing the X, Y location of the window when it is minimized. 
+ptMaxPosition A POINTAPI structure containing the X, Y location of the window when it is maximized. 
+RcNormalPosition A RECT structure containing the position of the window when it is restored (set to its normal size). 
+
+Example Program
+The program below uses the GetWindowRect function to display the window's size in the first text box and the GetWindowPlacement function to display the window's left, right, top, and bottom coordinates. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. Set its MultiLine property to True. 
+Add a second Text Box control to Form1. Text2 is created by default. Set its MultiLine property to True. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to Get Window Info. 
+Add the following code to the Click event for Command1: 
+Sub Command1_Click()
+    Dim lpRect As RECT
+    Dim lpWnd As WINDOWPLACEMENT
+    Dim nPoint As POINTAPI
+    Dim hWnd As Integer
+    Dim FormWidth As Integer
+    Dim FormHeight As Integer  
+    Call GetWindowRect(Form1.hWnd, lpRect)
+    FormWidth = lpRect.Right - lpRect.Left
+    FormHeight = lpRect.Bottom - lpRect.Top    
+    Text1.Text = "Form Width = " + Str$(FormWidth) + Chr(13) + Chr(10)
+    Text1.Text = Text1.Text + "Form Height = " + Str$(FormHeight) 
+    lpWnd.Length = 22
+    Call GetWindowPlacement(Form1.hWnd, lpWnd)
+    FormWidth = lpWnd.RcNormalPosition.Right - lpWnd.RcNormalPosition.Left
+    FormHeight = lpWnd.RcNormalPosition.Bottom - lpWnd.RcNormalPosition.Top
+    Text2.Text = "Form Width = " + Str$(FormWidth) + Chr(13) + Chr(10)
+    Text2.Text = Text2.Text + "Form Height = " + Str$(FormHeight)
+End Sub
+
+Add a new BAS module to the project. Module1.Bas is created by default. 
+Add the following Declare statements and structures to Module1.Bas (note that each Declare statement must be typed as a single line of text): 
+Declare Sub GetWindowRect Lib "User" (ByVal hWnd As Integer, lpRect As RECT)
+Declare Sub GetWindowPlacement Lib "User" (ByVal hWnd As Integer, lpWnd
+   As WINDOWPLACEMENT)
+Type RECT       '8 bytes
+    Left As Integer
+    Top As Integer
+    Right As Integer
+    Bottom As Integer
+End Type
+Type POINTAPI       '4 bytes
+    X As Integer
+    Y As Integer
+End Type
+Type WINDOWPLACEMENT    '22 bytes
+    Length As Integer
+    Flags As Integer
+    ShowCmd As Integer
+    PtMinPosition As POINTAPI
+    PtMaxPosition As POINTAPI
+    RcNormalPosition As RECT
+End Type
+

@@ -1,0 +1,6 @@
+'Description: Returns HWND of window that has the mouse captured
+
+'Private Declare Function M_GetCapture Lib "user32" Alias "GetCapture" () As Long
+'Public Function GetCapture() As Long
+GetCapture = M_GetCapture()
+'End Function

@@ -1,0 +1,38 @@
+Tip 27: Determining When a Key or Mouse Button Is Pressed
+Created: March 1, 1995
+
+Abstract
+When developing an application in Visual Basic®, you may need to interrupt a time-consuming function or react to a certain keypress. It is always a user-friendly option if you allow your user to exit out of these long processes gracefully. The Windows® GetAsyncKeyState application programming interface (API) function can be used to detect when the user has pressed a certain key on the keyboard or clicked a mouse button.
+
+Monitoring the Keyboard and Mouse Activities
+The Windows® GetAsyncKeyState application programming interface (API) function can tell you if a user has clicked a mouse button or pressed a specific key on the keyboard. To declare this function within your program, include the following Declare statement in the Global Module or General Declarations section of a Visual Basic® form:
+
+Declare Function GetAsyncKeyState Lib "User" (ByVal Key As Integer) As Integer
+
+Note that this Declare statement must be typed as one single line of text.
+
+The GetAsyncKeyState function determines if the specific key was pressed since the last call to this function. It can also tell you if one of the mouse buttons was pressed. This function takes only one argument—an integer value that represents the key code of the virtual key or mouse button you want to test.
+
+GetAsyncKeyState returns a non-zero value if the specified key or button is currently pressed. It will also return a non-zero value if the key or button was pressed since the last call to this function. The CONSTANT.TXT file contains a list of the virtual key constants.
+
+Example Program
+The following Visual Basic program shows how you can perform a function within your program until a specific keystroke is detected on the keyboard. In this example program, the DoEvents function is called to put the program in a constant loop. When you press the ESC (escape) key, the program is terminated. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as one single line of text): 
+Declare Function GetAsyncKeyState Lib "User" (ByVal Key As Integer) As Integer
+Const KEY_ESCAPE = &H1B
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Sub Command1_Click()
+    Text1.Text = "Press ESCAPE to quit"    
+    Do While DoEvents()
+        If GetAsyncKeyState(KEY_ESCAPE) Then
+            Text1.Text = "ESCAPE pressed"
+            Exit Sub
+        End If
+    Loop
+End Sub
+

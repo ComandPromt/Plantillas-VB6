@@ -1,0 +1,55 @@
+Tip 117: Changing a Menu's Shortcut Key at Run Time
+July 1, 1995
+
+Abstract
+When you use the Menu Editor in Microsoft® Visual Basic®, you can assign a shortcut or accelerator key to each individual menu entry. This article shows how you can change this shortcut key at run time within your Visual Basic application.
+
+Setting Shortcut Keys in Visual Basic Menus
+The Microsoft® Visual Basic® Menu Editor lets you easily design a menu system for your application. When your program is run, the user can click a menu entry to perform some kind of operation. As an alternative to using the mouse to select a menu entry, the user can type a keystroke combination such as ALT+S to invoke the menu selection. These keystroke combinations are called access or accelerator keys.
+
+After you have designed your menu structure in the Visual Basic Menu Editor, you may decide to change the access key for a specific menu entry at run time. The example program below changes the ALT+F access key for the File menu to ALT+E.
+
+To change a menu entry's access key at run time, you need to process the keystrokes at the form-level. That is, the KeyDown event for the underlying form will need to be monitored.
+
+The KeyDown event in Visual Basic is triggered each time a user presses a key on the keyboard. The event is triggered for the control that has the focus. In this case, the control is the form that the menu is attached to.
+
+The KeyDown event tells you which key or combination of keys was just pressed on the keyboard. The KeyCode argument gives you a unique number that identifies each individual key on the keyboard. For example, if the KeyCode value returned is 9, you know that the TAB key was just pressed.
+
+In the example program below, you use the KeyDown event to determine if the user pressed the CTRL+E keystroke combination. If CTRL+E was pressed, the program displays a message box telling you that the File menu item was selected. In all other cases, the KeyDown event simply ignores the incoming keystrokes.
+
+Example Program
+This program shows how to change a menu item's shortcut key from within a Visual Basic application. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1: 
+Option Explicit
+Dim ShortCut As String * 1
+
+From the Visual Basic Tools menu, click Menu Editor to create a single menu item. In the Caption field, type "&File", and in the Name field, type "mnuFile". Click OK to create the menu structure and to return to the design mode in Visual Basic. 
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Command1.Caption = "Change ShortCut"
+    KeyPreview = True
+End Sub
+
+Add the following code to the KeyDown event for Form1: 
+Private Sub Form_KeyDown(KeyCode As Integer, Shift As Integer)
+    If Shift And 2 <> 2 Then Exit Sub
+    If KeyCode = Asc(ShortCut) Then
+        mnuFile_Click
+    End If
+End Sub
+
+Add the following code to the Click event for mnuFile: 
+Private Sub mnuFile_Click()
+    MsgBox "Menu was selected"
+End Sub
+
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Change Item". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    ShortCut = "E"
+    mnuFile.Caption = "Fil" & "&" & LCase$(ShortCut)
+End Sub
+
+Run the example program by pressing F5. Notice the menu at the top of the form. The menu entry says "File" with the letter F underlined. The letter F is the menu entry's access key. Click the command button. The menu changes to "File" with the letter e designated as the access key. Press CTRL+E on the keyboard; a message box pops up saying that that menu item was just clicked.

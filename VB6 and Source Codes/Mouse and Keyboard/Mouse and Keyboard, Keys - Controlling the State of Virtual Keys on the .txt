@@ -1,0 +1,58 @@
+Tip 167: Controlling the State of Virtual Keys on the Keyboard
+December 5, 1995
+
+Abstract
+This article explains how to control the state of any virtual key from within a Microsoft® Visual Basic® application.
+
+Retrieving and Setting the State of Virtual Keys
+From within a Microsoft® Visual Basic® application, you can control the state of any one of the 256 virtual keys on the keyboard. You do this by executing two Microsoft Windows® application programming interface (API) functions—GetKeyboardState and SetKeyboardState.
+
+In the example program below, you switch the state of both the CAPS LOCK and NUM LOCK keys. To do this, you must first retrieve the state of these two toggle keys by calling the GetKeyboardState function. After calling this function, the KeyboardBuffer array that you have defined in the program contains the current state of every virtual key.
+
+To isolate the CAPS LOCK and NUM LOCK keys, you must interrogate the bytes stored in the KeyboardBuffer array. The constants VK_CAPITAL and VK_NUMLOCK represent the CAPS LOCK and NUM LOCK keys, respectively. If the low-order bit in the byte representing the toggle key is 1, then the key is on. If the low-order bit is 0, the key is off.
+
+You can use the Visual Basic logical AND operator to test the low-order bit for the toggle keys, as shown here:
+
+If KeyboardBuffer(VK_CAPITAL) And 1 Then
+        KeyboardBuffer(VK_CAPITAL) = 0
+    Else
+        KeyboardBuffer(VK_CAPITAL) = 1
+End If
+
+In the code fragment above, you first test the state of the CAPS LOCK key. If the CAPS LOCK key is currently on (the low-order bit is 1), you reset the low-order bit to 0 to turn the key off. If the CAPS LOCK key is off (the low-order bit is 0), you reset the low-order bit to 1 to turn the key on.
+
+When you want to reverse the state of the toggle keys (that is, turn the key on if it is not engaged or off if it is engaged), you use the SetKeyboardState function. This function modifies the state of any virtual key. The key you want to modify is again stored in the KeyboardBuffer array.
+
+Example Program
+This program shows how to turn the toggle (CAPS LOCK and NUM LOCK) keys on and off. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1: 
+Private Declare Sub GetKeyboardState Lib "user32" (lpKeyState As Any)
+Private Declare Sub SetKeyboardState Lib "user32" (lpKeyState As Any)
+Const VK_CAPITAL = &H14
+Const VK_NUMLOCK = &H90
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    ReDim KeyboardBuffer(256) As Byte
+
+    GetKeyboardState KeyboardBuffer(0)
+
+    If KeyboardBuffer(VK_CAPITAL) And 1 Then
+        KeyboardBuffer(VK_CAPITAL) = 0
+    Else
+        KeyboardBuffer(VK_CAPITAL) = 1
+    End If
+
+    If KeyboardBuffer(VK_NUMLOCK) And 1 Then
+        KeyboardBuffer(VK_NUMLOCK) = 0
+    Else
+        KeyboardBuffer(VK_NUMLOCK) = 1
+    End If
+
+    SetKeyboardState KeyboardBuffer(0)
+End Sub
+
+Run the example program by pressing F5. Notice that both the CAPS LOCK and NUM LOCK keys are off. Click the Command Button control. The CAPS LOCK and NUM LOCK keys are both on. Each time you click the Command Button control, the state of the CAPS LOCK and NUM LOCK keys is reversed.

@@ -1,0 +1,104 @@
+Tip 42: Using Bitmaps to Create Custom Cursors
+Created: April 1, 1995
+
+Abstract
+The ability to change the appearance of the default Windows® icon can add a great deal of flexibility and user-friendliness to your Visual Basic® application. Visual Basic provides twelve different cursor shapes to choose from. For example, the hourglass cursor is generally used to tell the user of your application that some type of lengthy operation is taking place. When that operation has been completed, the cursor reverts back to its normal pointer shape. This article explains how you can create your own custom cursor shapes.
+
+Designing Cursors in Visual Basic
+In simple terms, a cursor is a bitmap image. The bitmap must be 32 x 32 pixels in size. Each cursor, or icon, consists of two separate bitmap images: 
+
+The XOR bitmap is the first bitmap. Its image is combined with the display's image by using the exclusive OR operator. 
+The AND bitmap is the second bitmap. Its image consists of an AND mask that is combined with the XORed bitmap. Used in this way, the AND and XOR operators create the icon's new image. 
+In Visual Basic, you can use the Windows® CreateCursor function to create a completely new and different cursor shape. To use this function within your program, include the following Declare statement in the Global Module or General Declarations section of your program:
+
+Declare Function CreateCursor Lib "User" (ByVal hInstance As Integer, ByVal 
+   nXhotspot As Integer, ByVal nYhotspot As Integer, ByVal nWidth As Integer, 
+   ByVal nHeight As Integer, lpANDbitPlane As Integer, lpXORbitPlan As Integer) 
+   As Integer
+
+Note that this Declare statement must be typed as one single line of text.
+
+The CreateCursor function takes six arguments, as follows:
+
+hInstance The application program's handle. This is the instance of the application that will own the newly created cursor. 
+nXhotspot, nYhotspot These integer values must be set to the X and Y coordinates of the cursor's location. 
+nWidth The width (in pixels) of the cursor image. 
+nHeight The height (in pixels) of the cursor image. 
+lpANDbitPlane This is a string or long value containing a pointer to the AND bitmap's data. 
+lpXORbitPlane This is a string or long value containing a pointer to the XOR bitmap's data. 
+
+The CreateCursor function returns an integer value that identifies the cursor. If this value is zero, the function was unable to create the new cursor.
+
+Once you have created the cursor, you need to tell Windows to use the new cursor by calling the GetClassWord and SetClassWord functions. Call the GetClassWord function first so that you can save the cursor's handle. Then you can restore the original cursor's image or set the cursor's image to a new one by calling the SetClassWord function.
+
+The Declare statements for the GetClassWord and SetClassWord functions are:
+
+Declare Function GetClassWord Lib "User" (ByVal hWnd As Integer, ByVal nIndex
+   As Integer) As Integer
+
+Declare Function SetClassWord Lib "User" (ByVal hWnd As Integer, ByVal nIndex
+   As Integer, ByVal wNewWord As Integer) As Integer
+
+Note that each Declare statement must be typed as one line of text.
+
+To retrieve the default cursor's handle, you pass two arguments to the GetClassWord function: the handle of the window that owns the cursor, and a value specifying the type of information you want to retrieve. In this case, we would specify the GCW_HCURSOR constant (the cursor's default handle). In our application, we save the returned handle to an integer variable so that we can use it again later in the program.
+
+The SetClassWord function takes an additional argument: the new value for the class information. The class information, of course, refers to the cursor's new image.
+
+When the SetClassWord function is executed, the new cursor is called into action. In our Visual Basic program, we can restore the cursor to its previous image by simply calling the SetClassWord function with the original cursor's handle (which is why we saved this handle to a variable earlier in the program).
+
+Example Program
+The following Visual Basic program displays a different cursor image on the screen. In this example, the XORBitPlane and ANDBitPlane values are used to manipulate the cursor's current image, thereby creating a new cursor. You can create your own custom cursors in Visual Basic by modifying the original cursor as this example program does. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Change Cursor". 
+Add the following code to the Click event for Command1: 
+Sub Command1_Click()
+  Dim X As Integer
+  Dim nWidth As Integer
+  Dim nHeight As Integer
+  Dim hInstance As Integer
+  Dim hCursor As Integer
+  Dim OldCursor As Integer    
+  ReDim ANDbitPlane%(100), XORbitPlane%(100)
+  For C% = 0 To 100
+     ANDbitPlane%(C%) = 63
+     XORbitPlane%(C%) = 255
+  Next C%
+
+  nWidth = 32
+  nHeight = 32
+  hInstance = GetModuleHandle("VB.EXE")
+  hCursor = CreateCursor(hInstance, 0, 0, nWidth, nHeight, ANDbitPlane%(0),
+     XORbitPlane%(0))
+
+  OldCursor = GetClassWord(Form1.hWnd, -12)
+  X = SetClassWord(Form1.hWnd, -12, hCursor)
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. Set its Caption property to "Restore Cursor". 
+Add the following code to the Click event for Command2: 
+Sub Command2_Click()
+  X = SetClassWord(Form1.hWnd, -12, OldCursor)
+  Dummy% = DeleteObject(hCursor)
+End Sub
+
+Add the following Declare statements to the general declarations section of Form1 (note that each Declare statement must be typed as a single line of text): 
+Declare Function CreateCursor Lib "User" (ByVal hInstance As Integer, ByVal 
+   nXhotspot As Integer, ByVal nYhotspot As Integer, ByVal nWidth As Integer,
+   ByVal nHeight As Integer, lpANDbitPlane As Integer, lpXORbitPlan As Integer)
+   As Integer
+
+Declare Function DeleteObject Lib "GDI" (ByVal hObject As Integer) As Integer
+
+Declare Function GetClassWord Lib "User" (ByVal hWnd As Integer, ByVal nIndex
+   As Integer) As Integer
+
+Declare Function GetModuleHandle Lib "Kernel" (ByVal lpModuleName As String)
+   As Integer
+
+Declare Function SetClassWord Lib "User" (ByVal hWnd As Integer, ByVal nIndex 
+   As Integer, ByVal wNewWord As Integer) As Integer
+
+Declare Function SetCursor Lib "User" (ByVal hCursor As Integer) As Integer
+

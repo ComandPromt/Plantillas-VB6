@@ -1,0 +1,36 @@
+Tip 171: Determining RGB Color Values
+December 5, 1995
+
+Abstract
+This article explains how to determine the red, green, and blue components for a specific color in your Microsoft® Visual Basic® application.
+
+Determining the RGB Components of a Specific Color
+Using color in a Microsoft® Visual Basic® application adds visual appeal to your program. The Visual Basic RGB function lets you tell the system what color you want to use.
+
+Each color used under the Microsoft Windows® operating system is actually made up from a combination of the colors red, green, and blue. Depending on what value is assigned to each of these components, one of many colors can be selected.
+
+However, you may need to determine the actual red, green, and blue values that constitute a given color. The example program below uses the Mod operator to separate the red, green, and blue components of the specified color. When you have these individual values, you can then change them to suit your particular needs.
+
+Example Program
+This program shows how to separate the individual red, green, and blue components from a given color. 
+
+Create a new project in Visual Basic, Form1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. Set its BackColor property to any color wanted. 
+Add the following code to the Click event for Command1 (note that the "MsgBox =" statement must be typed as a single line of code): 
+Private Sub Command1_Click()
+    Dim C As Long
+    Dim Red As Integer
+    Dim Green As Integer
+    Dim Blue As Integer
+
+    C = Command1.BackColor
+    Red = C Mod &H100
+    C = C \ &H100
+    Green = C Mod &H100
+    C = C \ &H100
+    Blue = C Mod &H100
+    MsgBox "Red = " & Str$(Red) & " Green: " & Str$(Green) & " Blue = " 
+       & Str$(Blue)
+End Sub
+
+Run the example program by pressing F5. Click the Command Button control. A message box appears indicating the individual red, green, and blue color values that represent the button's BackColor property.

@@ -1,0 +1,61 @@
+Tip 160: Retrieving the Versions of MS-DOS and Windows
+December 5, 1995
+
+Abstract
+This article explains how to retrieve the version numbers of MS-DOS® and/or the Microsoft® Windows® operating system installed on your computer system.
+
+Using the GetVersion Function
+There may be times when you need to retrieve the version of MS-DOS® and/or the Microsoft® Windows® operating system installed on your computer system. This information is useful when you need to perform a task and a check must be made to ensure that the task is supported under MS-DOS or Windows.
+
+The Windows application programming interface (API) GetVersion function can be used to retrieve both the MS-DOS and the Windows versions installed on the computer system. To use this function, you must add the following Declare statement to the General Declarations section of your form:
+
+Private Declare Function GetVersion Lib "kernel32" () As Long
+
+After calling the GetVersion function, a long value is returned. This value contains the major and minor version numbers of Windows in the low word. The high word contains the major and minor version numbers of MS-DOS.
+
+Once you have retrieved the version information, it is a simple matter to isolate the high and low bytes of each word and convert these values to the version numbers.
+
+Example Program
+This program shows how to retrieve the version of MS-DOS and Windows installed in the computer system. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Declare statement to the General Declarations section of Form1: 
+Private Declare Function GetVersion Lib "kernel32" () As Long
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim WinMajor As Integer
+    Dim WinMinor As Integer
+    Dim DosMajor As Integer
+    Dim DosMinor As Integer
+    Dim RetLong As Long
+    Dim LoWord As Integer
+    Dim HiWord As Integer
+
+    RetLong = GetVersion()
+    Call GetHiLoWord(RetLong, LoWord, HiWord)
+
+    Call GetHiLoByte(LoWord, WinMajor, WinMinor)
+    Call GetHiLoByte(HiWord, DosMinor, DosMajor)
+
+    Text1.Text = "Windows version:" & WinMajor & "." & WinMinor
+    Text2.Text = "DOS version:" & DosMajor & "." & DosMinor
+
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a second Text Box control to Form1. Text2 is created by default. 
+Create a new function called GetHiLoByte. Add the following code to this function: 
+Sub GetHiLoByte(X As Integer, LoByte As Integer, HiByte As Integer)
+    LoByte = X And &HFF&
+    HiByte = X \ &H100
+End Sub
+
+Create a new function called GetHiLoWord. Add the following code to this function: 
+Sub GetHiLoWord(X As Long, LoWord As Integer, HiWord As Integer)
+    LoWord = CInt(X And &HFFFF&)
+    HiWord = CInt(X \ &H10000)
+End Sub
+
+Run the example program by pressing F5. The major and minor version numbers of Windows appear in the first Text Box control. The major and minor version numbers of MS-DOS appear in the second Text Box control.

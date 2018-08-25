@@ -1,0 +1,93 @@
+Tip 204: Changing the Screen Resolution at Run Time in Visual Basic 4.0
+February 28, 1996
+
+Abstract 
+Because Microsoft Windows 95 users may have different screen resolution settings, you may need to set the screen resolution to a specific setting while your Microsoft® Visual Basic® version 4.0 application is running. This article explains how to change your screen resolution from within Visual Basic.
+
+Setting the Screen Resolution
+Under the Microsoft® Windows® 95 operating system, you can set your screen resolution by running the Display applet in Control Panel. In a Microsoft Visual Basic® version 4.0 application, you can use the Windows application programming interface (API) EnumDisplaySettings and ChangeDisplaySettings functions to change the screen resolution while your program is running.
+
+The EnumDisplaySettings function allows you to retrieve information about your display's graphics modes. This information is then stored in a DEVMODE structure.
+
+After you have interrogated the computer system with the EnumDisplaySettings function, you use the ChangeDisplaySettings function to tell the operating system to use a different screen resolution.
+
+The ChangeDisplaySettings function lets you set the screen resolution to a different graphics mode. The DEVMODE structure holds the graphics mode information to which you want to change.
+
+In the example program below, you first retrieve the current screen resolution information by calling the EnumDisplaySettings function. The DEVMODE structure contains the graphics modes information for the display type. Next, you modify the dmPelsWidth and dmPelsHeight fields in the DEVMODE structure to reflect the new screen resolution you want to set. Finally, you call the ChangeDisplaySettings function to tell the operating system to set the new screen resolution as the default resolution.
+
+Example Program
+This program shows how to set the screen resolution from within a Visual Basic application. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Option Explicit
+Private Declare Function EnumDisplaySettings Lib "user32" Alias 
+   "EnumDisplaySettingsA" (ByVal lpszDeviceName As Long, 
+   ByVal iModeNum As Long, lpDevMode As Any) As Boolean
+
+Private Declare Function ChangeDisplaySettings Lib "user32" Alias 
+   "ChangeDisplaySettingsA" (lpDevMode As Any, ByVal dwflags As Long) As Long
+
+Const CCDEVICENAME = 32
+Const CCFORMNAME = 32
+Const DM_PELSWIDTH = &H80000
+Const DM_PELSHEIGHT = &H100000
+
+Private Type DEVMODE
+    dmDeviceName As String * CCDEVICENAME
+    dmSpecVersion As Integer
+    dmDriverVersion As Integer
+    dmSize As Integer
+    dmDriverExtra As Integer
+
+    dmFields As Long
+    dmOrientation As Integer
+    dmPaperSize As Integer
+    dmPaperLength As Integer
+    dmPaperWidth As Integer
+    dmScale As Integer
+    dmCopies As Integer
+    dmDefaultSource As Integer
+    dmPrintQuality As Integer
+    dmColor As Integer
+    dmDuplex As Integer
+    dmYResolution As Integer
+    dmTTOption As Integer
+    dmCollate As Integer
+
+    dmFormName As String * CCFORMNAME
+    dmUnusedPadding As Integer
+    dmBitsPerPel As Integer
+    dmPelsWidth As Long
+    dmPelsHeight As Long
+    dmDisplayFlags As Long
+    dmDisplayFrequency As Long
+End Type
+Dim DevM As DEVMODE
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim a As Boolean
+    Dim i&
+    i = 0
+    Do
+        a = EnumDisplaySettings(0&, i&, DevM)
+        i = i + 1
+    Loop Until (a = False)
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. 
+Add the following code to the Click event for Command2: 
+Private Sub Command2_Click()
+    Dim b&
+    DevM.dmFields = DM_PELSWIDTH Or DM_PELSHEIGHT
+
+    DevM.dmPelsWidth = 800
+    DevM.dmPelsHeight = 600
+
+    b = ChangeDisplaySettings(DevM, 0)
+End Sub
+
+Run the example program by pressing Click the first Command Button control. This retrieves all the graphics modes for your display. Next, click the second Command Button control to change the display's screen resolution to 800 x 600 graphics mode.
+

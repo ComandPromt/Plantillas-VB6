@@ -1,0 +1,74 @@
+Tip 38: Determining the Number of Colors the Screen Supports
+Created: March 1, 1995
+
+Abstract
+When developing a Visual Basic® application that will be executed on different computer systems, you may need to determine at run time how many colors are supported by the target machine's display driver. This article explains how to do this using three Windows® application programming interface (API) functions.
+
+Calculating the Number of Colors Supported by the Display Driver
+The Windows® application programming interface (API) functions CreateDC, DeleteDC, and GetDeviceCaps can be used to calculate how many colors are supported by the display (screen) device driver.
+
+First, you need to call the CreateDC function. This function creates a device context for the specified device (in this case, it will be the DISPLAY device). To declare this function within your program, include the following Declare statement in the Global Module or General Declarations section of your application's form:
+
+Declare Function CreateDC Lib "GDI" (ByVal lpDriverName As String, ByVal 
+   lpDeviceName As String, ByVal lpOutput As String, ByVal lpInitData As Any)
+   As Integer
+
+Note that this Declare statement must be typed as one single line of text.
+
+The CreateDC function must be called with four arguments, as follows:
+
+lpDriverName This is a string containing the DOS filename of the device you want to create a device context for. 
+lpDeviceName If the driver supports more than one device, you must specify the name of the individual device to use. 
+lpOutput This is the filename or name of a device that will receive the output. 
+lpInitData Set this to zero to use the device's default initialization values or a DEVMODE structure that contains the values that you want to use. 
+
+Because we want to know how many colors the display device supports, we call the CreateDC function by issuing the statement:
+
+hDC = CreateDC("DISPLAY", "", "", "")
+
+The hDC variable will contain a handle to the device context just created. We can use this handle to retrieve information about the device through the GetDeviceCaps function.
+
+The Declare statement for the GetDeviceCaps function is:
+
+Declare Function GetDeviceCaps Lib "GDI" (ByVal hDC As Integer, ByVal nIndex As Integer) As Integer
+
+This function takes two arguments: the device's handle and a constant value that specifies the type of information the function should retrieve. In our case, we need to call the GetDeviceCaps function twice to retrieve the number of color planes and the number of bits per pixel for each plane. From these two values, we can calculate how many colors the display driver supports.
+
+Calculating the number of colors supported by the display device is simple. You need to multiply the number of bits per pixel by the number of color planes. However, since each bit can represent two colors, the number of bits must first be raised to the power of 2. This will give you the total number of colors the display device currently supports.
+
+The last step you need to do is to call the DeleteDC function. The Declare statement for the DeleteDC function is:
+
+Declare Function DeleteDC Lib "GDI" (ByVal hDC As Integer) As Integer
+
+You must call the DeleteDC function to remove the device context that you have created earlier. This removes the device context and also frees the windows resources occupied by the device context.
+
+Example Program
+The program below shows how you can determine the number of colors that a device supports. This example calculates the number of colors supported by the display (screen) device driver. The result is displayed in the text box. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. 
+Add the following Constants and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as one single line of text): 
+Declare Function GetDeviceCaps Lib "GDI" (ByVal hDC As Integer, ByVal nIndex 
+   As Integer) As Integer
+Declare Function CreateDC Lib "GDI" (ByVal lpDriverName As String, ByVal 
+   lpDeviceName As String, ByVal lpOutput As String, ByVal lpInitData As Any)
+   As Integer
+Declare Function DeleteDC Lib "GDI" (ByVal hDC As Integer) As Integer
+Const BitsPixel = 12
+Const Planes = 14
+
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+   Dim NumColors As Long
+    Dim hDC As Integer
+    Dim X As Integer
+    Dim PL As Integer
+    Dim BP As Integer
+    hDC = CreateDC("DISPLAY", "", "", "")    
+    PL = GetDeviceCaps(hDC, Planes)
+    BP = GetDeviceCaps(hDC, BitsPixel)    
+    NumColors = 2 ^ CLng(PL * BP)
+    X = DeleteDC(hDC)    
+    Text1.Text = Str$(NumColors)
+End Sub
+

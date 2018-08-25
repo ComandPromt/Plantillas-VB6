@@ -1,0 +1,36 @@
+Tip 175: Determining the Current Screen Resolution
+December 5, 1995
+
+Abstract
+This article explains how to determine the current screen resolution in a Microsoft® Visual Basic® application.
+
+Determining Horizontal and Vertical Screen Resolutions
+When developing a Microsoft® Visual Basic® application, it may be necessary to determine the current screen resolution. You can do this by retrieving the TwipsPerPixelX and TwipsPerPixelY properties of the Screen object.
+
+To determine the horizontal resolution of the screen, you retrieve the value of the TwipsPerPixelX property. Next, you divide the screen's current Height property by this value.
+
+To determine the vertical resolution of the screen, you retrieve the value of the TwipsPerPixelY property. Next, you divide the screen's current Width property by this value.
+
+Example Program
+This program shows how to determine the current screen resolution in a Visual Basic application. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim XTwips As Long
+    Dim YTwips As Long
+    Dim XPixels As Long
+    Dim YPixels As Long
+
+    XTwips = Screen.TwipsPerPixelX
+    YTwips = Screen.TwipsPerPixelY
+
+    YPixels = Screen.Height / YTwips
+    XPixels = Screen.Width / XTwips
+
+    Text1.Text = Str$(XPixels) + " x " + Str$(YPixels)
+End Sub
+
+Run the example program by pressing F5. Click the Command Button control. The current screen resolution appears in the Text Box control.

@@ -1,0 +1,59 @@
+Tip 92: Using the Shell Statement to Execute MS-DOS Programs
+May 22, 1995
+
+Abstract
+From within a Visual Basic® application, you can execute an MS-DOS® program. This article explains how to use the Shell statement in conjunction with the Windows® application programming interface (API) GetNumTasks function to execute an MS-DOS program.
+
+Running MS-DOS Programs
+A very popular set of utilities called PKZIP and PKUNZIP can be found on bulletin board systems throughout the world. These two utilities are used to compress and decompress a group of related files. The resulting ZIP file can then be distributed as one single entity. Because these programs are used by people daily, you may need to allow your user to execute these MS-DOS programs (or an entirely different MS-DOS program) from within your Visual Basic® application program.
+
+Visual Basic's Shell function can be used to execute another program. To run a program, you would issue the statement:
+
+X = Shell("program name",[windowstate]])
+
+The program name must be a valid MS-DOS or Windows®-based-application name and may optionally include any command-line parameters needed by the program. The second parameter tells Visual Basic how to execute the program. There are five possible values for this argument, as follows:
+
+1 Normal size, program retains focus 
+2 Minimized, program retains focus 
+3 Maximized, program retains focus 
+4 Normal size, Visual Basic application retains focus 
+5 Minimized, program does not retain focus 
+
+While the MS-DOS program is executing, you can use the SendKeys statement to send specific keystrokes to the application. In this manner, you can actually control what the MS-DOS program does or provide some required input.
+
+In addition, you can determine when the secondary program has terminated by using the GetNumTasks function. To use the GetNumTasks function in your Visual Basic application, you must include the following Declare statement in the Global Module or General Declarations section of your form:
+
+Private Declare Function GetNumTasks Lib "Kernel" () As Integer
+
+The GetNumTasks function does not require any arguments but simply returns an integer value set to the number of tasks that are currently running under Windows. Therefore, to determine when your MS-DOS program has finished executing, call GetNumTasks first, saving the value it returns in a variable. After the MS-DOS program has finished executing, call the GetNumTasks function a second time to find out if the number of tasks has decreased by a value of one. If the value has decreased, you know that your MS-DOS program has finished executing and you can return control to your Visual Basic application.
+
+Example Program
+This program shows how you can use the Shell function and the GetNumTasks function to execute an MS-DOS program. This program assumes that you have the PKUNZIP program stored in the UTILS directory and that you have previously created a destination directory called DESTDIR on your hard drive. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following statements to the General Declarations section of Form1: 
+Dim ActiveApps As Integer
+Private Declare Function GetNumTasks Lib "Kernel" () As Integer
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim AppDir As String
+    Dim Zip As String
+    Dim Y As Integer
+    Dim X As Integer
+    
+    AppDir = "c:\destdir"
+    ActiveApps = GetNumTasks()
+    
+    Zip = "c:\utils\pkunzip " & "c:\destdir\" & "test.zip" & " " & AppDir
+    X = Shell(Zip, 2)
+    SendKeys "%{enter}EXIT%{ }n"
+    
+    Do While GetNumTasks() <> ActiveApps
+        Y = DoEvents()
+    Loop
+    MsgBox "Pkunzip is finished", 0, "Demo Program"
+    
+End Sub
+

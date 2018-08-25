@@ -1,0 +1,62 @@
+Tip 170: Positioning the Mouse Pointer over a Specific Control
+December 5, 1995
+
+Abstract
+This article explains how to position the mouse pointer over a specific control in a Microsoft® Visual Basic® application.
+
+Positioning the Mouse Pointer
+Sometimes you may need to position the mouse pointer over a specific control in a Microsoft® Visual Basic® application, even though that control does not have the current focus.
+
+To position the mouse pointer over a specific control, you need to use the Microsoft Windows® application programming interface (API) GetWindowRect and SetCursorPos functions. The GetWindowRect function is used to retrieve the coordinates of a control. The Declare statement for the GetWindowRect function is:
+
+Private Declare Function GetWindowRect Lib "user32" (ByVal hwnd As Long, lpRect 
+   As RECT) As Long
+
+The GetWindowRect function requires two arguments. The first argument is the handle of the control. The second argument is the address of a RECT structure.
+
+After calling the GetWindowRect function, the control's coordinates are stored in the RECT structure. The RECT structure is defined as:
+
+Type RECT
+        Left As Long
+        Top As Long
+        Right As Long
+        Bottom As Long
+End Type
+
+Note that the left, top, right, and bottom positions of the control are stored in the RECT structure. After you know the exact position of the control, you need to use the SetCursorPos function to position the mouse pointer directly over the control. The Declare statement for the SetCursorPos function is:
+
+Private Declare Function SetCursorPos Lib "user32" (ByVal x As Long, 
+   ByVal y As Long) As Long
+
+Then, to position the mouse pointer over the control, you retrieve the coordinates of the control's upper-left corner by using the values stored in the Left field and Top field of the RECT structure. Next, you call the SetCursorPos function with these two values to actually position the mouse pointer over the control.
+
+Example Program
+This program shows how to move the mouse pointer over a specific control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Private Declare Function GetWindowRect Lib "user32" (ByVal hwnd As Long, lpRect 
+   As RECT) As Long
+Private Declare Function SetCursorPos Lib "user32" (ByVal x As Long, ByVal y As 
+   Long) As Long
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Dim MousePos As RECT
+
+    Call GetWindowRect(Command2.hwnd, MousePos)
+    Call SetCursorPos(MousePos.Left, MousePos.Top)
+End Sub
+
+Add a Command Button control to Form1. Command1 is created by default. Set its Default property to False. 
+Add a second Command Button control to Form1. Command2 is created by default. Set its Default property to True. 
+From the Visual Basic Insert menu, select Module to create a new module. Module1.Bas is created by default. 
+Add the following Type structure to Module1.Bas: 
+Type RECT
+    Left As Long
+    Top As Long
+    Right As Long
+    Bottom As Long
+End Type
+
+Run the example program by pressing F5. Notice that the focus is set to the first Command Button control, but the mouse pointer is positioned over the second Command Button control. In short, the mouse pointer is placed over the control whose Default property is set to True.

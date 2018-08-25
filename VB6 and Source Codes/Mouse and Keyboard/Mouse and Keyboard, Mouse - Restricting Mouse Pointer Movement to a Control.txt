@@ -1,0 +1,69 @@
+Tip 37: Restricting Mouse Pointer Movement to a Control
+Created: March 1, 1995
+
+Abstract
+In your Visual Basic® application, you may want to restrict the movement of the mouse pointer (cursor) to a certain control or area of a window. This technique is called clipping, and can be accomplished by calling the Windows® application programming interface (API) ClipCursorRect and SetCursorPos functions.
+
+Confining the Cursor (Mouse Pointer) to a Specific Area of a Window
+The Windows® application programming interface (API) ClipCursorRect function lets you confine the cursor's movement to a specific area of a window. To declare this function within your program, include the following Declare statement in the Global Module or General Declarations section of your application's form:
+
+Declare Sub ClipCursorRect Lib "User" Alias "ClipCursor" (lpRect As RECT)
+
+Note that this Declare statement must be typed as one single line of text.
+
+The ClipCursorRect function can be called by passing it just one argument—a RECT rectangle structure. This structure describes the area to which you want to restrict the cursor's movement. The RECT structure is defined as follows:
+
+Type RECT
+    Left As Integer
+    Top As Integer
+    Right As Integer
+    Bottom As Integer
+End Type
+
+The left, right, top, and bottom values represent the area's coordinates within the window that you want to work with. After you have determined the area you want to restrict cursor movement to, you must use the SetCursorPos function to move the cursor to this area. As stated earlier, you would add the Declare statement for this function to the General Declarations section as:
+
+Declare Sub SetCursorPos Lib "User" (ByVal X As Integer, ByVal Y As Integer)
+
+When you want to move the cursor to a specific location, you call the SetCursorPos function with the X argument set to the horizontal screen coordinate and the Y argument set to the vertical screen coordinate that corresponds to the position on the screen that you want the cursor moved to.
+
+It is important to note that you must also call the ClipCursorClear function to restore the mouse pointer to its normal state. If you don't do this, your program's user will not be able to move the mouse pointer away from the restricted area, most likely forcing him or her to reboot the computer system. The ClipCursorClear function can be called with a value of zero to turn off the cursor clipping.
+
+Example Program
+The following program shows how you can restrict the mouse pointer's movement within a Visual Basic program. In this example, you can only move the mouse pointer with the Text Box control as long as the time delay is in effect. After the For-Next loop has finished its work, the mouse pointer's movement is restored to its normal functionality. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+    Dim CursorX As Integer
+    Dim CursorY As Integer
+    Dim lpRect As RECT
+    Dim X As Integer    
+    lpRect.Left = Text1.Left \ Screen.TwipsPerPixelX
+    lpRect.Top = Text1.Top \ Screen.TwipsPerPixelY
+    lpRect.Right = (Text1.Left + Text1.Width) \ Screen.TwipsPerPixelX
+    lpRect.Bottom = (Text1.Top + Text1.Height) \ Screen.TwipsPerPixelY
+    CursorX = lpRect.Left + (lpRect.Right - lpRect.Left) \ 2
+    CursorY = lpRect.Top + (lpRect.Bottom - lpRect.Top) \ 2  
+Call SetCursorPos(CursorX, CursorY)
+    Call ClipCursorRect(lpRect)
+For X = 1 To 200
+       Debug.Print Str$(X)
+    Next X
+Call ClipCursorClear(0&)
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add the following Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as one single line of text): 
+Declare Sub ClipCursorRect Lib "User" Alias "ClipCursor" (lpRect As RECT)
+Declare Sub SetCursorPos Lib "User" (ByVal X As Integer, ByVal Y As Integer)
+Declare Sub ClipCursorClear Lib "User" Alias "ClipCursor" (ByVal lpRect As Long)
+
+Add a new BAS module to the project. Module1.Bas is created by default. 
+Add the following structure to Module1.Bas: 
+Type RECT
+    Left As Integer
+    Top As Integer
+    Right As Integer
+    Bottom As Integer
+End Type
+

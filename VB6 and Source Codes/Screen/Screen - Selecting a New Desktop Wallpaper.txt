@@ -1,0 +1,54 @@
+Tip 192: Selecting a New Desktop Wallpaper
+December 5, 1995
+
+Abstract
+This article explains how to select desktop wallpaper from a Microsoft® Visual Basic® application when using the Microsoft Windows® 95 operating system.
+
+Using the SystemParametersInfo Function
+Using the Microsoft® Windows® 95 operating system, you can change the Control Panel settings to display any wallpaper image you want. From the Start menu, click Settings and click Control Panel. Next, double-click Desktop Themes. You can then choose a new wallpaper from the Themes drop-down list box.
+
+In a Microsoft Visual Basic® application, however, you can use the Windows application programming interface (API) SystemParametersInfo function to select a new wallpaper. This function can be used to retrieve or set many different Control Panel settings. The following code is the Declare statement for this function:
+
+Private Declare Function SystemParametersInfo Lib "user32" Alias 
+   "SystemParametersInfoA" (ByVal uAction As Long, ByVal uParam 
+   As Long, ByVal lpvParam As String, ByVal fuWinIni As Long) As Long
+
+Note that the SystemParametersInfo function requires four arguments. The first argument, uAction, is the setting that you want to retrieve or set. In this case, you want to change the desktop wallpaper, so you use the SPI_SETDESKWALLPAPER constant The second argument, uParam, is set to zero, because the wallpaper setting does not use this argument. For the third argument, lpvParam, you must tell the SystemParametersInfo function the filename for the wallpaper you want to use. You must be sure to specify the file's full path in this argument. The fourth argument, fuWinIni, can be one of two values that tells Windows 95 how to preserve the new settings.
+
+If the SPIF_UPDATEINIFILE constant is specified for the fuWinIni argument, Windows 95 saves the new settings to its user profile. If the constant SPIF_SENDWININICHANGE is specified, however, the change is broadcast to Windows 95 after the user profile is updated.
+
+In the example program below, you can change the wallpaper setting to None or to the PINSTRIPE bitmap image. When you change the current wallpaper setting to None, the desktop is presented as a black background. In all other cases, the desktop wallpaper displays the image stored in the specified bitmap file.
+
+Example Program
+This program below shows how to change the wallpaper in Windows 95. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function SystemParametersInfo Lib "user32" Alias 
+   "SystemParametersInfoA" (ByVal uAction As Long, ByVal uParam 
+   As Long, ByVal lpvParam As String, ByVal fuWinIni As Long) As Long
+Const SPIF_UPDATEINIFILE = &H1
+Const SPI_SETDESKWALLPAPER = 20
+Const SPIF_SENDWININICHANGE = &H2
+
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Remove Wallpaper". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim X As Long
+    X = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0&, "(None)", SPIF_UPDATEINIFILE Or SPIF_SENDWININICHANGE)
+    MsgBox "Wallpaper was removed"
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. Set its Caption property to "Change Wallpaper". 
+Add the following code to the Click event for Command2: 
+Private Sub Command2_Click()
+    Dim FileName As String
+    Dim X As Long
+
+    FileName = "c:\windows\pinstripe.bmp"
+
+    X = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0&, FileName, SPIF_UPDATEINIFILE Or SPIF_SENDWININICHANGE)
+    MsgBox "Wallpaper was changed"
+End Sub
+
+Run the example program by pressing F5. Click the Remove Wallpaper command button. The wallpaper is removed—Windows 95 displays a black background with no graphics. Click the Change Wallpaper command button. The wallpaper is changed to the PINSTRIPE bitmap image.

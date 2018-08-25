@@ -1,0 +1,59 @@
+Tip 78: Retrieving the Names of All Printers
+May 8, 1995
+
+Abstract
+When Windows® is executed, it uses the WIN.INI initialization file to determine what printer is attached to the computer system. This article explains how to determine the names of all printers as stored in the Devices section of the WIN.INI file.
+
+Populating a List Box Control with Printer Names
+You can retrieve the names of all printers attached to the computer system by using the Windows® application programming interface (API) GetProfileString function. To declare this function in your Visual Basic® application, include the following Declare statement in the Global Module or General Declarations section of your program:
+
+Private Declare Function GetProfileString Lib "Kernel" (ByVal lpAppName
+   As String, ByVal lpKeyName As Any, ByVal lpDefault As String, ByVal 
+   lpReturnedString As String, ByVal nSize As Integer) As Integer
+
+(Note that this Declare statement must be typed as a single line of code.)
+
+The GetProfileString function requires five arguments, as follows:
+
+lpAppName A string containing the section name. Not case-sensitive. 
+lpKeyName A string containing the entry name to retrieve. Not case-sensitive. If this is a long value set to zero, a list of all entries found in the specified section will be returned in lpReturnedString. 
+lpDefault A string containing the default value to return if no entry is found. 
+lpReturnedString A string buffer that will hold the information the function retrieves. 
+nSize An integer value set to the maximum number of characters to be stored in lpReturnedString. 
+
+Calling the GetProfileString function returns an integer value. This value is a count of the number of characters that were stored in the lpReturnedString buffer, but does not include the terminating NULL byte. (Each entry returned in lpReturnedString is terminated by a NULL character.) When your program is retrieving more than a single entry, the last entry in the buffer is marked with two consecutive NULL bytes to signal the end of the list.
+
+Because we want to retrieve the names of all printers stored in the devices section of the WIN.INI file, we would execute the following statement:
+
+RetVal = GetProfileString(Section, 0&, "", Buffer, Len(Buffer))
+
+This tells the GetProfileString function to retrieve all entries stored in the "devices" section of WIN.INI (notice the 0& argument to tell the function to provide us with a list of the entries).
+
+Example Program
+The example program below populates a List Box control with the names of all printers attached to the computer system. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Declare statement to the General Declarations section of Form1 (note that this Declare statement must be typed as a single line of code): 
+Private Declare Function GetProfileString Lib "Kernel" (ByVal lpAppName As 
+  String, ByVal lpKeyName As Any, ByVal lpDefault As String, ByVal 
+  lpReturnedString As String, ByVal nSize As Integer) As Integer
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Dim RetVal As Integer
+    Dim Buffer As String
+    Dim Section As String
+    Dim Start As Integer
+    
+    Buffer = Space$(1024)
+    Section = "devices"
+    RetVal = GetProfileString(Section, 0&, "", Buffer, Len(Buffer))
+    
+    Do Until Left$(Buffer, 1) = Chr$(0)
+        Start = InStr(Buffer, Chr$(0))
+        List1.AddItem Left$(Buffer, Start - 1)
+        Buffer = Right$(Buffer, Len(Buffer) - Start)
+    Loop
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. 

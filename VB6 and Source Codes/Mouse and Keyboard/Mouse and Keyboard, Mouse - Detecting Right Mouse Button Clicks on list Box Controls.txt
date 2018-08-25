@@ -1,0 +1,72 @@
+Tip 76: Detecting Right Mouse Button Clicks on List Box Controls
+May 8, 1995
+
+Abstract
+When using a List Box control in a Visual Basic® application, the user can click on an item with the left mouse button. That item then becomes selected. This article explains how you can select items with the right mouse button instead of the left mouse button.
+
+Intercepting Right Mouse Button Click Events
+The LB_GETITEMRECT message can be used to determine which item in a List Box was selected. This message retrieves the coordinates of a bounding rectangle for the selected item in the List Box control. To invoke this message, you must tell it the entry number, starting at zero, whose dimensions you want to retrieve, as well as a RECT structure that will hold the coordinate information.
+
+To determine which item a user clicked on with the right mouse button, you trap the MouseUp event. The MouseUp event can be used to determine which mouse button was pressed and the mouse's current X and Y coordinates on the form or control.
+
+Once we have determined the mouse's position over the List Box control, we can use the Windows® application programming interface (API) SendMessage function to return the index number of the item the mouse was positioned over when the MouseUp event was triggered.
+
+Example Program
+The example program below displays a List Box control on a form. Whenever you click the right mouse button on an item in the List Box, the message "Right Click on" is displayed in the Text Box along with the index number corresponding to the selected item. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    List1.AddItem "Item #1"
+    List1.AddItem "Item #2"
+    List1.AddItem "Item #3"
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. 
+Add the following code to the MouseUp event for List1 (note that the Private lines must be typed as a single line of code): 
+Private Sub List1_MouseUp(Button As Integer, Shift As Integer, X As Single,
+  Y As Single)
+    Dim Item%
+    If (Button = 2) Then
+        Item% = GetRClickedItem(List1, X, Y)
+        If (Item% = LB_ERR) Then
+            Text1.Text = "ERROR"
+        Else
+            Text1.Text = "Right Click on " + Str(Item%)
+        End If
+    End If
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a new module to the project. Module.Bas is created by default. 
+Add the following code to the Module.Bas file (note that the Private and If lines must be typed as a single line of code): 
+Type RECT
+    Left As Integer
+    Top As Integer
+    Right As Integer
+    Bottom As Integer
+End Type
+Global Const WM_USER = &H400
+Global Const LB_GETITEMRECT = (WM_USER + 25)
+Global Const LB_ERR = (-1)
+Private Declare Function SendMessage Lib "User" (ByVal hWnd As Integer, ByVal 
+  wMsg As Integer, ByVal wParam As Integer, lParam As Any) As Long
+Function GetRClickedItem%(MyList As Control, X As Single, Y As Single)
+    Dim ClickX%, ClickY%, Ret&, CurRect As RECT
+    ClickX% = X \ Screen.TwipsPerPixelX
+    ClickY% = Y \ Screen.TwipsPerPixelY
+    i% = 0
+    Do While True
+        Ret& = SendMessage(MyList.hWnd, LB_GETITEMRECT, i%, CurRect)
+        If (Ret& = LB_ERR) Then
+            GetRClickedItem% = LB_ERR: Exit Function
+        End If
+        If (ClickX% >= CurRect.Left) And (ClickX% <= CurRect.Right) And 
+  (ClickY% >= CurRect.Top) And (ClickY% <= CurRect.Bottom) Then
+            GetRClickedItem% = i%: Exit Function
+        End If
+        i% = i% + 1
+    Loop
+    
+End Function
+

@@ -1,0 +1,74 @@
+Tip 142: Determining Whether the Operating System Supports Long File Names
+August 6, 1995
+
+Abstract
+While developing an application in Microsoft® Visual Basic®, you may need to allow your user to use long file names. This article explains how you can determine whether the operating system supports long file names.
+
+Using Long File Names in Windows 95
+The Microsoft® Windows® 95 operating system lets you use long file names when creating directories and files. Under other operating systems, you might store your word processing files in a directory called C:\DOCS. Under Windows 95, however, you can specify the directory name as C:\Documents for Legal Department. Using long file names such as this can make your file system easier to navigate.
+
+To determine whether your current operating system supports long file names, you can use the GetVolumeInformation function in Visual Basic®. To use this function, include the following Declare statement in the General Declarations section of your project (note that the Declare statement must be typed as a single line of code):
+
+Private Declare Function GetVolumeInformation Lib "kernel32" Alias 
+   "GetVolumeInformationA" (ByVal lpRootPathName As String, ByVal 
+   lpVolumeNameBuffer As String, ByVal nVolumeNameSize As Long, 
+   lpVolumeSerialNumber As Long, lpMaximumComponentLength As Long, 
+   lpFileSystemFlags As Long, ByVal lpFileSystemNameBuffer As String, 
+   ByVal nFileSystemNameSize As Long) As Long
+
+The GetVolumeInformation function retrieves information about the disk and/or file system used on the specified disk drive. This function requires eight arguments, as follows.
+
+lpRootPathName A string containing the name of the disk's root directory. 
+lpVolumeNameBuffer A string that will hold the disk's volume name. 
+nVolumeNameSize A long value containing the size of lpVolumeNameBuffer. 
+lpVolumeSerialNumber A long value that will hold the volume serial number. 
+lpMaximumComponentLength A long value containing the maximum length of a file name component. 
+lpFileSystemFlags A long value containing the maximum length of a file name component. A combination of the following flags is used: 
+FS_CASE_IS_PRESERVED File system preserves the case of file names when saved to disk. 
+FS_CASE_SENSITIVE File system supports case-sensitive file names. 
+FS_UNICODE_STORED_ON_DISK File system supports Unicode™ in file names. 
+FS_PERSISTENT_ACLS File system preserves and enforces access control lists (ACLs). 
+lpFileSystemNameBuffer A string to hold the file system's name (FAT, HPFS, or NTFS). 
+nFileSystemNameSize A long value containing the length of lpFileSystemNameBuffer. 
+
+After the program calls the GetVolumeInformation function, a value of True is returned if the function was successful and all information about the disk/file system was retrieved. A value of False is returned if the function was not successful.
+
+After you have executed the GetVolumeInformation function, it returns the maximum component length of a file name. An ordinary MS-DOS® file name (such as COMMAND.COM) consists of eight characters followed by three characters. In this case, the value returned by GetVolumeInformation would be 8.3. If the operating system supports long file names, the value returned will be 255, regardless of the actual length of the file name.
+
+Example Program
+This program shows how you can retrieve the volume name of a disk, and how to determine whether the operating system supports long file names. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Declare statement to the General Declarations section of Form1 (note that this Declare statement must be typed as a single line of text): 
+Private Declare Function GetVolumeInformation Lib "kernel32" Alias 
+   "GetVolumeInformationA" (ByVal lpRootPathName As String, ByVal 
+   lpVolumeNameBuffer As String, ByVal nVolumeNameSize As Long, 
+   lpVolumeSerialNumber As Long, lpMaximumComponentLength As Long, 
+   lpFileSystemFlags As Long, ByVal lpFileSystemNameBuffer As String,
+   ByVal nFileSystemNameSize As Long) As Long
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a second Text Box control to Form1. Text2 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1. 
+Private Sub Command1_Click()
+    Dim nRet As Long
+    Dim VolName As String
+    Dim VolSN As Long
+    Dim MaxCompLen As Long
+    Dim VolFlags As Long
+    Dim VolFileSys As String
+    VolName = Space$(256)
+    VolFileSys = Space$(256)
+    nRet = GetVolumeInformation("C:\", VolName, Len(VolName), VolSN,
+       MaxCompLen, VolFlags, VolFileSys, Len(VolFileSys))
+    text1.Text = VolName
+    If MaxCompLen = 255 Then
+        Text2.Text = "Long file names are supported"
+    Else
+        Text2.Text = "Long file names are NOT supported"
+    End If
+End Sub
+
+Run the example program by pressing F5. Click the command button. The disk's volume name is displayed in the first text box. A message is displayed in the second text box if long file names are supported.
+

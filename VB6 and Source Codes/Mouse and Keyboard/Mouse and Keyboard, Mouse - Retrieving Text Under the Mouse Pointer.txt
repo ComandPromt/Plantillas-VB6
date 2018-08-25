@@ -1,0 +1,103 @@
+Tip 59: Retrieving Text Under the Mouse Pointer
+Created: April 17, 1995
+
+Abstract
+When developing an application in Visual Basic®, you may need to determine what word or phrase is under the mouse pointer. This article will demonstrate, through the use of an example program, how to retrieve text from a control.
+
+Retrieving Text from a Control
+The Instr function in Visual Basic® is a powerful tool you can use to manipulate text strings. The Instr function is used to determine the position of a target string within a larger string. The target string can be defined as a whole word or phrase or simply a character, such as a space character. You can use it in conjunction with the Mid$ function to easily remove parts of one string from another. The ParseText routine shown in the example program below is based on using these two Visual Basic functions to retrieve the text under the mouse pointer.
+
+Example Program
+The following program shows how to retrieve a word or phrase under the mouse pointer (cursor). 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Form_Load event for Form1 (note that each Words line must be typed as a single line of code): 
+Sub Form_Load()
+   'Make the picture box take up the form's entire client area.
+   Form1.Picture1.Top = 0
+   Form1.Picture1.Left = 0
+   Form1.Picture1.Height = Form1.ScaleHeight
+   Form1.Picture1.Width = Form1.ScaleWidth
+
+   ' Create some sample text to work with. This could be
+   ' text loaded in from a file.
+   ' Note - The text MUST currently end with a space.
+   Text$ = "This is an example of how to determine which "
+   Text$ = Text$ + "word the cursor is over in a picture "
+   Text$ = Text$ + "box. This example is of course "
+   Text$ = Text$ + "released into public domain. "
+
+   'Parse the text into the Words array.
+   Call ParseText(Text$, Words())
+
+   'Create the prompts for the text.
+   Words(0).PromptText = "This program"
+   Words(3).PromptText = "A model"
+   Words(11).PromptText = "The mouse cursor"
+   Words(16).PromptText = "A control in VB that can display a Bitmap, MetaFile 
+      or Icon"
+   Words(17).PromptText = "A control in VB that can display a Bitmap, MetaFile 
+      or Icon"
+   Words(20).PromptText = "A model"
+   Words(26).PromptText = "This program can be copied, modified, and used 
+      without violating a copyright."
+   Words(27).PromptText = "This program can be copied, modified, and used 
+      without violating a copyright."
+   Form1.Show
+   'Display the text on the Picture Box.
+   Call DisplayText(Words(), Form1.Picture1)
+   Form1.Picture1.AutoRedraw = True
+End Sub
+
+Add a Picture Box control to Form1. Picture1 is created by default. 
+Add the following code to the MouseMove event for Picture1 (note that the Sub line must be typed as a single line of code): 
+Sub Picture1_MouseMove(Button As Integer, Shift As Integer, X As Single,
+      Y As Single)
+   Form1.Caption = ""
+   For I = 0 To UBound(Words)
+      If Y >= Words(I).Top And Y <= Words(I).Bottom Then
+         If X >= Words(I).Left And X <= Words(I).Right Then
+            Form1.Caption = Words(I).PromptText
+         End If
+      End If
+   Next
+End Sub
+
+Create a new Sub procedure called ParseText. Add the following code to this procedure: 
+Sub ParseText(Text$, WordHolder() As WordType)
+   'Find the number of spaces in the text, to determine
+   'approx. how many words are in it.
+   Start = 1                              'Start at the beginning.
+
+   Do
+      I = InStr(Start, Text$, Chr$(32))   'Look for a space after 
+                                          'the one just found.
+
+      'If a space was found, add 1 to the counter and move
+      'the start to its location.
+      If I > 0 Then
+         NumSpaces = NumSpaces + 1
+         Start = I + 1
+      End If
+   Loop Until I = 0
+   ReDim WordHolder(NumSpaces + 1)        'Redimension the array to 
+                                          'the # of words in the text.
+   Start = 1                              'Reset the starting position.
+   WordNum = 0                            'Create a counter for the 
+                                          'current location in the
+                                          'array.
+   Do
+      I = InStr(Start, Text$, Chr$(32))   'Look for a space after
+                                          'the one just found.
+      'If a space was found, make the next word equal to what
+      'was in between it and the previous space.
+
+      If I > 0 Then
+         WordHolder(WordNum).Word = Mid$(Text$, Start, (I - Start) + 1)
+         Start = I + 1
+         WordNum = WordNum + 1
+      End If
+   Loop Until I = 0
+End Sub
+
+After executing this program, Visual Basic enlarges the Picture Box to fit the entire client area of Form1. Next, it displays the sentences in the Picture Box control. When you move the mouse pointer over selected words in the Picture Box, the phrases associated with the text pointed to by the mouse pointer are shown in the form's titlebar.

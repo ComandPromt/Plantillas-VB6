@@ -1,0 +1,16 @@
+'Description: Returns cursor positions X and Y
+
+'Private Type POINTAPI
+'      x       As Long
+'      y       As Long
+'End Type
+
+'Private Declare Function M_GetCursorPos Lib "user32" Alias "GetCursorPos" (lpPoint As POINTAPI) As Long
+
+'Public Sub GetCursorPos(xX As Long, xY As Long)
+Dim pt      As POINTAPI
+Call M_GetCursorPos(pt)
+
+xX = pt.x
+xY = pt.y
+'End Sub

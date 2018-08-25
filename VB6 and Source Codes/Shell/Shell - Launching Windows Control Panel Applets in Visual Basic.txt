@@ -1,0 +1,73 @@
+Tip 193: Launching Windows 95 Control Panel Applets in Visual Basic
+December 5, 1995
+
+Abstract
+This article explains how to launch an applet in Microsoft® Windows® 95 Control Panel from within a Microsoft Visual Basic® application.
+
+Using the RunDLL32 Utility to Launch Applets
+The Control Panel program in the Microsoft® Windows® 95 operating system allows you to customize various aspects of the operating system. For example, by running the Printers applet, you can add, remove, or select a new default printer.
+
+A special utility included with Windows 95 allows you to execute a specific function (that is, a Control Panel applet) from within your own Microsoft Visual Basic® application. This utility is RunDLL32. You can use the RunDLL32 utility to execute the Control_RunDLL function in the Shell32.DLL library. To execute a Control Panel applet, you use a statement such as:
+
+X = Shell("Rundll32.exe shell32.dll,Control_RunDLL main.cpl @2")
+
+This statement uses the Shell command to execute the Printers applet in Control Panel. In a Visual Basic application, this would give your user the ability to select a new default printer, check a printer's status, and add or remove printer objects from the Windows 95 operating system.
+
+When using the Shell command to launch a Control Panel applet, you must be careful to use the exact syntax for the RunDLL32 utility. The capitalization of all components in the statement must not be altered in any way—otherwise, an error will occur.
+
+Each time you want to launch a Control Panel applet, your Visual Basic statement must include the syntax used above. In other words, you need only to substitute the name of the .CPL file for "main.cpl" used above and specify the number of the particular applet you want to execute. Also, if that applet requires additional command-line parameters, you would specify these as the last parameter to the statement.
+
+Each applet contained in a .CPL file is numbered starting from zero. If you don't specify which applet you want to execute with the @value parameter, the first applet (@0) is the one that is launched.
+
+The following list provides a starting point for showing how to launch the different applets found in Control Panel.
+
+To launch Control Panel itself:
+
+rundll32.exe shell32.dll,Control_RunDLL
+
+To launch the Accessibility Options applet: 
+
+General 
+rundll32.exe shell32.dll,Control_RunDLL access.cpl,,5
+
+Display 
+rundll32.exe shell32.dll,Control_RunDLL access.cpl,,3
+
+Keyboard 
+rundll32.exe shell32.dll,Control_RunDLL access.cpl,,1
+
+Mouse 
+rundll32.exe shell32.dll,Control_RunDLL access.cpl,,4
+
+Sound 
+rundll32.exe shell32.dll,Control_RunDLL access.cpl,,2
+
+To launch the Regional Settings applet: 
+
+Background 
+rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,0
+
+Appearance 
+rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,2
+
+Screen Saver 
+rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,1
+
+Settings 
+rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,3
+
+To launch the Date/Time applet:
+
+rundll32.exe shell32.dll,Control_RunDLL timedate.cpl
+
+Example Program
+This program shows how to launch the Printers applet in Control Panel from within a Visual Basic application. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1 (note that the Shell statement must be typed exactly as shown): 
+Private Sub Command1_Click()
+    X = Shell("Rundll32.exe shell32.dll,Control_RunDLL main.cpl @2")
+End Sub
+
+Run the example program by pressing F5. Click the command button. The Printers applet in Control Panel is launched.

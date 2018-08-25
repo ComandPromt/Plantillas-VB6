@@ -1,0 +1,8 @@
+'Description: Returns HWND of active window
+
+'Private Declare Function M_GetActiveWindow Lib "user32" Alias "GetActiveWindow" () As Long
+'Function GetActiveWindow() As Long
+Dim xHwnd       As Long
+xHwnd = M_GetActiveWindow()
+GetActiveWindow = xHwnd
+'End Function

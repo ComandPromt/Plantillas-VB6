@@ -1,0 +1,66 @@
+Tip 100: Printing a Form Multiple Times on One Page
+May 29, 1995
+
+Abstract
+This article explains how you can print a Visual Basic® form several times on a single piece of paper.
+
+Printing Forms on the Printer Device
+You can use the Windows® application programming interface (API) StretchBlt function to copy a form to another form multiple times. For instance, the example program below uses the StretchBlt function to copy a form to a new form. The original form is copied four times. The destination form then contains a copy of the original form in its upper left, lower left, upper right, and lower right corners.
+
+The technique presented in this article is useful for duplicating a form several times. For example, if you designed a form to keep track of telephone messages, you could print four messages per printed page, instead of using one piece of paper per telephone message.
+
+The StretchBlt function can be used to copy an image from one device context to another. To use this function in your Visual Basic® application, include the following Declare statement in the General Declarations section of your form (note that it must be typed as a single line of code):
+
+Private Declare Function StretchBlt Lib "GDI" (ByVal hDC%, ByVal X%, ByVal y%, 
+   ByVal nWidth%, ByVal nHeight%, ByVal hSrcDC%, ByVal XSrc%, ByVal YSrc%, ByVal 
+   nSrcWidth%, ByVal nSrcHeight%, ByVal dwRop&) As Integer
+
+The StretchBlt function requires the following arguments:
+
+hDC An integer value containing the destination device context. 
+X,Y Integer values defining the rectangle's upper left corner for the destination device context. 
+nWidth The width of the image. 
+nHeight The height of the image. 
+hSrcDC An integer value containing the source device context. 
+Xsrc, YSrc Integer values defining the rectangle's upper left corner for the source device context. 
+nSrcWidth The width of the image. 
+nSrcHeight The height of the image. 
+dwRop The raster operation that is to be used. 
+
+In the example program below, the StretchBlt function is called four times to copy the original Form1 to the destination Form2. Each time the copy operation is performed, the destination is offset to the next quarter section of Form2.
+
+Example Program
+Before running this program, make sure your printer is online and ready to accept data. Press the F5 function key to run the example program, which will print Form2 on the paper four times. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1 (note that the X = lines must each be typed as a single line of code): 
+Private Sub Command1_Click()
+    Dim W As Integer
+    Dim H As Integer
+    Dim X As Integer
+    
+    W = Form2.ScaleWidth / 2
+    H = Form2.ScaleHeight / 2
+    X = SetStretchBltMode(Form2.hDC, 3)
+    X = StretchBlt(Form2.hDC, 0, 0, W, H, Form1.hDC, 0, 0, Form1.ScaleWidth, 
+        Form1.ScaleHeight, SRCCOPY)
+    X = StretchBlt(Form2.hDC, W, 0, W, H, Form1.hDC, 0, 0, Form1.ScaleWidth, 
+        Form1.ScaleHeight, SRCCOPY)
+    X = StretchBlt(Form2.hDC, W, H, W, H, Form1.hDC, 0, 0, Form1.ScaleWidth, 
+        Form1.ScaleHeight, SRCCOPY)
+    X = StretchBlt(Form2.hDC, 0, H, W, H, Form1.hDC, 0, 0, Form1.ScaleWidth, 
+        Form1.ScaleHeight, SRCCOPY)
+    Form2.Refresh
+    Form2.PrintForm
+End Sub
+
+From Visual Basic's menu, select Insert. Select Form to create a new form. Form2 is created by default. Add a Text Box control to Form2 or otherwise put some type of material on the form so you can see it printed on the paper. 
+Add the following code to the General Declarations section of Form1 (note that each Declare statement should be typed as a single line of code): 
+Private Declare Function SetStretchBltMode Lib "GDI" (ByVal hDC%, ByVal 
+   nStretchMode%) As Integer
+Private Declare Function StretchBlt Lib "GDI" (ByVal hDC%, ByVal X%, ByVal y%, 
+   ByVal nWidth%, ByVal nHeight%, ByVal hSrcDC%, ByVal XSrc%, ByVal YSrc%, ByVal 
+   nSrcWidth%, ByVal nSrcHeight%, ByVal dwRop&) As Integer
+Const SRCCOPY = &HCC0020
+

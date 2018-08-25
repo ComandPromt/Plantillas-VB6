@@ -1,0 +1,53 @@
+Tip 72: Positioning the Cursor over a Control That Receives Focus
+May 1, 1995
+
+Abstract
+The Default property of a Command Button can be used to place the focus on the control at run time. If this property is set to True, the Command Button receives the focus; if it is set to False, the Command Button does not have the focus. In addition, the SetFocus method can be used to shift the focus to a specific control or form. However, the mouse pointer's position is not changed. This article explains how you can position the mouse pointer over the control that has just received the focus.
+
+Using SetCursorPos to Change Cursor Position
+Whenever you use the SetFocus method to move the focus to a different control or form, the mouse pointer's position is not changed. In many situations, it would be nice if the position of the mouse pointer could follow the control that has the focus. We can implement this feature in a Visual Basic® application by using the SetCursorPos function provided in the Windows® application programming interface (API). The Declare statement for the SetCursorPos function is:
+
+Declare Sub SetCursorPos Lib "User" (ByVal X As Integer, ByVal Y As Integer)
+
+As you can see, this function takes two arguments. The X argument represents the horizontal position of the cursor and the Y argument represents the vertical position of the cursor. To successfully move the cursor using SetCursorPos, you must first determine the correct coordinates to use with the function.
+
+How do we actually determine the position of a control on the screen? First, we know that the Command Button control has both Width and Height properties that tell us the exact size of the control; ditto for the Form control. To calculate the approximate coordinates of the center point of the Command Button, we can add the left position of the Command Button to the Form's left position, and divide this value by the half the width of the Command Button, which gives us the center position of the Command Button.
+
+However, we also need to adjust the values we calculate for the width of the form's border and title bar. The final step is to divide this value we have just calculated by the TwipsPerPixelX and TwipsPerPixelY values to obtain the control's true center position on the screen. It is then a simple matter to call the SetCursorPos function to move the mouse pointer to this new location.
+
+Each time a control receives the focus, the GotFocus event for that control is triggered. In addition, the focus can be shifted to a control by clicking that control. In this case, the Click event is triggered. By including code that positions the mouse pointer at the center of the control in these two events, you can successfully position the cursor over any control as soon as it receives the focus.
+
+Example Program
+The program below shows how to move the mouse pointer to the control that has just received the focus. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Declare statement to the General Declarations section of Form1 (note that this Declare statement should be typed as one single line of code): 
+Declare Sub SetCursorPos Lib "User" (ByVal X As Integer, ByVal Y As Integer)
+
+Add a Label control to Form1. Label1 is created by default. Set its Caption property to "Save Changes?" 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Yes". 
+Add the following code to the Click event for Command1: 
+Sub Command1_Click()
+    Dim X As Integer, Y As Integer
+    X = (Form1.Left + Command2.Left + Command2.Width / 2 + 60) /
+         Screen.TwipsPerPixelX
+    Y = (Form1.Top + Command2.Top + Command2.Height / 2 + 360) /
+         Screen.TwipsPerPixelY
+    SetCursorPos X, Y
+    Command2.SetFocus
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. Set its Caption property to "No". 
+Add the following code to the GotFocus event for Command2: 
+Sub Command2_GotFocus()
+    Dim X As Integer, Y As Integer
+    X = (Form1.Left + Command2.Left + Command2.Width / 2 + 60) /
+          Screen.TwipsPerPixelX
+    Y = (Form1.Top + Command2.Top + Command2.Height / 2 + 360) /
+         Screen.TwipsPerPixelY
+    SetCursorPos X, Y
+End Sub
+
+Run the program by pressing the F5 function key. Notice that the Yes Command Button has the focus. Press the TAB key once. The focus has now been placed on the No Command Button. In addition, the mouse pointer is positioned over the second Command Button.
+
+Run the program a second time. Using the mouse, click the No Command Button. The Command Button receives the focus and the mouse pointer is positioned over the button. This demonstrates that no matter which one is used to move the focus—the TAB key or the mouse—the mouse pointer can be programmed to follow control that has the focus.

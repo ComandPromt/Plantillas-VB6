@@ -1,0 +1,74 @@
+Tip 146: Retrieving the Printer Name from the Windows 95 Registry
+August 31, 1995
+
+Abstract
+Microsoft® Windows® 95 uses the registry to determine which applications and hardware items are installed in the computer system. This article explains how you can retrieve the name of the default printer from the registry from within a Visual Basic® application.
+
+Manipulating the Windows 95 Registry in Visual Basic
+The Microsoft® Windows® 95 registry is a database of information that contains configuration details about the hardware and software installed in your computer system. Under Windows version 3.1, this information was maintained through initialization (.INI) files.
+
+The registry is composed of keys. Each key may contain a specific value or other subkeys, which in turn may contain values or other subkeys. You can examine or modify the contents of the registration database by using the Microsoft Win32® registry application programming interface (API) functions in a Visual Basic program or by using the Registry Editor (REGEDIT).
+
+The example program below shows how to use the Win32 registry API functions to retrieve the default printer's name from the registry.
+
+The first step is to call the RegOpenKeyEx function.This function opens the specified key in the registration database. In this case, you want to open the subkey that is associated with the printer. This subkey is stored in the registry as:
+
+SYSTEM\Current Control Set\Control\Print\Printers\Default
+You also need to tell the RegOpenKeyEx function that you want to work with the Default subkey. After the program calls this function, a value that is set to zero is returned if the function was successful.
+
+The next step is to retrieve the actual value stored for the key that you are interrogating. Because you want to retrieve the name that is assigned to the default printer, you should call the RegQueryValueEx function. You must tell this function that you want to retrieve the value that was given to the Default subkey.
+
+Finally, you must call the RegCloseKey function to release the handle of the key that you have been accessing in the registration database. This terminates access to the registration database and frees the handle for future use by the computer system.
+
+Example Program
+This program shows how to retrieve the name of the default printer from the Windows 95 registry. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Private Declare Function RegOpenKeyEx Lib "advapi32" Alias "RegOpenKeyExA" 
+   (ByVal hKey As Long, ByVal lpSubKey As String, ByVal dwReserved As Long, 
+   ByVal samDesired As Long, phkResult As Long) As Long
+Private Declare Function RegQueryValueEx Lib "advapi32" Alias "RegQueryValueExA" 
+   (ByVal hKey As Long, ByVal lpValueName$, ByVal lpdwReserved As Long, lpdwType 
+   As Long, lpData As Any, lpcbData As Long) As Long
+Private Declare Function RegCloseKey Lib "advapi32" (ByVal hKey As Long) As Long
+Const HKEY_CURRENT_CONFIG As Long = &H80000005
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1. 
+Private Sub Command1_Click()
+    Dim PName As String
+    PName = GetCurrPrinter()
+    Text1.Text = PName
+End Sub
+
+Create a new procedure called GetCurrPrinter. Add the following code to this procedure. 
+Function GetCurrPrinter() As String
+    GetCurrPrinter = RegGetString$(HKEY_CURRENT_CONFIG, "System\CurrentControlSet\Control\Print\Printers", "Default")
+End Function
+
+Create a new procedure called RegGetString. Add the following code to this procedure. 
+Function RegGetString$(hInKey As Long, ByVal subkey$, ByVal valname$)
+    Dim RetVal$, hSubKey As Long, dwType As Long, SZ As Long
+    Dim R As Long
+    RetVal$ = ""
+    Const KEY_ALL_ACCESS As Long = &HF0063
+    Const ERROR_SUCCESS As Long = 0
+    Const REG_SZ As Long = 1
+    R = RegOpenKeyEx(hInKey, subkey$, 0, KEY_ALL_ACCESS, hSubKey)
+    If R <> ERROR_SUCCESS Then GoTo Quit_Now
+    SZ = 256: v$ = String$(SZ, 0)
+    R = RegQueryValueEx(hSubKey, valname$, 0, dwType, ByVal v$, SZ)
+    If R = ERROR_SUCCESS And dwType = REG_SZ Then
+        RetVal$ = Left$(v$, SZ)
+    Else
+        RetVal$ = "--Not String--"
+    End If
+    If hInKey = 0 Then R = RegCloseKey(hSubKey)
+Quit_Now:
+    RegGetString$ = RetVal$
+End Function
+
+Run the example program by pressing F5. When you click the Command Button control, the name of your default printer is displayed in the Text Box control.
+

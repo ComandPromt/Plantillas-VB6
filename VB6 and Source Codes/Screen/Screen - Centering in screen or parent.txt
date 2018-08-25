@@ -1,0 +1,29 @@
+'Description: Centers a form in the screen or another  form 
+
+'screen centering syntax: CenterForm Me
+'parent centering syntax: CenterForm Me, form1
+
+'Public Sub CenterForm(frm As Form, Optional vParent As Variant)
+   Dim oParent    As Object
+   Dim iMode      As Integer
+   Dim iLeft      As Integer
+   Dim iTop       As Integer
+   
+   If IsMissing(vParent) Then
+      Set oParent = Screen
+   ElseIf TypeOf vParent Is Screen Or TypeOf vParent Is Form Then
+      Set oParent = vParent
+   Else
+      Exit Sub
+   End If
+   
+   If TypeOf oParent Is Form Then
+      iLeft = oParent.Left
+      iTop = oParent.Top
+   End If
+   frm.Move iLeft + (oParent.Width - frm.Width) / 2, iTop + (oParent.Height - frm.Height) / 2
+'End Sub
+
+'Place the following code in under a command button or in a menu, etc...
+
+CenterForm me

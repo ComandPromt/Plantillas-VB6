@@ -1,0 +1,98 @@
+Tip 36: Terminating a Running Application from Within Visual Basic
+Created: March 1, 1995
+
+Abstract
+From within a Visual Basic® application, you can terminate another Windows®-based application that is currently running. To do this, you send a WM_CLOSE command to the running application. This terminates the program just as if you had clicked on the Close command in the application's control menu. This article explains how you can terminate a program from within a Visual Basic application.
+
+Terminating Running Applications
+There are several steps you need to perform in your Visual Basic® program before you can successfully terminate a running application.
+
+First, you need to determine the running application's window handle. This can be done by calling theWindows® application programming interface (API) FindWindow function. Next, you must use the GetWindow function to make sure that you are not trying to terminate your own Visual Basic program. Second, you must be certain the window handle does not refer to a window that is disabled or otherwise not able to be terminated. As long as the above-mentioned conditions have been met, you can call the PostMessage function to terminate the running application.
+
+The Windows API PostMessage function is the key to terminating a program running in Windows. After you have determined the application's handle, you simply execute the PostMessage function with the WM_CLOSE command as an argument.
+
+To declare this function within your program, include the following Declare statement in the Global Module or General Declarations section of your form:
+
+Declare Function PostMessage Lib "User" (ByVal Hwnd As Integer, ByVal wMsg
+   As Integer, ByVal wParam As Integer, ByVal lParam As Long) As Integer
+
+Note that this Declare statement must be typed as one single line of text.
+
+The PostMessage function requires four arguments to be passed to it. These arguments are as follows:
+
+hWnd An integer value set to the window's handle 
+wMsg An integer value set to the message ID that you want to send to the window 
+wParam An integer value set to a 16-bit parameter (depends on wMsg) 
+lParam A string or long value (depends on wMsg) 
+
+After calling the PostMessage function, an integer value will be returned. If this value is set to TRUE (nonzero), the function was successful and the target application was terminated.
+
+Example Program
+The following Visual Basic program shows how you can terminate an application currently running in Windows. This example assumes that the application you want to terminate is the Windows Solitaire game and that it is currently running in memory.
+
+When you execute this program, it will display a message box telling you either that Solitaire is not running (in which case the program simply ends) or that Solitaire is running. Click the OK command button and Solitaire will be immediately terminated. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add the following Constants and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of text): 
+Declare Function IsWindow Lib "User" (ByVal Hwnd As Integer) As Integer
+Declare Function GetWindow Lib "User" (ByVal Hwnd As Integer, ByVal wCmd 
+   As Integer) As Integer
+Declare Function GetWindowLong Lib "User" (ByVal Hwnd As Integer, ByVal nIndex 
+   As Integer) As Long
+Declare Function PostMessage Lib "User" (ByVal Hwnd As Integer, ByVal wMsg 
+   As Integer, ByVal wParam As Integer, ByVal lParam As Long) As Integer
+Declare Function FindWindow Lib "User" (ByVal lpClassName As Any, ByVal 
+   lpWindowName As String) As Integer
+Const GW_OWNER = 4
+Const GWL_STYLE = -16
+Const WS_DISABLED = &H8000000
+Const WS_CANCELMODE = &H1F
+Const WM_CLOSE = &H10
+
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+    Dim Hwnd As Integer
+    Dim Y As Integer    
+    Hwnd = FindWindow(0&, "Solitaire")
+    If Hwnd = 0 Then
+        MsgBox "SOLITAIRE is not running"
+        Exit Sub
+    Else
+        MsgBox "Click to quit SOLITAIRE"
+    End If    
+    Y = EndTask(Hwnd)    
+    If Y <> 0 Then
+        MsgBox "SOLITAIRE terminated"
+    Else
+        MsgBox "Error - Cannot terminate SOLITAIRE"
+    End If
+End Sub
+
+Create a new function called EndTask. Type the following code for this function: 
+Function EndTask(TargetHwnd As Integer) As Integer
+    Dim X As Integer
+    Dim ReturnVal As Integer
+    If TargetHwnd = hWndMe% Or GetWindow(TargetHwnd, GW_OWNER) = hWndMe% Then
+        End
+    End If    
+    If IsWindow(TargetHwnd) = False Then GoTo EndTaskFail
+    If (GetWindowLong(TargetHwnd, GWL_STYLE) And WS_DISABLED) Then GoTo EndTaskSucceed
+    
+    If IsWindow(TargetHwnd) Then
+        If Not (GetWindowLong(TargetHwnd, GWL_STYLE) And WS_DISABLED) Then
+        X = PostMessage(TargetHwnd, WM_CANCELMODE, 0, 0&)
+        X = PostMessage(TargetHwnd, WM_CLOSE, 0, 0&)
+         DoEvents
+        End If
+    End If
+    GoTo EndTaskSucceed
+    
+EndTaskFail:
+    ReturnVal = False
+    GoTo EndTaskEndSub    
+EndTaskSucceed:
+    ReturnVal = True    
+EndTaskEndSub:
+    EndTask% = ReturnVal
+End Function
+

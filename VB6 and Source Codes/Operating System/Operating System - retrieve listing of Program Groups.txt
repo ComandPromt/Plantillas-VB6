@@ -1,0 +1,72 @@
+'Description: Uses DDE to retrieve a complete listing of Program Groups
+'             in List1 and Program Items in List2
+
+'Uses 2 listBoxes and 2 TextBoxes. Use default names.
+'Sub Form_Load ()
+Text1.Visible = False
+Text2.Visible = False
+GetGroups List1
+'End Sub
+
+'Sub List1_Click ()
+GetItems List2
+'End Sub
+
+'Sub GetGroups (OutPutCtl As ListBox)
+On Error GoTo GError
+Text1.LinkTopic = "Progman|Progman"
+Text1.LinkMode = 2
+Text1.LinkItem = "groups"
+Text1.LinkRequest
+OutPutCtl.Clear
+sGroups$ = Text1
+pos% = InStr(1, sGroups$, Chr$(13))
+While pos%
+  OutPutCtl.AddItem RTrim$(Mid$(sGroups$, 1, pos% - 1))
+  sGroups$ = LTrim$(Mid$(sGroups$, pos% + 2))
+  pos% = InStr(1, sGroups$, Chr$(13))
+Wend
+OutPutCtl.ListIndex = 0
+Text1.LinkMode = 0
+Exit Sub
+
+GError:
+  MsgBox Error
+  Resume Next
+'End Sub
+
+
+'Sub GetItems (OutPutCtl As ListBox)
+On Error GoTo IError
+OutPutCtl.Clear
+If Len(List1.Text) Then
+  Text2.LinkTopic = "Progman|Progman"
+  Text2.LinkMode = 2
+  Text2.LinkItem = List1
+  Text2.LinkRequest
+  sItems$ = Text2
+  pos% = InStr(1, sItems$, Chr$(44))
+  temp% = InStr(1, sItems$, Chr$(10))
+  If temp% < pos% Then pos% = temp%
+     While pos%
+        sItems$ = LTrim$(Mid$(sItems$, pos% + 1))
+        pos% = InStr(1, sItems$, Chr$(44))
+        temp% = InStr(1, sItems$, Chr$(10))
+        If temp% < pos% Then pos% = temp%
+           cnt% = cnt% + 1
+             If Int((cnt% - 4) / 9) = (cnt% - 4) / 9 Then
+                tststr$ = RTrim$(Mid$(sItems$, 1, pos% - 1))
+                Sppos1% = InStr(1, tststr$, Chr$(34))
+                SpPos2% = InStr(Sppos1% + 1, tststr$, Chr$(34))
+                OutPutCtl.AddItem Mid$(tststr$, Sppos1% + 1, (SpPos2% - Sppos1%) - 1)
+         End If
+      Wend
+End If
+Text2.LinkMode = 0
+Exit Sub
+IError:
+MsgBox Error
+Resume Next
+'End Sub
+
+

@@ -1,0 +1,76 @@
+Tip 201: Retrieving the Task List in Windows 95
+December 5, 1995
+
+Abstract
+This article explains how to create a list of all currently running tasks on the Microsoft® Windows® 95 operating system.
+
+Determining Which Tasks Are Running
+With the Microsoft® Windows® 95 operating system, you can run any number of applications simultaneously. Occasionally, you may need to determine which tasks are currently being run. This can be accomplished by using several Windows application programming interface (API) functions.
+
+To find the names of all currently executing tasks, you must first determine the handle of the window that is currently at the top of the z-order. This, of course, would be the window of your own Microsoft Visual Basic® application. You can use the Windows API GetWindow function to retrieve the handle of your application's window with the statement:
+
+CurrWnd = GetWindow(Form1.hwnd, GW_HWNDFIRST)
+
+The first argument of the GetWindow function is the handle of the window that is at the top of the z-order. In this case, this is the handle of Form1.
+
+The second argument of the GetWindow function specifies the window you want to retrieve the handle for. This argument can have one of the following values:
+
+GW_CHILD Retrieve the handle for the child window. 
+GW_HWNDFIRST Retrieve the handle for the window at the top of the z-order. 
+GW_HWNDLAST Retrieve the handle for the window at the bottom of the z-order. 
+GW_HWNDNEXT Retrieve the handle of the window below the specified window in the z-order. 
+GW_HWNDPREV Retrieve the handle of the window above the specified window in the z-order. 
+GW_OWNER Retrieve the handle of the window that owns the specified window, if any. 
+
+After you have retrieved the application's window handle, you can use the Windows API GetParent function to retrieve this window's child window handle. Next, you call the Windows API GetWindowText and GetWindowTextLength functions to retrieve the text in the window's title bar and the length of this text, respectively. You can then use the text string in your own application. For example, you can save the title bar text to a List Box control.
+
+All of the above steps are repeated until you have processed all running tasks. You know that you have gone through each task when the current window is that of your own application.
+
+Example Program
+This program shows how to create a list of all currently running tasks in Windows 95. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Private Declare Function GetWindow Lib "user32" 
+   (ByVal hwnd As Long, ByVal wCmd As Long) As Long
+Private Declare Function GetParent Lib "user32" (ByVal hwnd As Long) As Long
+Private Declare Function GetWindowTextLength Lib "user32" Alias "GetWindowTextLengthA" (ByVal hwnd As Long) As Long
+Private Declare Function GetWindowText Lib "user32" Alias "GetWindowTextA" 
+   (ByVal hwnd As Long, ByVal lpString As String, ByVal cch As Long) As Long
+Const GW_HWNDFIRST = 0
+Const GW_HWNDNEXT = 2
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    LoadTaskList
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. 
+Create a new subroutine called LoadTaskList. Add the following code to this subroutine: 
+Sub LoadTaskList()
+    Dim CurrWnd As Long
+    Dim Length As Long
+    Dim TaskName As String
+    Dim Parent As Long
+    
+    List1.Clear
+    CurrWnd = GetWindow(Form1.hwnd, GW_HWNDFIRST)
+    
+    While CurrWnd <> 0
+        Parent = GetParent(CurrWnd)
+        Length = GetWindowTextLength(CurrWnd)
+        TaskName = Space$(Length + 1)
+        Length = GetWindowText(CurrWnd, TaskName, Length + 1)
+        TaskName = Left$(TaskName, Len(TaskName) - 1)
+        If Length > 0 Then
+            If TaskName <> Me.Caption Then
+                List1.AddItem TaskName
+            End If
+        End If
+        CurrWnd = GetWindow(CurrWnd, GW_HWNDNEXT)
+        DoEvents
+    Wend
+End Sub
+
+Run the example program by pressing F5. Click the Command Button control. A list of all currently running tasks on the Windows 95 operating system appears in the List Box control.

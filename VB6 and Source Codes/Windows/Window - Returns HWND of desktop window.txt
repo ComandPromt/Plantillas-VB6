@@ -1,0 +1,8 @@
+'Description: Returns HWND of desktop window
+
+'Private Declare Function M_GetDesktopWindow Lib "user32" Alias "GetDesktopWindow" () As Long
+'Function GetDesktopWindow() As Long
+Dim xHwnd As Long
+xHwnd = M_GetDesktopWindow()
+GetDesktopWindow = xHwnd
+'End Function

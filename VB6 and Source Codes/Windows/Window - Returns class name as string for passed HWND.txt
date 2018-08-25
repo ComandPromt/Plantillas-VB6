@@ -1,0 +1,14 @@
+'Description: Returns class name as string for passed HWND
+
+'Private Declare Function M_GetClassName Lib "user32" Alias "GetClassNameA" (ByVal lHwnd As Long, ByVal lpClassName As String, ByVal lMax As Long) As Long
+'Function GetClassName(ByVal xHwnd As Long) As String
+Dim xLen         As Long
+Dim sBuffer         As String
+sBuffer = String(255, Chr$(0))
+xLen = M_GetClassName(xHwnd, sBuffer, 255)
+If xLen = 0 Then
+   GetClassName = ""
+Else
+   GetClassName = Left(sBuffer, xLen)
+End If
+'End Function

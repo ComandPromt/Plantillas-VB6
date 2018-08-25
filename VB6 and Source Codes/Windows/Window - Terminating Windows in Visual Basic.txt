@@ -1,0 +1,45 @@
+Tip 154: Terminating Windows 95 in Visual Basic
+September 5, 1995
+
+Abstract
+In a Microsoft® Visual Basic® program, you can use a Microsoft Windows® application programming interface (API) function to reboot the computer system in various ways. This article explains how to quit Windows 95 and shut down the computer system.
+
+Shutting Down the Computer System
+You can use the Microsoft® Windows® application programming interface (API) ExitWindowsEx function to reboot a computer system from within a Microsoft Visual Basic® application. To use this function, include the following Declare statement in the General Declarations section of your form:
+
+Private Declare Function ExitWindowsEx Lib "user32" (ByVal uFlags 
+   As Long, ByVal dwReserved As Long) As Long
+
+The ExitWindowsEx function takes two arguments—the shutdown operation you want performed, and a parameter that is not used. You can use one or more combinations of the following flags to tell the ExitWindowsEx function how you want to perform the shutdown procedure.
+
+EWX_FORCE All processes all forced to terminate. 
+EWX_LOGOFF All processes are forced to terminate and the user is logged off. 
+EWX_POWEROFF The computer system is shut down and, if supported by the power-off feature, the computer is physically turned off. 
+EWX_REBOOT The computer system is shut down and rebooted. 
+EWX_SHUTDOWN The computer system is shut down to where it is safe to physically turn the power off. 
+
+In the example program below, you use a combination of three of the above flags. This flag combination (EWX_LOGOFF, EWX_FORCE, and EWX_REBOOT) tells Windows 95 to quit all currently executing processes, log the user off network connections, and leave the computer system ready for the user to turn off.
+
+Example Program
+This program shows how to shut down the computer system. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function ExitWindowsEx Lib "user32" (ByVal uFlags As Long,
+   ByVal dwReserved As Long) As Long
+Const EWX_LOGOFF = 0
+Const EWX_SHUTDOWN = 1
+Const EWX_REBOOT = 2
+Const EWX_FORCE = 4
+Const EWX_POWEROFF = 8
+Const EWX_RESET = EWX_LOGOFF + EWX_FORCE + EWX_REBOOT
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim X As Long
+    X = ExitWindowsEx(EWX_RESET, dwReserved)
+End Sub
+
+Run the example program by pressing F5. Click the command button to reboot the computer system.
+

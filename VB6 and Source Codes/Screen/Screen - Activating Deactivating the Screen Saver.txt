@@ -1,0 +1,53 @@
+Tip 43: Activating and Deactivating the Screen Saver
+Created: April 2, 1995
+
+Abstract
+The Windows® operating system can be configured to run a screen saver after a specified amount of time has elapsed without any keyboard or mouse activity being sensed. However, in certain situations, you may need to deactivate the screen saver, do some processing in your Visual Basic® application, and then reactivate the screen saver. This article explains how to do this in a Visual Basic program.
+
+Modifying System Parameters in Visual Basic
+Whenever you want to change the system settings in Windows®, you usually work through the Control Panel applet. However, the Windows SystemParametersInfo function can also be used within a Visual Basic® application to retrieve or set these same settings. To modify these settings in Visual Basic, you can use the function with a constant that describes the setting you want to modify. In this example, we use the SPI_GETSCREENSAVEACTIVE constant to control the screen saver program.
+
+To declare this function in your Visual Basic program, include the following Declare statement in the Global Module or General Declarations section of your program:
+
+Declare Function SystemParametersInfo Lib "User" (ByVal uAction As Integer, 
+   ByVal uParam As Integer, lpvParam As Any, ByVal fuWinIni As Integer)
+   As Integer
+
+Note that this Declare statement must be typed as a single line of text.
+
+The SystemParametersInfo function takes four arguments, as follows:
+
+uAction An integer value that tells the function which Windows setting you want to modify. 
+uParam An integer value based on the uAction argument. 
+lpvParam An integer, string, long, or data structure, depending on the uAction argument. 
+fuWinIni An integer value that determines whether the WIN.INI initialization file will be updated. The SPIF_UPDATEINIFILE constant writes the changes to the WIN.INI file, while the SPIF_SENDWININICHANGE constant sends a WM_WININICHANGE message to all currently running Windows-based applications to tell them of the system changes you have just made. If fuWinIni is set to zero, no changes are made to WIN.INI. 
+
+For a list of the Windows settings you can modify, see the Knowledge Base article Q97142, "How to Use SystemParametersInfo API for Control Panel Settings," referenced at the end of this article.
+
+This function returns an integer value. If this value is TRUE (nonzero), the changes were made successfully. If the return value is FALSE (zero), the function was not able to make the requested changes to the operating system.
+
+Example Program
+The following program demonstrates how the Windows screen saver can be temporarily activated or deactivated. To turn the screen saver off, click the Deactivate command button; to turn the screen saver on again, click the Activate command button. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following constant and Declare statements to the general declarations section of Form1 (note that the Declare statement must be typed as a single line of text): 
+Declare Function SystemParametersInfo Lib "User" (ByVal uAction As Integer,
+   ByVal uParam As Integer, lpvParam As Any, ByVal fuWinIni As Integer)
+   As Integer
+
+Const SPI_SETSCREENSAVEACTIVE = 17
+
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Activate". 
+Add the following code to the Click event for Command1: 
+Sub Command1_Click()
+  Dim ret As Integer
+  ret = SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, True, 0, 0)
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. Set its Caption property to "Deactivate". 
+Add the following code to the Click event for Command2: 
+Sub Command2_Click()
+  Dim ret As Integer
+  ret = SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, False, 0, 0)
+End Sub
+

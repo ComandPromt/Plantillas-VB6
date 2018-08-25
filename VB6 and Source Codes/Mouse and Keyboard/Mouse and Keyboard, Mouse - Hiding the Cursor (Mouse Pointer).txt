@@ -1,0 +1,62 @@
+Tip 17: Hiding the Cursor (Mouse Pointer)
+Created: March 1, 1995
+
+Abstract
+The mouse pointer, or mouse cursor, as it is often called, can be temporarily toggled on or off within a Visual Basic® application. You might want to make the cursor invisible while your program displays a maximized form that contains a graphic picture. Then, after displaying the graphic, you can make the cursor visible again. The Windows® application programming interface (API) ShowCursor function lets a Visual Basic program hide the cursor from view.
+
+Hiding the Cursor
+To hide the cursor in your Visual Basic® applications, call the ShowCursor function. To declare this Windows® application programming interface (API) function within your program, include the following Declare statement in the Global Module or the General Declarations section of a Visual Basic form:
+
+Declare Function ShowCursor Lib "User" (ByVal bShow As Integer) As Integer
+
+Note that this Declare statement must be typed as a single line of text.
+
+The ShowCursor function requires only one argument. When bShow is set to TRUE, the cursor is displayed; when bShow is set to FALSE, the cursor is hidden.
+
+You cannot simply call the ShowCursor function to hide the cursor. You also need to be aware that the cursor's visibility depends on the value of an internal display count that Windows maintains. This count value is incremented by a value of one each time ShowCursor is called with bShow set to TRUE. Conversely, each time ShowCursor is called with bShow set to FALSE, the count value is decremented. When the count value is greater than or equal to zero, the cursor is displayed.
+
+Example Program
+The following program demonstrates how to make the cursor invisible and how to make it reappear in a Visual Basic application program. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+In the global declarations section of Form1, enter the following Windows API function declaration (note that this Declare statement must be typed as a single line of text): 
+Declare Function ShowCursor Lib "User" (ByVal bShow As Integer) As Integer
+
+In addition, add the following two Dim statements to the general declarations section of Form1: 
+Dim QuitFlag As Integer
+Dim MCount As Integer
+
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+    MCount = ShowCursor(False) + 1
+    'hide mousepointer
+    Do While ShowCursor(False) >= -1
+    Loop
+    Do While ShowCursor(True) <= -1
+    Loop
+    Form1.Show
+    Text1.Text = "Invisible"    
+    x% = ShowCursor(False)   
+    Do
+        DoEvents
+    Loop Until QuitFlag = True
+End Sub
+
+Add the following code to the Form_Unload event for Form1: 
+Sub Form_Unload(Cancel As Integer)
+    Do While ShowCursor(False) >= Mcount
+    Loop
+    Do While ShowCursor(True) <= Mcount
+    Loop
+    Unload Form1
+End Sub
+
+Add the following code to the Click event for Form1: 
+Sub Form_Click()
+    Text1.Text = "Visible"
+    x% = ShowCursor(True)
+    QuitFlag = True
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. Set its Text property to a NULL (empty) string. 
+After executing this demonstration program, Visual Basic will display the string "Invisible" in the Text Box. The cursor is made invisible. The program loops continuously until you click the mouse to terminate the program. After clicking the mouse over Form1, the cursor will again be visible.

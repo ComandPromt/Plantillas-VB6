@@ -1,0 +1,17 @@
+Description: Plays a .WAV file
+
+'Private Declare Function sndPlaySound Lib "winmm.dll" Alias "sndPlaySoundA" _
+(ByVal lpszSoundName As String, ByVal uFlags As Long) As Long
+
+Const SND_SYNC      = &H0000
+Const SND_ASYNC     = &H0001
+Const SND_NODEFAULT = &H0002
+Const SND_LOOP      = &H0008
+Const SND_NOSTOP    = &H0010
+
+'Insert the following code under a command button, in a menu, etc..
+
+SoundFile$ = "c:\windows\chimes.wav"
+wFlags% = SND_ASYNC Or SND_NODEFAULT
+x% = sndPlaySound(SoundFile$,wFlags%)
+

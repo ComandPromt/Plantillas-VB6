@@ -1,0 +1,87 @@
+Tip 143: Determining Whether the Windows 95 Taskbar Is Visible or Hidden
+August 31, 1995
+
+Abstract
+The Microsoft® Windows® 95 taskbar allows you to easily launch Windows-based programs and to determine which applications are currently running. The taskbar can also display status information, such as the current time. This article will explain how you can determine, from within a Visual Basic® program, whether the taskbar is visible or hidden.
+
+Customizing the Windows 95 Taskbar
+The taskbar in Microsoft® Windows® 95 is an area of the screen that contains icons that let you easily switch from one application to another, launch new applications, or display status information.
+
+You can easily customize certain aspects of the taskbar. From the Start menu, choose Settings/Taskbar. Windows 95 will display the current settings for the taskbar. For example, if you set the autohide option, the taskbar is always hidden from view. To see the taskbar, move the mouse pointer over the area of the screen where the taskbar is located. The taskbar will immediately appear.
+
+You can use the SHAppBarMessage function in Visual Basic® to determine whether the taskbar is visible or hidden. To use the SHAppBarMessage function in your program, you must include the following Declare statement in the General Declarations section of your program (note that this Declare statement must be typed as a single line of code):
+
+Private Declare Function SHAppBarMessage Lib "shell32.dll" 
+   (ByVal dwMessage As Long, pData As APPBARDATA) As Long
+
+The SHAppBarMessage function requires two arguments. The first argument identifies the appbar message you want to send. The dwMessage argument may be set to one of the following values.
+
+ABM_ACTIVATE Notifies the system that an appbar has been activated 
+ABM_GETAUTOHIDEBAR Retrieves the handle of the autohide appbar associated with a particular edge of the screen 
+ABM_GETSTATE Retrieves the autohide and always-on-top states of the window's taskbar 
+ABM_GETTASKBARPOS Retrieves the bounding rectangle of the window's taskbar 
+ABM_NEW Registers a new appbar and specifies the message identifier that the system should use to send notification messages to the appbar. 
+ABM_QUERYPOS Requests a size and screen position for an appbar 
+ABM_REMOVE Unregisters an appbar, removing bar from the system's internal list 
+ABM_SETAUOTOHIDEBAR Registers or unregisters an autohide appbar for an edge of the screen 
+ABM_SETPOS Sets the size and screen position of an appbar 
+ABM_WINDOWPOSCHANGED Notifies the system when an appbar's position has changed 
+
+The second argument required by the SHAppBarMessage function is a pointer to an APPBARDATA structure. The actual contents of this structure depend on the message you send to the system. Because we are retrieving the state of the taskbar, we don't need to set any of the fields in the APPBARDATA structure. Instead, we must set the dwMessage argument to the constant value ABM_GETSTATE to retrieve the current state of the taskbar.
+
+After we have called the SHAppBarMessage function, a value is returned indicating the state of the taskbar. If this value is zero, we know the taskbar is not in autohide mode or always-on-top mode. If the value returned is &H1, the taskbar is in autohide mode; if the value returned is &H2, the taskbar is in always-on-top mode.
+
+Example Program
+This program shows how to determine whether the taskbar in Windows 95 is visible or hidden. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function SHAppBarMessage Lib "shell32.dll" 
+   (ByVal dwMessage As Long, pData As APPBARDATA) As Long
+Const ABS_ALWAYSONTOP = &H2
+Const ABS_AUTOHIDE = &H1
+Const ABM_GETSTATE = &H4
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1. 
+Private Sub Command1_Click()
+    Dim IsThere As Integer
+    
+    IsThere = BarExists()
+    If IsThere = 0 Then
+        Text1.Text = "TaskBar not in auto-hide or always-on-top mode"
+    End If
+    If IsThere = ABS_ALWAYSONTOP Then
+        Text1.Text = "TaskBar always-on-top"
+    End If
+    If IsThere = ABS_AUTOHIDE Then
+        Text1.Text = "TaskBar in auto-hide"
+    End If
+End Sub
+
+Create a new function called BarExists. Add the following code to this function. 
+Function BarExists() As Integer
+    Dim Bardata As APPBARDATA
+    BarExists = SHAppBarMessage(ABM_GETSTATE, Bardata)
+End Function
+
+Add a Text Box control to Form1. Text1 is created by default. Set its MultiLine property to True. 
+Add a new module to the project. Module1.Bas is created by default. 
+Add the following TYPE structures to Module1.Bas: 
+Type RECT
+        Left As Long
+        Top As Long
+        Right As Long
+        Bottom As Long
+End Type
+Type APPBARDATA
+        cbSize As Long
+        hwnd As Long
+        uCallbackMessage As Long
+        uEdge As Long
+        rc As RECT
+        lParam As Long '  message specific
+End Type
+
+Run the example program by pressing F5. Click the command button. If the Windows 95 taskbar is visible, a message to that effect is displayed in the text box. If the taskbar is hidden, however, the text box will display the text "Taskbar in auto-hide." If neither the Auto-Hide nor the Always-on-Top property of the taskbar is set, then the text box will display the message "Taskbar is not in auto-hide or always-on-top mode."
+

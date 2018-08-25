@@ -1,0 +1,49 @@
+Tip 178: Enabling or Disabling Fast Task Switching in Windows
+December 5, 1995
+
+Abstract
+Within a Microsoft® Visual Basic® application, you can use the Microsoft Windows® 
+SystemParametersInfo to enable or disable fast task switching key combinations. 
+This article contains an example program that disables fast task switching.
+
+Using the SystemParametersInfo Function
+When you have several Microsoft® Windows®-based applications loaded into memory at the same time, 
+there are several methods you can use to switch to any one of these applications. For example, 
+when you press the ALT+TAB key combination, Windows displays a window from which you can select 
+the program to which you want to switch the focus. This is called fast task switching.
+
+From within a Microsoft Visual Basic® application, you can enable or disable the fast task 
+switching feature. You can do this by calling the Windows application programming interface (API) SystemParametersInfo function, 
+which retrieves or sets a multitude of different settings.
+
+To enable the fast task switching capability in Windows, 
+you must call the SystemParametersInfo function with its lpvParam variable set to False. 
+To disable fast task switching, however, you set lpvParam to True.
+
+In the example program below, you disable fast task switching by executing the following statement:
+
+X = SystemParametersInfo(97, True, lpvparam, 0)
+
+After this statement is executed, the ALT+TAB, CTRL+ESC, and CTRL+ALT+DEL key combinations are no longer 
+recognized by the Windows operating system.
+
+Example Program
+This program shows how to disable certain key combinations such as CTRL+ESC, ALT+TAB, and CTRL+ALT+DEL. 
+This, in effect, prevents the fast task switching mechanism available under the Windows operating system. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Declare statement to the General Declarations section of Form1 
+(note that the Declare statement must be typed as a single line of code): 
+Private Declare Function SystemParametersInfo Lib "user32" Alias 
+   "SystemParametersInfoA" (ByVal uAction As Long, ByVal uParam As Long, 
+   lpvparam As Any, ByVal fuWinIni As Long) As Long
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Dim lpvparam As Boolean
+    Dim X As Long
+
+    X = SystemParametersInfo(97, True, lpvparam, 0)
+End Sub
+
+Run the example program by pressing F5. Form1 appears on the screen. Notice that you cannot use the ALT+TAB, CTRL+ESC, or CTRL+ALT+DEL key combinations—the Windows operating system ignores these actions.

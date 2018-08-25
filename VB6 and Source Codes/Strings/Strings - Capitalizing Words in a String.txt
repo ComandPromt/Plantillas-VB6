@@ -1,0 +1,41 @@
+Tip 33: Capitalizing Words in a String
+Created: March 1, 1995
+
+Abstract
+Visual Basic® offers many functions that can be used to manipulate text strings. Using the LCase and UCase functions, you can change the characters in a string to all lowercase or all uppercase letters. This article shows how you can convert the first letter of each word in a string to a capital letter.
+
+Converting Characters to Uppercase
+When you want to convert a string to all lowercase or all uppercase letters, you can use the LCase and UCase functions, respectively. LCase converts the text in the specified string to all lowercase characters, while UCase converts the text to all uppercase letters.
+
+The Mid function can be used to examine a particular string within a larger string. You can use Mid to extract one or more characters from a larger string, manipulate the characters in some manner, and the old characters are replaced with the newly modified letters.
+
+Another Visual Basic® function used to manipulate text strings is the InStr function, which can be used to find a specific character within a string.
+
+By combining the InStr, Mid, and UCase functions, you can selectively convert parts of a string to uppercase letters.
+
+Example Program
+The following Visual Basic program converts the sentence in the first text box so that each word is capitalized. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. Set its MultiLine property to True. 
+Add a second Text Box control to Form1. Text2 is created by default. Set its MultiLine property to True. 
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+    Text1.Text = "microsoft visual basic is a fun"
+    Text1.Text = Text1.Text + " programming language."
+    Text2.Text = CapAllWords(Text1.Text)
+End Sub
+
+Create the new function shown below: 
+Function CapAllWords(ByVal MyString As String) As String
+    Dim PosSpc As Integer   
+    Mid(MyString, 1, 1) = UCase(Mid(MyString, 1, 1))
+    PosSpc = InStr(MyString, " ")
+    While PosSpc <> 0
+        Mid(MyString, PosSpc + 1, 1) = UCase(Mid(MyString, PosSpc + 1, 1))
+        PosSpc = InStr(PosSpc + 1, MyString, " ")
+    Wend
+    CapAllWords = MyString
+End Function
+
+When you execute this sample program, Visual Basic displays a lowercase string in the first text box. The first character of each word in this sentence is then converted to a capital letter. The converted string is shown in the second text box.

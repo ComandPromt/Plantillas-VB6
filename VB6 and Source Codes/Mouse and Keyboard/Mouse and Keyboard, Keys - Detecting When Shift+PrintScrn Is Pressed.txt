@@ -1,0 +1,33 @@
+Tip 20: Detecting When Shift+PrintScrn Is Pressed
+Created: March 1, 1995
+
+Abstract
+In a Visual Basic® application, you may want to disable the SHIFT+PRINTSCRN keystroke combination. This can be accomplished by trapping the key in a control or form's KeyDown event.
+
+Trapping the SHIFT+PRINTSCRN Keystroke Combination
+You can trap any key on the keyboard in any form or control. The KeyPreview property of a form, when set to TRUE, forces all keystrokes to the form, not to the control. In this way, the form can be the first object to capture the incoming keystrokes. When the KeyPreview property of a form is set to FALSE, each control must be programmed individually to trap the keystrokes.
+
+To determine when a specific key has been pressed or released on the keyboard, use the KeyDown and KeyUp events, respectively. Both events will be triggered by a keypress or keyrelease for the control that has the current focus. If a form does not have any controls on it, or if the form's KeyPreview property is set to True, the KeyDown and KeyUp events will trap the keystroke at the form level.
+
+The KeyDown and KeyUp events return two variables: the keycode and the shift key status. The keycode is a unique number that is assigned to each key on the keyboard. The CONSTANT.TXT file contains a list of all keycodes supported by Visual Basic®. The shift variable tells you which shift key (SHIFT, ALT, or CTRL) was pressed.
+
+In a Visual Basic program, you can determine if SHIFT+PRINTSCRN was pressed by executing this statement in the KeyDown event:
+
+If KeyDown = 16 And Shift=1 Then ....
+
+Example Program
+The following program displays a Text Box on the screen. When you press SHIFT+PRINTSCRN, the program displays a message to that effect in the text box. If you press the SHIFT+F2 function key combination, the message tells you that that keystroke was pressed. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box to Form1. Text1 is created by default. 
+Set the KeyPreview property for Form1 to TRUE. 
+Add the following code to the KeyDown event for Form1: 
+Sub Form_KeyDown(KeyCode As Integer, Shift As Integer)
+    If KeyCode = 16 And Shift = 1 Then
+        Text1.Text = "Shift-PrintScreen pressed"
+    End If
+    If KeyCode = 113 And Shift = 1 Then
+        Text1.Text = "Shift-F2 pressed"
+    End If    
+End Sub
+

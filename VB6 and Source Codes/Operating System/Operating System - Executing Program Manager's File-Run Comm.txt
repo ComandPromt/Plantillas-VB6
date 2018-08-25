@@ -1,0 +1,66 @@
+Tip 60: Executing Program Manager's File/Run Command
+Created: April 17, 1995
+
+Abstract
+From the Windows® Program Manager, you can select the File/Run menu command to execute any Windows-based application. This article explains how you can use this same File/Run command from within a Visual Basic® application.
+
+The File/Run Command
+To execute Program Manager's File/Run menu command, we must send a special message to Program Manager. First we determine the handle to Program Manager, then we use the SendMessage function to actually invoke the File/Run menu selection.
+
+We can use the Windows® application programming interface (API) FindWindow function to retrieve the handle for Program Manager. To declare the FindWindow function within your program, include the following Declare statement in the Global Module or General Declarations section of your form (note that this statement must be typed as a single line of code):
+
+Declare Function FindWindow Lib "User" (ByVal lpClassName As String, ByVal 
+   lpWindowName As Long) As Integer
+
+To call FindWindow, you must pass it the following two arguments:
+
+lpClassName A string (or long pointer to a string) that contains the window's class name. A value of zero is used to accept any class. 
+lpWindowName A string (or long pointer to a string) that contains the window's title bar text. A value of zero is used to accept any window title. 
+
+Because we want to execute a command within Program Manager, we call the FindWindow function with this statement:
+
+RunFile = FindWindow("ProgMan", 0)
+
+The window's handle will be returned in the RunFile variable. We can then call the SendMessage function.
+
+The SendMessage function can be used to send a message to another window. In our case, we want to tell Program Manager to execute one of its menu selections, namely File/Run. The Declare statement for SendMessage is as follows (note that it must be typed as a single line of code):
+
+Declare Function SendMessage Lib "User" (ByVal hWnd As Integer, ByVal wMsg 
+   As Integer, ByVal wParam As Integer, ByVal lParam As Long) As Long
+
+As you can see, the SendMessage function requires four arguments. These arguments are:
+
+hWnd An integer value containing the window's handle. The message will be sent to this window. 
+wMsg An integer value containing the message to send to the window. 
+wParam A 16-bit value containing additional message-dependent information, if required. 
+lParam A 32-bit value containing additional message-dependent information, if required. 
+
+The Windows SDK Help File contains a description of each windows message you can use with the SendMessage function. For now, the message we want to send to Program Manager is represented by the value 107, which initiates the File/Run menu selection in Program Manager. In the example program below, the SendMessage function executes the File/Run command, then the DoEvents statement waits until that command has been processed, and then control returns to the program, with Form1 set to have the focus.
+
+Example Program
+The following program executes the File/Run command from Program Manager. When you run this program, click on the command button. The File/Run dialog box will be called up on your screen. Select any Windows-based application you wish to run. After that application has terminated, control returns to this program. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Declare Function FindWindow Lib "User" (ByVal lpClassName As String, ByVal 
+   lpWindowName As Long) As Integer
+
+Declare Function SendMessage Lib "User" (ByVal hWnd As Integer, ByVal wMsg 
+   As Integer, ByVal wParam As Integer, ByVal lParam As Long) As Long
+Const WM_COMMAND = &H111
+
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Execute File/Run". 
+Add the following code to the Click event for Command1: 
+Sub Command1_Click()
+    Dim RunFile As Integer
+    Dim Result As Integer
+    
+    RunFile = FindWindow("ProgMan", 0)
+    If RunFile <> 0 Then
+        Result = SendMessage(RunFile, WM_COMMAND, 107, 0)
+        DoEvents
+        Form1.SetFocus
+    End If
+    
+End Sub
+

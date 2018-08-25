@@ -1,0 +1,51 @@
+Tip 89: Invoking the Microsoft Word Page Setup Dialog Box
+May 22, 1995
+
+Abstract
+From within a Visual Basic® application, you can instruct Microsoft® Word to display its Page Setup dialog box. This article explains how this task can be accomplished by creating a Word Basic macro and executing that macro from within Visual Basic.
+
+Calling Word Basic Macros from Within Visual Basic
+You can execute a Word Basic macro from within a Visual Basic® application to perform any number of tasks. The example program below executes Microsoft® Word and opens up a new document page. Then the program calls a Word Basic macro, FPSdlg, to display the Word Page Setup dialog box.
+
+In order to execute Word from within a Visual Basic application, you must initiate a connection to Word. This is done by calling the CreateObject function. This function lets you create an OLE object, in this case Microsoft Word. When this function is executed, it runs Word if it is not already running in memory. To transfer control to Word, you can use the AppActivate function.
+
+The next step is to call the Word Basic macro that you have previously created in Word. In your Visual Basic program, you execute a Word Basic command with the Object.Method syntax. For example, after executing Word, we want to start with a new document. Therefore, we issue the statement wobjApp.FileNewDefault, where the object has been defined as Word and FileNewDefault is the Basic command we want to execute. A list of these Word Basic commands can be found in the WRDBASIC.HLP file that is stored in the Word directory when you initially installed Microsoft Word.
+
+After the new document screen has been displayed in Word, we want to actually execute the Word Basic macro called CallFPS. To do this, we again issue a Word Basic command called ToolsMacro. This command executes the specified macro file in Word. When the macro has been terminated, we can close Word and return to our Visual Basic program by issuing the Set wobjApp=Nothing statement. This statement removes the object variable, which in turn causes Word to terminate. 
+
+Example Program
+The following example program shows how you can invoke a Word Basic macro to call up the Word Page Setup dialog box.
+
+First, you must create the Word Basic macro that the Visual Basic program will call. Start Word. From the Tools menu, select Macro. Type the name of the macro as FPSdlg and click the Create command button.
+
+Type the following as the macro's text. When you're done, save the macro so that it can be used by all newly created Word documents.
+
+Sub Main
+    Dim FPSdlg as FilePageSetup
+    GetCurValues FPSdlg
+    rc = Dialog(FPSdlg)
+    If rc <> 0 then
+        FilePageSetup FPSdlg
+    End If
+End Sub
+
+At this point, make sure the macro actually works from within Word. From the Tools menu, select Macro. Click the name of the macro you want to execute—in this case, the FPSdlg macro. Click the Run command button. Word should respond by popping up the Page Setup dialog box. Click the Cancel button to return to the document screen. Exit Word.
+
+Now, you need to create the demonstration program in Visual Basic by following these steps: 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim wobjApp As Object
+    Set wobjApp = CreateObject("word.basic")
+    AppActivate "Microsoft Word"
+    
+    wobjApp.FileNewDefault
+    wobjApp.ToolsMacro "CallFPS", True
+    Set wobjApp = Nothing
+    
+End Sub
+
+To run the example program, press the F5 function key. Click the command button. After a few seconds, Word will be executed and the FPSdlg macro will also be executed. The program stops after it has displayed the Page Setup dialog box in Word. Click the Cancel command button and you will be returned to Visual Basic's design environment.
+

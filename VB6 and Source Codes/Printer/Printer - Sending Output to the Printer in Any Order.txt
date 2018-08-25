@@ -1,0 +1,38 @@
+Tip 87: Sending Output to the Printer in Any Order
+May 15, 1995
+
+Abstract
+You can use the Visual Basic® Print method to send text to the default printer. This article explains how you can send data to the printer in any order (that is, you can print a line of text in the middle of the page and then print some other text at the top of page).
+
+Outputting Data to the Printer
+In a Visual Basic® application, you may need to create a hard copy of some data. To send data to the default printer, you use Visual Basic's Print method. For example, to send a line of text to the printer, you would issue a statement such as:
+
+Printer.Print "This is a test"
+
+When this statement is executed, Visual Basic will print the text on the printer. Note that the text is printed at the coordinates specified by the CurrentX and CurrentY properties.
+
+Each time you send data to the printer, Visual Basic automatically updates the CurrentX and CurrentY properties. CurrentX is incremented each time a new character is sent to the printer on the same line. When a new line is needed, the value in CurrentX is reset to zero, and CurrentY is incremented by one to account for the new line.
+
+Therefore, as the example program below shows, you can print to any specific physical location on the paper. You can print a line of text in the center of the paper first and then, by simply changing the CurrentX and CurrentY properties, print a line of text at the top of the page.
+
+Example Program
+The example program below prints two lines of text on the default printer. The first line is actually the second line to be physically transferred to the printer. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Printer.ScaleMode = 2
+    Printer.FontSize = 42
+    Printer.CurrentX = 40
+    Printer.CurrentY = 40
+    Printer.Print "This is the first line to be printed"
+    
+    Printer.CurrentX = 40
+    Printer.CurrentY = 12
+    Printer.FontSize = 14
+    Printer.Print "This is actually the second line to be printed"
+    Printer.EndDoc
+    
+End Sub
+

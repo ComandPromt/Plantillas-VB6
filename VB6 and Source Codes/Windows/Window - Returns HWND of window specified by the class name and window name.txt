@@ -1,0 +1,14 @@
+'Description: Returns HWND of window specified by the class name and window name
+
+'Private Declare Function M_FindWindow Lib "User" Alias "FindWindow" (ByVal lpClassName As Any, ByVal lpWindowName As Any) As Integer
+'Function FindWindow(ByVal sClassName As String, ByVal sWindowName As String) As Long
+Dim xHwnd           As Long
+If Len(sClassName) = 0 Then
+   xHwnd = M_FindWindow(0&, sWindowName)
+ElseIf Len(sWindowName) = 0 Then
+   xHwnd = M_FindWindow(sClassName, 0&)
+Else
+   xHwnd = M_FindWindow(sClassName, sWindowName)
+End If
+FindWindow = xHwnd
+'End Function
