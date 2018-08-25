@@ -1,0 +1,34 @@
+Poor Performance from CD-ROM-Based Program
+The information in this article applies to:
+Microsoft Windows Millennium Edition
+Microsoft Windows 98 Second Edition
+Microsoft Windows 98
+Microsoft Windows 95
+
+This article was previously published under Q141368 
+SYMPTOMS
+When you run a program that accesses a CD-ROM drive, you may notice that the program is not performing optimally. You may notice slow data transfer in a business or reference program, or skipping or slow audio and video in a multimedia program. 
+CAUSE
+This behavior can occur when the Supplemental Cache Size and Optimize Access Pattern For settings are not be set correctly for your CD-ROM drive. 
+RESOLUTION
+To resolve this issue, follow these steps improve your CD-ROM drive's performance: 
+
+Click Start, point to Settings, click Control Panel, and then double- click System. 
+On the Performance tab, click File System. 
+Click the CD-ROM tab. 
+Move the Supplemental Cache Size slider to the right to allocate more random access memory (RAM) for caching data from the CD-ROM drive or to the left to allocate less RAM for caching data. 
+
+Note that many multimedia programs perform better with a smaller cache because these program tend not to reuse data. 
+For reading continuous data, such as .avi files, use a higher setting in the Optimize Access Pattern For box. For reading random data, increase the Supplemental Cache Size setting and decrease the Optimize Access Pattern For setting. 
+Click OK, and then click Close. When you are prompted to restart your computer, do so. 
+NOTE: If you are using real-mode drivers for your CD-ROM drive, these settings have no effect. 
+MORE INFORMATION
+The supplemental cache is used to hold path table, directory, and file information. It is a passive cache holding data that has been accessed and may be accessed again. 
+
+The Optimize Access Pattern For setting is based on a 64K cache (single- speed read ahead plus 14K random access cache). This is incremented in 50K increments depending on the CD-ROM drive speed. It is an active buffer storing data initially read from the CD-ROM. 
+
+The default cache size is not based on the CD-ROM drive, but on the amount of RAM in the computer, as follows: 
+
+For computers with less than 8 MB of RAM, the default setting is single-speed read ahead cache (50K) + small random access cache (14K). 
+For computers with from 8 to 12 MB of RAM, the default setting is double-speed read ahead cache (100K) + medium random access cache (512K). 
+For computers with more than 12 MB of RAM, the default setting is quad-speed read ahead cache (200K) + large random access cache (1024K). 

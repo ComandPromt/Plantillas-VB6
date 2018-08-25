@@ -1,0 +1,66 @@
+Tip 120: Minimizing Program Manager When Visual Basic Is Run
+July 1, 1995
+
+Abstract
+You can minimize a specific Microsoft® Windows®-based application each time you launch another Windows-based application. This article explains how you can minimize Windows Program Manager each time you run Microsoft Visual Basic®. The same technique can be applied to any other Windows-based program.
+
+Launching Applications While Minimizing Others
+In some situations, such as when you want to keep your desktop as clean as possible, you may want to launch a specific application by first minimizing Microsoft® Windows® Program Manager (or Windows Explorer). This can be done very easily in Microsoft Visual Basic®.
+
+Let's assume that each time you load Visual Basic in order to design a new project, you want to minimize Program Manager. After you have finished working in Visual Basic, you want Program Manager to be restored to its normal, maximized state.
+
+To accomplish this task in Visual Basic, you need to use two Windows application programming interface (API) functions. The FindWindow function returns the handle of the window that matches the name of your target window. In this case, you want to find the handle of the window belonging to Program Manager. Therefore, you tell FindWindow to find the first window whose window name is "Program Manager".
+
+When you have the Program Manager window handle, you use the WindowState property in Visual Basic to minimize your program's window. This means that your Visual Basic program runs quietly in the background, waiting for Visual Basic to be run.
+
+Approximately once every second, the program checks the computer system to see whether Visual Basic has been run. This is done in the Timer1 routine in the example program that follows. If the FindWindow function determines that Visual Basic is running in memory, it uses the ShowWindow function to minimize the Program Manager window. Alternatively, if the FindWindow function finds that Visual Basic is not running, it tells ShowWindow to maximize the Program Manager window.
+
+You can modify this example program to monitor any Windows-based application. In addition, you might want to add this program to your Windows Startup group so that it runs each time you start Windows.
+
+Example Program
+This program shows how to minimize Program Manager each time you run Visual Basic. When you quit Visual Basic, Program Manager is restored to its original, maximized state. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Dim, Constant, and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Private Declare Function FindWindow Lib "User" (lpClassName As Any, lpWindowName
+   As Any) As Integer
+Private Declare Function ShowWindow Lib "User" (ByVal hWnd As Integer, ByVal
+   nCmdShow As Integer) As Integer
+Const SW_MINIMIZE = 6
+Const SW_RESTORE = 9
+Dim pm_hwnd As Integer
+Dim vb_hwnd As Integer
+Dim R As Integer
+Dim Flag As Integer
+Dim VBS As String
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Dim PMS As String
+    
+    PMS = "Program Manager"
+    VBS = "Microsoft Visual Basic - Project1 [design]"
+    pm_hwnd = FindWindow(ByVal 0&, ByVal PMS)
+    Form1.WindowState = 1
+    Flag = False
+End Sub
+
+Add a Timer control to Form1. Timer1 is created by default. Set its TimerInterval property to 1. 
+Add the following code to the Timer1 event for Timer1: 
+Private Sub Timer1_Timer()
+    vb_hwnd = FindWindow(ByVal 0&, ByVal VBS)
+    If Flag = False Then
+        If vb_hwnd <> 0 Then
+            Flag = True
+            R = ShowWindow(pm_hwnd, SW_MINIMIZE)
+        End If
+    Else
+        If vb_hwnd = 0 Then
+            Flag = False
+            R = ShowWindow(pm_hwnd, SW_RESTORE)
+        End If
+    End If
+End Sub
+
+On the File menu in Visual Basic, click Make EXE File. Save the file as MINPM.EXE. 
+On the File menu in Program Manager, click Run. Type the program's name as MINPM.EXE and click OK. The MINPM program is now running in memory. When you start Visual Basic, Program Manager will be minimized on the desktop. As soon as you quit Visual Basic, Program Manager will be maximized.
