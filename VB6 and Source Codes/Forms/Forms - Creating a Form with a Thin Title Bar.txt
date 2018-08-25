@@ -1,0 +1,89 @@
+Tip 104: Creating a Form with a Thin Title Bar
+June 5, 1995
+
+Abstract
+Many Microsoft® Windows®-based applications include a Toolbox control. A toolbox is a group of icons that the user can click to perform various operations within a running application. These toolbox windows usually display a very small, thin title bar instead of the normal-sized title bar. This article explains how you can create forms with thin title bars in your Visual Basic® applications.
+
+Using SendMessage and GetCursorPos to Create Title Bars
+You can design a form that contains a thin title bar. This is most often used in Toolbox controls from which the user can click on an icon to perform a program operation.
+
+In the example program below, we use a Label control, sized to fit at the top of our form. This control, which will become the thin title bar, responds to both the Click and MouseDown events. These two events allow the user to click on the Label control (that is, the thin title bar) and drag the entire form to a new location on the screen. This gives our Microsoft® Visual Basic® application the same functionality as a toolbox window.
+
+To enable our user to drag the form to a new location on the screen, we need to determine the cursor's current X and Y coordinates on the screen. You can use the Microsoft® Windows® application programming interface (API) GetCursorPos function to retrieve the cursor's current location.
+
+To call the GetCursorPos function, you must first add its Declare statement to the General Declarations section of your Visual Basic application. Following is the declaration for the GetCursorPos function:
+
+Private Declare Sub GetCursorPos Lib "User" (lpPoint As POINTAPI)
+
+The GetCursorPos function requires only one argument—a POINTAPI structure. This structure will hold the cursor's current position, which is reported in screen coordinate values.
+
+The cursor's horizontal position is stored in the X variable; the cursor's vertical position is stored in the Y variable within the POINTAPI structure:
+
+Type POINTAPI
+    X As Integer
+    Y As Integer
+End Type
+
+After the cursor's position has been retrieved, we issue the LSet statement to convert the X and Y values to values that can be understood by the SendMessage function. In other words, LSet converts the X and Y integers to a single long value.
+
+Next, we issue two SendMessage commands to Windows. The first SendMessage statement tells Windows that, because a MouseDown event has just occurred, it needs an equivalent MouseUp event. The second SendMessage statement tells Windows that the user has clicked the title bar. Windows then processes our thin title bar's Click and MouseDown events as it would for a normal window.
+
+Example Program
+This program shows how to create a form with a small title bar. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Set the following properties for Form1: 
+ClipControls 0 'False 
+ControlBox 0 'False 
+MaxButton 0 'False 
+MinButton 0 'False 
+
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statements must be typed as single lines of text): 
+Private Declare Function SendMessage Lib "User" (ByVal hWnd As Integer, ByVal
+   wMsg As Integer, ByVal wParam As Integer, ByVal lParam As Any) As Long
+Private Declare Sub GetCursorPos Lib "User" (lpPoint As POINTAPI)
+Const WM_LBUTTONUP = &H202
+Const WM_SYSCOMMAND = &H112
+Const MOUSE_MOVE = &HF012
+
+Add a Label control to Form1. Label1 is created by default. Set its Caption property to "Thin Title Bar". 
+Note: For this example program, change the size of Form1 so that it resembles the size and shape of a Toolbox window. Next, position the Label control at the top of the form and adjust its size so that it isthe same size as a thin title bar. 
+
+Add the following code to the Click event for Label1: 
+Private Sub Label1_Click()
+    Dim mpos As POINTAPI
+    Dim P As ConvertPOINTAPI
+    Dim Ret As Integer
+    
+    Call GetCursorPos(mpos)
+    LSet P = mpos
+    Ret = SendMessage(Me.hWnd, WM_LBUTTONUP, 0, P.XY)
+    Ret = SendMessage(Me.hWnd, WM_SYSCOMMAND, MOUSE_MOVE, P.XY)
+    
+End Sub
+
+Add the following code to the MouseDown event for Label1 (note that the first two lines must be typed as a single line of code): 
+Private Sub Label1_MouseDown(Button As Integer, Shift As Integer,
+ X As Single, Y As Single)
+    Dim mpos As POINTAPI
+    Dim P As ConvertPOINTAPI
+    Dim Ret As Integer
+    
+    Call GetCursorPos(mpos)
+    LSet P = mpos
+    Ret = SendMessage(Me.hWnd, WM_LBUTTONUP, 0, P.XY)
+    Ret = SendMessage(Me.hWnd, WM_SYSCOMMAND, MOUSE_MOVE, P.XY)
+End Sub
+
+From the Insert menu, select Module. Module1.Bas is created by default. 
+Add the following type declarations to Module1.Bas: 
+Type POINTAPI
+    X As Integer
+    Y As Integer
+End Type
+Type ConvertPOINTAPI
+    XY As Long
+End Type
+
+Run the example program by pressing F5. Form1 should be displayed on the screen with the thin title bar appearing at the top of the form. You can drag the form by clicking on the title bar, just as you would do with any other window that has a title bar.
+

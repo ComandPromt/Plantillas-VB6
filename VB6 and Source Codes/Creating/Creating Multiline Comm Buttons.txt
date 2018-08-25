@@ -1,0 +1,49 @@
+Tip 9: Creating Multiline Command Buttons
+Created: March 1, 1995
+
+Abstract
+Visual Basic® allows you to add Command button controls to your application programs. Command buttons can display a one-line caption (up to a maximum of 255 characters in length) that tells users of your program the command that will be executed when they click the mouse on the button. However, you can have the same functionality if you create a multiline command button using the Picture Box control.
+
+How to Create a Multiline Command Button
+In Windows®-based applications, Command buttons are used to allow the user to execute a specific function simply by clicking the mouse over the control. The Caption property of a Command button is used to display a message directly on the control. This message tells users what function will be executed if they click the mouse on the Command button. Although Command buttons are extremely versatile controls, they do not allow you to include more than a single one-line caption.
+
+You can, however, create a multiline Command button by using a Picture Box control. The Picture Box control responds to a click event just as the Command button does, and it also lets you display as many lines of text as is needed. Instead of using the Caption property of the Command button to display a message on the control, you use Print to draw the text on the Picture Box.
+
+To draw the message text on a Picture Box, you use the Print command in Visual Basic®. The text is always printed at the location specified by the CurrentX and CurrentY properties of the Picture Box. Therefore, you must first calculate the length of each line of text, and the length of the Picture Box control itself. This value can then be used to calculate the position on the Picture Box where the text is to be drawn. As each character is drawn on the Picture Box, Visual Basic automatically increments CurrentX to point to the next available print position. Visual Basic does not scroll the text of the message to the next line when drawing text on a Picture Box. The text will be cut off at the control's right-most border. Therefore, you must be certain that the Picture Box is wide enough to accommodate the longest line you intend to display on the control.
+
+After you have calculated the values for the CurrentX property, you must issue the Print command to tell Visual Basic to draw the text on the Picture Box control. To do this, you execute the statement:
+
+Picture1.Print Msg
+
+To determine where the text of your message should be drawn on the Picture Box, you use the TextWidth method. This returns the horizontal length of the text based on the currently selected FontName and FontSize properties. Likewise, you can determine how wide the Picture Box control itself is by using ScaleWidth.
+
+Once you have the length of the text and the length of the Picture Box control, you simply divide these two values by two. Next, you set CurrentX to the difference between these two values. This is the position where the first character of the message will be drawn on the Picture Box control by the Print command.
+
+Example Program
+The following program demonstrates how to create a multiline Command button in Visual Basic. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add a Picture Box control to Form1. 
+Add the following code to the Picture1_Paint event: 
+Sub Picture1_Paint()
+        Dim Msg As String
+    Picture1.CurrentY = 0
+        Msg = "Click here to"
+        MsgWidth = TextWidth(Msg) / 2
+    BtnWidth = Picture1.ScaleWidth / 2
+        Picture1.CurrentX = BtnWidth - MsgWidth
+        Picture1.Print Msg
+        Msg = "Exit"
+        MsgWidth = TextWidth(Msg) / 2
+    BtnWidth = Picture1.ScaleWidth / 2
+        Picture1.CurrentX = BtnWidth - MsgWidth
+        Picture1.Print Msg
+    
+End Sub
+
+Add the following statement to the Picture1_Click event: 
+Picture1_Click()
+    End
+End Sub
+
+When you execute this program, a multiline command button will be displayed on Form1. The first line of text displayed on the command button is "Click here to" and the second line is "Exit". Both lines of text are centered horizontally within the left and right border of the Picture Box. The program will end when you click the mouse button on the Picture Box. When in design mode, you can adjust the vertical position of the Picture Box so that the text is also centered vertically within the Picture Box control. Alternatively, you could use the TextHeight method to calculate the vertical position within the Picture Box, just as was done with the example above to center the text horizontally on the control.

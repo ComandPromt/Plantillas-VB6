@@ -1,0 +1,35 @@
+Tip 83: Listing Fields and Associated Properties for an Attached Microsoft Access Table
+May 15, 1995
+
+Abstract
+This article describes a sample user-defined Access Basic function that you can use to retrieve all field names and their associated properties for an attached Microsoft® Access® table.
+
+More Information
+This article assumes that you are familiar with Access Basic and with creating Microsoft® Access® applications using the programming tools provided with Microsoft Access. For more information on Access Basic, please refer to the Building Applications manual for Access 2.0 and the Introduction to Programming manual for Access 1.x.
+
+The example program below uses tools in Visual Basic® to get information from a Microsoft Access database.
+
+Example Program
+This program demonstrates how to create and use the sample ListFieldProperties() function. 
+
+Open the sample database NWIND.MDB. (This database can usually be found in the C:\ACCESS\SAMPAPPS directory.) 
+From the File menu, choose New, and select Module. 
+Enter the following code to create the ListFieldProperties() function: 
+Function ListFieldProperties ()
+Dim MyDB As Database
+Dim MyTable As TableDef
+Set MyDB = DBEngine(0)(0)
+Set MyTable = MyDB.TableDefs("Categories")
+For X = 0 To MyTable.Fields.Count - 1
+Debug.Print MyTable.Fields(X).Name
+For Y = 0 To MyTable.Fields(X).Properties.Count - 1
+Debug.Print Chr(9) & MyTable.Fields(X).Properties(Y).Name
+Next Y
+Next X
+End Function
+
+From the View menu, choose Immediate Window. 
+In the Immediate window, type the following line and press the ENTER key: 
+? ListFieldProperties()
+
+The name of each field in the Categories table will be displayed along with that field's properties

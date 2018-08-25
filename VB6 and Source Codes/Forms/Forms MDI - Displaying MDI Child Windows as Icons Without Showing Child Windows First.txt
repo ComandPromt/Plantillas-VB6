@@ -1,0 +1,56 @@
+Tip 29: Displaying MDI Child Windows as Icons Without Showing Child Windows First
+Created: March 1, 1995
+
+Abstract
+When designing a MDI application in Visual Basic®, you first create the primary MDI form and add secondary child forms to the MDI form. After your program is executed, you can initially display the child forms as minimized icons. These icons will appear at the bottom of the primary MDI form's window.
+
+However, when the icons are displayed on the form, you can actually see each child form quickly displayed in its normal size on the MDI form. This article explains how you can prevent Windows® from flashing these child windows before they are shown as minimized icons. The icons will be minimized immediately without this side effect.
+
+Minimizing and Displaying Child Icons Immediately
+The key to minimizing child windows immediately, without first having them displayed in their normal size and at their normal positions within the MDI form, is to set each child window's WindowState property to 1-Minimized. Next, call the Windows® application programming interface (API) ShowWindow function to display the child windows as minimized icons.
+
+The ShowWindow function is used to set a window's visibility status. You can tell the function to display the window as minimized, hidden, or any number of other states. To declare this function within your program, include the following Declare statement in the Global Module or General Declarations section of your MDI form:
+
+Declare Function ShowWindow Lib "User" (ByVal hWnd%, ByVal nCmdShow%) As Integer
+
+Note that this Declare statement must be typed as one single line of text.
+
+To call the ShowWindow function, you pass the window's handle and the visibility status you want to apply to the window. The visibility status may be one of the constants in the following table.
+
+SW_HIDE Window is hidden. 
+SW_MINIMIZE Window is minimized. 
+SW_RESTORE Window is restored to original size/position. 
+SW_SHOW Windows is restored to original size/position and activated. 
+SW_SHOWMAXIMIZED Window is maximized and activated. 
+SW_SHOWMINIMIZED Window is minimized and activated. 
+SW_SHOWMINNOACTIVE Window is minimized but not activated. 
+SW_SHOWNA Window is shown at current size/position but not activated. 
+SW_SHOWNOACTIVATE Window is shown at most recent size/position but not activated. 
+SW_SHOWNORMAL Window is restored to original size/position. 
+
+To change the visibility status of a window with the ShowWindow function, you must first determine the window's handle. In our case, we need to retrieve the handle for the child window. This can be done with the statement:
+
+X% = Form2.hWnd
+
+where Form2 is the name of the form whose handle we want to retrieve and the X variable will contain the handle number. Every Visual Basic form has an hWnd property that is set to the form's handle. Once the ShowWindow function is called, the child window will be immediately iconized on the MDI form.
+
+Example Program
+The following program shows how you can display a MDI form's child windows as icons without first having the child windows flashed on the MDI form in their normal size and position. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Create an MDI form. MDIForm1 is created by default. 
+Add a child form to MDIForm1. Form2 is created by default. Set its WindowState property to 1-Minimized. Set its MDIChild property to True. 
+Add a second child form to MDIForm1. Form3 is created by default. Set its WindowState property to 1-Minimized. Set its MDIChild property to True. 
+Set the application's StartUp form to MDI_Test. 
+Add the following Constant and Declare statement to the General Declarations section of MDIForm1 (note that the Declare statement must be typed as one single line of text): 
+Declare Function ShowWindow Lib "User" (ByVal hWnd%, ByVal nCmdShow%) As Integer
+Const SW_MINIMIZE = &H6
+
+Add the following code to the Form_Load event for MDIForm1: 
+Sub MDIForm_Load()
+    Dim x As Integer
+    x = ShowWindow%(Form2.hWnd, SW_MINIMIZE)
+    x = ShowWindow%(Form3.hWnd, SW_MINIMIZE)
+End Sub
+
+To execute this demonstration program, press the F5 function key. The two child forms will be immediately displayed as icons near the bottom of the MDIForm1 form.

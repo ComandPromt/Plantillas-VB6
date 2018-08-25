@@ -1,0 +1,11 @@
+Description: Function returns True if date falls on a weekend
+
+'Public Function IsWeekend(ByVal vntDate As Variant) As Boolean
+     Dim bResult         As Boolean
+     If IsDate(vntDate) Then
+       If (WeekDay(vntDate) Mod 6 = 1) Then bResult = True Else bResult = False
+     Else
+       Err.Raise 13, "Type Mismatch, Must Be Date"
+     End If
+     IsWeekend = bResult
+ 'End Function

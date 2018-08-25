@@ -1,0 +1,39 @@
+Tip 123: Displaying Records from a Microsoft Access Database in an Outline Control
+July 1, 1995
+
+Abstract
+The Outline control in Microsoft® Visual Basic® lets you create a hierarchical list of items. This article explains how to populate the Outline control with information stored in a Microsoft Access database file.
+
+Extracting Fields from an Access Database
+From within a Microsoft® Visual Basic® application, you can retrieve individual fields from a Microsoft Access database and display these fields in an Outline control.
+
+The OpenDatabase function loads the specified database into Microsoft Access. After the file has been opened, you need to create a Snapshot variable for a specific table within the database. To do this, you use the CreateSnapshot method. The Snapshot allows you to read data from a table but does not allow you to change any data stored in the file.
+
+After the Snapshot variable has been created, you use a While-Wend loop to process each record in the specified table. The example program below, for instance, retrieves each Title field from the BIBLIO.MDB file and uses the AddItem method of the Outline control to populate that control with the data from the Title field. After processing all the records in the table, you must remember to close both the Snapshot and the Microsoft Access database file.
+
+Example Program
+This program shows how to display specific fields from a Microsoft Access database in a Visual Basic Outline control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add an Outline control to Form1. Outline1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim DB As Database
+    Dim SN As Snapshot
+    Dim X As Integer
+    Dim Y As Integer
+    
+    Set DB = OpenDatabase("C:\VB\BIBLIO.MDB")
+    Set SN = DB.CreateSnapshot("select * from titles order by Title")
+ 
+    While Not SN.EOF
+        Outline1.AddItem SN.Fields("Title")
+        SN.MoveNext
+    Wend
+    SN.Close
+    DB.Close
+End Sub
+
+Run the example program by pressing F5. Click the command button. The program retrieves the Title field's data from each record in the BIBLIO.MDB file and adds it to the Outline control.
+

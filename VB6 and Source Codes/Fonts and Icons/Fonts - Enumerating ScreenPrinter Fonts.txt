@@ -1,0 +1,38 @@
+Tip 26: Enumerating Screen and Printer Fonts
+Created: March 1, 1995
+
+Abstract
+When displaying text in a Visual Basic® program, you have the option of specifying that the text be shown in different screen fonts. This also applies to text sent to the printer device. However, you may need to determine which fonts are common to both the screen and printer so that you can use a font available to both devices in your application.
+
+Determining Available Fonts
+The FontName property is used by many controls in Visual Basic®, as well as the printer. In an application, you can change the default font to one more suitable for your program by setting the FontName property to one of the fonts available in Windows®.
+
+You can easily find out which fonts are available for the screen or printer by using the FontCount property in conjunction with the Fonts property. FontCount tells you how many fonts are available for the specified device, while Fonts tells you the name of the actual font.
+
+If you need to determine which fonts are common to both the screen and printer, you can simply loop through both font lists and create a list of those fonts that are the same.
+
+Example Program
+The program below displays three List Box controls on a Visual Basic form. Printer fonts are listed in the first List Box, screen fonts in the second List Box, and those fonts that are common to both the printer and screen in the third List Box. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add three List Box controls, side by side, to Form1. 
+For each list box, set its Sorted property to True. 
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+    Dim X As Integer
+    Dim Y As Integer    
+    For X = 0 To Screen.FontCount - 1
+        For Y = 0 To Printer.FontCount - 1
+            If Screen.Fonts(X) = Printer.Fonts(Y) Then
+                List3.AddItem Printer.Fonts(Y)
+            End If
+        Next Y
+    Next X    
+    For X = 0 To Printer.FontCount - 1
+        List1.AddItem Printer.Fonts(X)
+    Next X
+For X = 0 To Screen.FontCount - 1
+        List2.AddItem Screen.Fonts(X)
+    Next X
+End Sub
+

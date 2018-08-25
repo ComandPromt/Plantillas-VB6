@@ -1,0 +1,102 @@
+Tip 105: Removing a Form's Title Bar
+June 5, 1995
+
+Abstract
+This article explains how you can remove the title bar from a window or form from within a Microsoft® Visual Basic® application.
+
+Modifying the Style Attributes of a Window
+You can use two Microsoft® Windows® application programming interface (API) functions—GetWindowLong and SetWindowLong—to modify the appearance of a window when your Visual Basic® application is running.
+
+These functions allow you to programmatically change one or more style bits associated with a specific window. For example, you can remove a window's title bar by changing the following style bits at run time:
+
+WS_SYSMENU The window has a control menu on the left side of its title bar 
+WS_MINIMIZEBOX The window has a minimize box on the right side of its title bar 
+WS_MAXMIZEBOX The window has a maximize box on the right side of its title bar 
+WS_DLGFRAME The window has a double border, but does not have a title bar 
+
+First, we must first call GetWindowLong. This function reports the window style associated with a window, among other pieces of information.
+
+To use GetWindowLong, you must include its Declare statement in your program as follows (note that the Declare statement must be typed as a single line of text):
+
+Private Declare Function GetWindowLong Lib "User" (ByVal hWnd As Integer,
+   ByVal nIndex As Integer) As Long
+
+The GetWindowLong function requires two arguments. The first argument is the window's handle;the second argument specifies the type of information you want to retrieve. In this case, we want to retrieve the window's style settings. The current window style is returned as a long value after Get WindowLong is called.
+
+After we have retrieved the current window style for the window, we need to save the original style value that was just retrieved so that we can later restore the window's title bar, if desired. This is done by testing for the individual title bar attributes and saving each in turn to a new OriginalStyle variable. Next, we need to remove the attributes associated with the window's title bar. These attributes are the Minimize and Maximize buttons, the control menu, and the dialog box frame. We can remove them from the original window style value that was just retrieved by using the bitwise AND NOT function. Finally, we can call SetWindowLong to send this information to Windows, which causes the title bar to be removed from the window.
+
+Example Program
+Thisprogram shows how you can remove and later restore a window's title bar. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Remove Title Bar". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    RemoveTitleBar Form2
+    Form2.Show
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. Set its Caption property to "Restore Title Bar". 
+Add the following code to the Click event for Command2: 
+Private Sub Command2_Click()
+    RestoreTitleBar Form2
+    Form2.Show
+End Sub
+
+From the Insert menu, select Form. Form2 is created by default. Adjust the size of this form so that it is approximately half the size of Form1. Set its AutoRedraw property to True and its Caption property to an empty (NULL) string. 
+Add a Command Button control to Form2. Command1 is created by default. Set its Caption property to "OK". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Form1.Show
+    Unload Form2
+End Sub
+
+From the Insert menu, select Module. Module1.Bas is created by default. 
+Add the following Constant and Declare statements to Module1.Bas (note that each Declare statement must be typed as a single line of text): 
+Option Explicit
+Private Declare Function GetWindowLong Lib "User" (ByVal hWnd As Integer,
+   ByVal nIndex As Integer) As Long
+Private Declare Function SetWindowLong Lib "User" (ByVal hWnd As Integer,
+   ByVal nIndex As Integer, ByVal dwNewLong As Long) As Long
+Const GWL_STYLE = (-16)
+Const WS_DLGFRAME = &H400000
+Const WS_SYSMENU = &H80000
+Const WS_MINIMIZEBOX = &H20000
+Const WS_MAXIMIZEBOX = &H10000
+
+Create a new function called RemoveTitleBar to Module1.Bas. Add the following code to this function: 
+Sub RemoveTitleBar(frm As Form)
+    Static OriginalStyle As Long
+    Dim CurrentStyle As Long
+    Dim X As Long
+    OriginalStyle = 0
+    CurrentStyle = GetWindowLong(frm.hWnd, GWL_STYLE)
+
+    OriginalStyle = OriginalStyle Or (CurrentStyle And WS_DLGFRAME)
+    OriginalStyle = OriginalStyle Or (CurrentStyle And WS_SYSMENU)
+    OriginalStyle = OriginalStyle Or (CurrentStyle And WS_MINIMIZEBOX)
+    OriginalStyle = OriginalStyle Or (CurrentStyle And WS_MAXIMIZEBOX)
+
+    CurrentStyle = CurrentStyle And Not WS_DLGFRAME
+    CurrentStyle = CurrentStyle And Not WS_SYSMENU
+    CurrentStyle = CurrentStyle And Not WS_MINIMIZEBOX
+    CurrentStyle = CurrentStyle And Not WS_MAXIMIZEBOX
+
+    X = SetWindowLong(frm.hWnd, GWL_STYLE, CurrentStyle)
+    frm.Refresh
+End Sub
+
+Create a new function called RestoreTitleBar to Module1.Bas. Add the following code to this function: 
+Sub RestoreTitleBar(frm As Form)
+    Static OriginalStyle As Long
+    Dim CurrentStyle As Long
+    Dim X As Long
+    
+    CurrentStyle = GetWindowLong(frm.hWnd, GWL_STYLE)
+    CurrentStyle = CurrentStyle Or OriginalStyle
+    X = SetWindowLong(frm.hWnd, GWL_STYLE, CurrentStyle)
+    frm.Refresh
+End Sub
+
+Run this example program by pressing F5. Click the "Remove Title Bar" command button. Form2 is displayed. Notice that the title bar has been removed from the form. Click the OK command button, then click the Restore Title Bar command button. Form2 is displayed again, this time with its title bar intact. 
+

@@ -1,0 +1,83 @@
+Tip 81: Repairing and Compressing a Microsoft Access Database from Visual Basic
+May 8, 1995
+
+Abstract
+Within a Visual Basic® application, you can compress and repair a Microsoft® Access® database (.MDB) file. This article explains how you can accomplish these two tasks in Visual Basic.
+
+Repairing and Compacting Access Files
+On occasion, a Microsoft® Access® database file can become damaged. For example, a database can become damaged if the computer system is powered down without first closing the database file. The RepairDatabase statement provided in Visual Basic® can be used to repair a previously corrupted database file. You need only pass the name of the .MDB file to the statement to repair it.
+
+When records are deleted from a database file, the file can become defragmented. You can compress a defragmented database file by using Visual Basic's CompactDatabase statement. CompactDatabase's main purpose is to compress a Microsoft Access file, but it can also be used to change the database's sort order, encrypt/decrypt the database, or create a Microsoft Access 1.0 compatible file.
+
+The CompactDatabase statement requires four arguments, as follows:
+
+SourceFile The database's complete path and filename. 
+DestFile The database's new path and filename. 
+Locale The sorting order to be used. 
+Options Set to one of the following values: 
+  DB_ENCRYPT Encrypt database. 
+  DB_DECRYPT Decrypt database. 
+  DB_VERSION10 Create a compatible Access 1.0 database file. 
+
+When the CompactDatabase statement is executed, it copies each valid record from the original database file to the new database file. Note that these two filenames must be different and that the security settings of the original file are automatically transferred to the new file.
+
+Example Program
+The program below shows how to repair and/or compact a Microsoft Access database (.MDB) file. To repair a damaged database file, click the "Repair" command button; to compress (remove deleted records) a database file, click the "Compact" command button. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Common Dialog control to Form1. CommonDialog1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Repair". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    On Error GoTo Repair_Error
+    Dim MDB_Name As String
+    
+    CommonDialog1.Filter = "Access (*.mdb)|*.mdb"
+    CommonDialog1.Flags = &H1000
+    CommonDialog1.FilterIndex = 1
+    CommonDialog1.Action = 1
+    
+    If CommonDialog1.FileName <> "" Then
+        Screen.MousePointer = 11
+        MDB_Name = CommonDialog1.FileName
+        RepairDatabase (MDB_Name)
+        Screen.MousePointer = 0
+        MsgBox "Database repaired successfully", 64, "Repair"
+    End If
+    Screen.MousePointer = 0
+    Exit Sub
+Repair_Error:
+    MsgBox "Error when repairing database", 16, "Error"
+    Screen.MousePointer = 0
+    Exit Sub
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. Set its Caption property to "Compact". 
+Add the following code to the Click event for Command2: 
+Private Sub Command2_Click()
+    On Error GoTo Compact_Error
+    
+    Dim MDB_Name As String
+    Dim MDB_NewName As String
+    Dim MDB_Local As String
+    Dim MDB_Options As String
+    
+    MDB_NewName = "c:\dummy.mdb"
+    CommonDialog1.Filter = "Access (*.MDB)|*.mdb"
+    CommonDialog1.Flags = &H1000
+    CommonDialog1.FilterIndex = 1
+    CommonDialog1.Action = 1
+    
+    If CommonDialog1.FileName <> "" Then
+        MDB_Name = CommonDialog1.FileName
+        CompactDatabase MDB_Name, MDB_NewName & MDB_Local & MDB_Options
+        Kill MDB_Name
+        Name MDB_NewName & MDB_Local & MDB_Options As MDB_Name
+        MsgBox "Database compressed OK", 64, "Compact"
+    End If
+    Exit Sub
+Compact_Error:
+    MsgBox "Unable to compress database", 16, "Error"
+    Exit Sub
+End Sub
+

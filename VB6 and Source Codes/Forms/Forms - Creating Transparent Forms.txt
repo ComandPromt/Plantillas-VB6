@@ -1,0 +1,16 @@
+Tip 113: Creating Transparent Forms
+
+Private Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
+Const WS_EX_TRANSPARENT = &H20&
+Const GWL_EXSTYLE = (-20)
+
+
+Private Sub Form_Load()
+
+   Dim Ret As Long
+   Ret = SetWindowLong(List1.hwnd, GWL_EXSTYLE, WS_EX_TRANSPARENT)
+   Ret = SetWindowLong(List2.hwnd, GWL_EXSTYLE, WS_EX_TRANSPARENT)
+   Ret = SetWindowLong(LstSorted.hwnd, GWL_EXSTYLE, WS_EX_TRANSPARENT)
+
+End Sub
+

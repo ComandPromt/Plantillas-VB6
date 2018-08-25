@@ -1,0 +1,84 @@
+Tip 31: Creating the Windows Wallpaper Effect
+Created: March 1, 1995
+
+Abstract
+Windows® displays an image as its wallpaper. You can add this feature to your own Visual Basic® programs. This article explains how you can use the Windows application programming interface (API) BitBlt function to copy a single icon multiple times. The icons are copied so that they cover the entire area of the form, giving it a "wallpaper" look.
+
+Using BitBlt to Copy an Icon
+The Windows® application programming interface (API) BitBlt function can be used to copy an icon within a Visual Basic® program. This function copies the specified bitmap from the source device to the destination device. In order for this function to work correctly, the ScaleMode property of both devices must be set to Pixel.
+
+To declare this function within your program, include the following Declare statement in the Global Module or General Declarations section of your form:
+
+Declare Function BitBlt Lib "GDI" (ByVal hDestDC As Integer, ByVal X As Integer, 
+   ByVal Y As Integer, ByVal nWidth As Integer, ByVal nHeight As Integer, ByVal 
+   hSrcDC As Integer, ByVal XSrc As Integer, ByVal YSrc As Integer, ByVal dwRop 
+   As Long) As Integer
+
+Note that this Declare statement must be typed as one single line of text.
+
+The BitBlt function requires that nine arguments be passed to it. These arguments are as follows:
+
+hDestDC An integer value that contains the device context (hDC property) of the destination device 
+hSrcDC An integer value that contains the device context (hDC property) of the source device 
+X, Y Integer values that contain the upper-left corner in the destination where the bitmap is to be placed. Specified in logical coordinates. 
+nWidth, nHeight Integer values that contain the logical dimensions of the bitmap. 
+Xsrc, Ysrc Integer values that contain the logical coordinates of the source bitmap's upper-left corner 
+dwRop A long value that specifies how the BitBlt function is to copy the bitmap. 
+
+The dwRop argument may be specified as one of the constants in the following table (these values are stored in the CONSTANT.TXT file).
+
+BLACKNESS All output is black. 
+DSTINVERT The destination bitmap is inverted. 
+MERGECOPY The Boolean AND operator combines the pattern and the source bitmap. 
+MERGEPAINT The source bitmap is inverted and the Boolean OR operator is used to combine it with the destination bitmap. 
+NOTSRCCOPY The source bitmap is inverted and copied to the destination bitmap. 
+NOTSRCERASE The Boolean OR operator is used to combine the source and destination bitmaps. The resulting bitmap is then inverted. 
+PATCOPY The pattern is copied to the destination bitmap. 
+PATINVERT The Boolean XOR operator is used to combine the destination bitmap with the pattern. 
+PATPAINT The Boolean OR operator is used to invert the source bitmap and combine it with the pattern. The Boolean OR operator is then used to combine the result with the destination bitmap. 
+SRCAND The Boolean AND operator is used to combine the pixels of the source and destination bitmaps. 
+SRCCOPY The source bitmap is copied to the destination bitmap. 
+SRCERASE The Boolean AND operator is used to invert the destination bitmap. The result is then combined with the source bitmap. 
+SRCINVERT The Boolean XOR operator is used to combine the pixels of the source and destination bitmaps. 
+SRCPAINT The Boolean OR operator is used to combine the pixels of the source and destination bitmaps. 
+WHITENESS All output is turned white. 
+
+We want to copy a bitmap many times so that the entire form is covered in bitmaps, so we execute the following statement in a Visual Basic program:
+
+D = BitBlt(hDC, X, Y, PatternWidth, PatternHeight, hDC, 0, 0, SRCCOPY)
+
+The SRCCOPY constant tells the BitBlt function to copy the bitmap to the destination; in this case we are copying it to the form.
+
+Example Program
+The following Visual Basic application displays a pattern over the entire area of a form. This example program uses the ARGYLE.BMP bitmap file shipped with Windows. You can substitute any other bitmap of your choice, as long as it is 32-by-32 pixels. This is hard-coded into the demonstration program in the PatternWidth and PatternHeight variables. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Set the Picture property of Form1 to the ARGYLE.BMP bitmap file (this file will be located in the WINDOWS directory). 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as one single line of text): 
+Const SRCCOPY = &HCC0020
+Declare Function BitBlt Lib "GDI" (ByVal hDestDC As Integer, ByVal X As Integer, 
+   ByVal Y As Integer, ByVal nWidth As Integer, ByVal nHeight As Integer, ByVal 
+   hSrcDC As Integer, ByVal XSrc As Integer, ByVal YSrc As Integer, ByVal dwRop 
+   As Long) As Integer
+
+Add the following code to the Paint event for Form1: 
+Sub Form_Paint()
+    Dim X As Integer
+    Dim Y As Integer
+    Dim D As Integer
+    Dim PatternHeight As Integer
+    Dim PatternWidth As Integer
+    Dim SM As Integer    
+    SM = ScaleMode          'save current value
+    ScaleMode = 3           'pixel
+    PatternHeight = 32      'hard-coded value
+    PatternWidth = 32       'hard-coded value    
+    For X = 0 To ScaleWidth Step PatternWidth
+        For Y = 0 To ScaleHeight Step PatternHeight
+            D = BitBlt(hDC, X, Y, PatternWidth, PatternHeight, hDC, 0, 0, SRCCOPY)
+        Next Y
+    Next X
+    ScaleMode = SM          'reset to previous value
+End Sub
+
+To execute this program, press the F5 function key. After a few seconds, the ARGYLE bitmap will be displayed over the entire area of the form.

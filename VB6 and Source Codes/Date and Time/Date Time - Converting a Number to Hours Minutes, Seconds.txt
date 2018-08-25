@@ -1,0 +1,34 @@
+Tip 13: Converting a Number to Hours, Minutes, Seconds
+Created: March 1, 1995
+
+Abstract
+Assume that you are writing a program where some kind of event has to be timed. You retrieve a time value representing the total number of seconds the event took to process its work. The problem is that you want to convert this seconds value to its equivalent minutes and seconds value and display that string to the user. The Visual Basic® Mod operator can do this conversion process for you.
+
+Using Mod to Calculate Elapsed Time Periods
+Assuming that you need to time a certain event in your Visual Basic® application, the Mod operator provided in Visual Basic can help you convert the value to an equivalent minutes and seconds value. You can then display this string to users in a more meaningful manner.
+
+The Visual Basic Mod operator divides two numbers, but returns only the remainder. If you take the number 121 (representing the number of seconds that has passed) and want to determine how many minutes and seconds this is, you would divide 121 by 60 (60 seconds per minute). The result would be 2, with 1 remaining. Then, if you use Mod on the original value again, you'll get 1 as the remainder. This converts 121 to two minutes and 1 second.
+
+Example Program
+The following program demonstrates how you can use the Mod operator to convert a number representing a time value to a string. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add a Label control to Form1. Label1 is created by default. Set its Caption property to "Enter a value:". 
+Next to Label1, add a Text Box control. Text1 is created by default. Set its Text property to a NULL (empty) string. 
+Add the following code to the LostFocus event for Text1: 
+Sub Text1_LostFocus()
+    Dim Isec As Integer
+    Isec = Val(Text1.Text)
+    BreakSec = Str$(Int(Isec / 60)) & " minutes " & Str$(Isec Mod 60) & " seconds "
+    Text2.Text = BreakSec
+End Sub
+
+Add a second Label control to Form1 (underneath Label 1). Label2 is created by default. Set its Caption property to "Time passed: ". 
+Beside Label2, add a Text Box control. Text2 is created by default. Set its Text property to a NULL (empty) string. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Exit". 
+Type the following code in the Click event for Command1: 
+Sub Command1_Click()
+    End
+End Sub
+
+When you execute this Visual Basic application, enter a value in the first text box. Press the TAB key to move to the second text box. The program will convert the value you entered to a string representing that value in minutes and seconds. Click on the Exit command button to terminate the program.

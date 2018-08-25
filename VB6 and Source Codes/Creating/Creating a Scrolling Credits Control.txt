@@ -1,0 +1,40 @@
+Tip 84: Creating a Scrolling "Credits" Control
+May 15, 1995
+
+Abstract
+You can add visual appeal to your Visual Basic® applications by including a routine that automatically scrolls text vertically within a picture box. This article explains how you can add this functionality to your programs.
+
+Scrolling Text Vertically Within a Picture Box
+The Windows® application programming interface (API) BitBlt function can be used to copy a section of a Picture Box control to another section of that same control. You must remember to set the ScaleMode property of the Picture Box control to Pixel mode.
+
+The example program below shows how to use the BitBlt function to print scrolling text on a Picture Box control. A Timer control is used to print a string of text on the Picture Box control at selected time intervals.
+
+Example Program
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Const SRCCOPY = &HCC0020
+Const ShowText$ = "This line of text scrolls vertically."
+Private Declare Function BitBlt Lib "GDI" (ByVal hDestDC As Integer, ByVal X 
+   As Integer, ByVal Y As Integer, ByVal nWidth As Integer, ByVal nHeight 
+   As Integer, ByVal hSrcDC As Integer, ByVal XSrc As Integer, ByVal YSrc 
+   As Integer, ByVal dwRop As Long) As Integer
+Dim ShowIt%
+
+Add a Picture Box control to Form1. Picture1 is created by default. Set its ScaleMode property to 3-Pixel. 
+Add a Timer control to Form1. Timer1 is created by default. Set its Interval property to 25. 
+Add the following code to the Timer event for Timer1 (note that the Ret = line must be typed as a single line of code): 
+Private Sub Timer1_Timer()
+    Dim Ret As Integer
+    If (ShowIt% = 30) Then
+        Picture1.CurrentX = 0
+        Picture1.CurrentY = Picture1.ScaleHeight - 30
+        Picture1.Print ShowText$
+        ShowIt% = 0
+    Else
+        Ret = BitBlt(Picture1.hDC, 0, 0, Picture1.ScaleWidth, 
+            Picture1.ScaleHeight - 1, Picture1.hDC, 0, 1, SRCCOPY)
+        ShowIt% = ShowIt% + 1
+    End If
+End Sub
+
+Run the program by pressing the F5 function key. After a short time, the text "This line of text scrolls vertically." will be displayed in the Picture Box control. Each time the Timer control reaches 25, the line of text will be scrolled upward in the Picture Box control.

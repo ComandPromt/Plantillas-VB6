@@ -1,0 +1,40 @@
+Tip 159: Setting the Minimum Size of a Window
+December 5, 1995
+
+Abstract
+In your Microsoft® Visual Basic® application, you can establish the absolute minimum size for a form. This article explains how to allow a user to resize a form only if the form is larger than the minimum size.
+
+Allowing or Preventing the Resizing of Forms
+When you design a Microsoft® Visual Basic® application, you add forms and controls to your project. The form is actually a window that holds other controls such as Command Button controls. You can modify the size of the form when you initially design your program.
+
+In addition, the user of your application may want the flexibility of resizing your application's form. You can allow a form to be resized by setting the form's BorderStyle property to Sizable. This is the default style for newly created forms.
+
+The only drawback to letting the user resize your form is that it can destroy the layout of your application. The user may resize the form to be larger or smaller, which may cover up other windows that need to be visible.
+
+In the example program below, the user can resize a form to make it larger, but not smaller. The Height and Width properties of the form are set to an absolute minimum size.
+
+Each time the user tries to resize the form, the Form_Resize event is activated. In this event, you check to make sure that the form is not minimized or iconized and then make a test of the form's current size.
+
+If the current height or width of the form is greater than the minimum size, you allow the form to be resized. On the other hand, if the user tries to shrink the form's size to a much smaller size, you prevent the change from taking place.
+
+Example Program
+This program shows how to prevent a form (window) from being resized to a smaller size. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Set the following properties for Form1: 
+Height = 2250
+Left = 1260
+Top = 1965
+Width = 4515 
+
+Add the following code to the Form_Resize event for Form1: 
+Private Sub Form_Resize()
+    MIN_WIDTH = 4515
+    MIN_HEIGHT = 2250
+    If WindowState <> 1 Then
+        If Width < MIN_WIDTH Then Width = MIN_WIDTH
+        If Height < MIN_HEIGHT Then Height = MIN_HEIGHT
+    End If
+End Sub
+
+Run the example program by pressing F5. When you try to change the size of Form1 to make it smaller, the code in the Resize event prevents the form's size from changing. You can make the form larger, but not smaller.

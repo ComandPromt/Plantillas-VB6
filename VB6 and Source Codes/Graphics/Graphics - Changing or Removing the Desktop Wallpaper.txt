@@ -1,0 +1,49 @@
+Tip 211: Changing or Removing the Desktop Wallpaper in Visual Basic 4.0
+February 28, 1996
+
+Abstract
+Using the Microsoft® Windows® application programming interface (API) SystemParametersInfo function, you can remove or change the default desktop wallpaper from within your Microsoft Visual Basic® 4.0 application.
+
+Using SystemParametersInfo to Remove/Select Wallpaper
+In a Microsoft® Visual Basic® application, the Microsoft Windows® application programming interface (API) SystemParametersInfo function can be used to set many different system-wide parameters. One of these parameters is the desktop wallpaper. Normally, a user would select a new desktop wallpaper by using Control Panel.
+
+As shown in the example program below, the SystemParametersInfo function can be called with the SPI_SETDESKWALLPAPER value and the name of the wallpaper you want to select. The Windows 95 operating system will then make this the new default wallpaper.
+
+The SPIF_SENDWININICHANGE value tells Windows 95 that it should notify all top-level windows of the new change to the system-wide parameters.
+
+Example Program
+This program shows how to remove and select a new desktop wallpaper from within a Visual Basic application. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function SystemParametersInfo Lib "user32" Alias 
+   "SystemParametersInfoA" (ByVal uAction As Long, ByVal uParam As Long, 
+   ByVal lpvParam As String, ByVal fuWinIni As Long) As Long
+Const SPIF_UPDATEINIFILE = &H1
+Const SPI_SETDESKWALLPAPER = 20
+Const SPIF_SENDWININICHANGE = &H2
+
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Remove Wallpaper". 
+Add the following code to the Click event for Command1 (note that the "X =" statement must be typed as a single line of code): 
+Private Sub Command1_Click()
+    Dim X As Long
+    X = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0&, "(None)", 
+       SPIF_UPDATEINIFILE Or SPIF_SENDWININICHANGE)
+    MsgBox "Wallpaper was removed"
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. Set its Caption property to "Change Wallpaper". 
+Add the following code to the Click event for Command2 (note that the "X =" statement must be typed as a single line of code): 
+Private Sub Command2_Click()
+    Dim FileName As String
+    Dim X As Long
+
+    FileName = "c:\windows\pinstripe.bmp"
+
+    X = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0&, FileName, 
+       SPIF_UPDATEINIFILE Or SPIF_SENDWININICHANGE)
+    MsgBox "Wallpaper was changed"
+End Sub
+
+Run the example program by pressing F5. To remove the wallpaper, click the "Remove Wallpaper" command button. Windows 95 displays a black background with no graphics whatsoever. Click the "Change Wallpaper" command button to change the wallpaper to the PINSTRIPE.BMP image.
+

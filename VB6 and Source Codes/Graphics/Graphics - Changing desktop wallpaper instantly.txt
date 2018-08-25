@@ -1,0 +1,11 @@
+'Description: Changes desktop wallpaper instantly without having to reboot 
+
+'Declare Function SystemParametersInfo Lib "user32" Alias "SystemParametersInfoA" (ByVal uAction As Long, ByVal uParam As Long, ByVal lpvParam As Any, ByVal fuWinIni As Long) As Long
+'Public Const SPI_SETDESKWALLPAPER = 20
+
+'Place the following code in under a command button or in a menu, etc...
+
+Dim ChangeWP
+dim source
+source = "C:\windows\setup.bmp"
+ChangeWP = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, source, 0)

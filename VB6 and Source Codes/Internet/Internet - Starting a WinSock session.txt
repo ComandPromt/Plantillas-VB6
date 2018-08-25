@@ -1,0 +1,6 @@
+'Description: Starts the WinSock session
+
+    Dim RC As Integer
+    Dim IPAddr As Long
+    RC = WSAStartup(&H101, StartupData)
+    If RC = SOCKET_ERROR Then Exit Sub

@@ -1,0 +1,17 @@
+'Description: Asynchronous routine which returns the true host name given
+'             an IP address, or Web address.
+
+'Usage
+'Handle = WSAAsyncGetHostByNameAlias(Text1.hWnd, &H202, "www.intrstar.net")
+
+
+'Public Function WSAAsyncGetHostByNameAlias(hWnd As Integer, wMsg As Integer, Host As String) As Long
+    Dim retIP As Long
+    retIP = inet_addr(Host)
+    If retIP = INADDR_NONE Then
+        retIP = WSAAsyncGetHostByName(hWnd, wMsg, Host, hostentbuffer, hostentasync_size)
+    Else
+        retIP = WSAAsyncGetHostByAddr(hWnd, wMsg, retIP, 4, AF_INET, hostentbuffer, hostentasync_size)
+    End If
+    WSAAsyncGetHostByNameAlias = retIP
+'End Function

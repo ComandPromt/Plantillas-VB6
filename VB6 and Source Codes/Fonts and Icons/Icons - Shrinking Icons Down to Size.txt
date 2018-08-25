@@ -1,0 +1,48 @@
+Tip 88: Shrinking Icons Down to Size
+July 1, 1995
+
+Abstract
+You can use the Windows® application programming interface (API) BitBlt function to modify the size of an icon. This article explains how to enlarge or shrink an icon.
+
+Modifying an Icon's Size
+You can use the Windows® application programming interface (API) BitBlt function to create an icon that is smaller or larger than the original icon. The BitBlt function copies a memory device context to another memory device context. (A memory device context is a block of memory that represents a display surface, such as an Image or Picture Box control. See Tip # 31 in this series, "Creating the Windows Wallpaper Effect" for a complete explanation of the BitBlt function.)
+
+In the example program below, we first load an icon into an Image control. Then we modify the Image control's Height and Width properties so the icon becomes 75 percent smaller than its original size. The BitBlt function is then used to copy the icon stored in the Image control to the Picture Box control.
+
+Example Program
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function BitBlt Lib "GDI" (ByVal hDestDC As Integer, ByVal X As 
+   Integer, ByVal Y As Integer, ByVal nWidth As Integer, ByVal nHeight As
+   Integer, ByVal hSrcDC As Integer, ByVal XSrc As Integer, ByVal YSrc As 
+   Integer, ByVal dwRop As Long) As Integer
+Const SRCCOPY = &HCC0020
+
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Shrink Icon". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim X As Integer
+    Dim Y As Integer
+    Dim W As Integer
+    Dim H As Integer
+    Dim Ret As Integer
+    
+    Image1 = LoadPicture("c:\vb\icons\misc\binoculr.ico")
+    Image1.Width = 0.75 * Image1.Width
+    Image1.Height = 0.75 * Image1.Height
+    Picture1.Width = Image1.Width
+    Picture1.Height = Image1.Height
+    
+    X = Image1.Left / Screen.TwipsPerPixelX
+    Y = Image1.Top / Screen.TwipsPerPixelY
+    
+    W = Picture1.Width / Screen.TwipsPerPixelX
+    H = Picture1.Height / Screen.TwipsPerPixelY
+    
+    Ret = BitBlt(Picture1.hDC, 0, 0, W, H, Form1.hDC, X, Y, SRCCOPY)
+    Picture1.Refresh
+    
+End Sub
+
+Add an Image control to Form1. Image1 is created by default. Set its Stretch property to True. 
+Add a Picture Box control to Form1. Picture1 is created by default. Set its AutoRedraw property to True. 

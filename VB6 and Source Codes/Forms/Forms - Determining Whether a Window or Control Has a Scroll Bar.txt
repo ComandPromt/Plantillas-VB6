@@ -1,0 +1,52 @@
+Tip 210: Determining Whether a Window or Control Has a Scroll Bar
+February 28, 1996
+
+Abstract 
+This article explains how to determine whether a window or control has a scroll bar associated with it when your Microsoft® Visual Basic® 4.0 application is running.
+
+Using the GetWindowLong Function
+When designing a Microsoft® Visual Basic® version 4.0 application, you may need to determine at run time whether a specific control has a scroll bar. This can be accomplished by using the Microsoft® Windows® application programming interface (API) GetWindowLong function.
+
+Every form (or window) in a Microsoft Windows-based application has a set of attributes associated with it. These window style bits describe the window. For example, if a window has a border, the WS_BORDER style bit is set. In the same manner, if a window has a scroll bar, the WS_VSCROLL and/or WS_HSCROLL style bits are set.
+
+You can call the GetWindowLong function to determine whether a control has a scroll bar. The GetWindowLong function requires two arguments: the handle of the window you want to retrieve information for, and the type of information you want to retrieve. In this case, you tell the GetWindowLong function to retrieve the style of the window (GWL_STYLE).
+
+After the GetWindowLong function is called, you use the Visual Basic AND operator to find out whether the style of the window is set to that of a vertical scroll bar (&H200000). If this statement indicates that a scroll bar is present, the expression returns a True value.
+
+Example Program
+This program shows how to determine whether a control has a scroll bar. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Private Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" 
+   (ByVal hwnd As Long, ByVal nIndex As Long) As Long
+Const GWL_STYLE = (-16)
+
+Add a File List Box control to Form1. File1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim lFlag As Long, iGotScroll As Long
+
+    lFlag = GetWindowLong(File1.hwnd, GWL_STYLE)
+    If (&H200000 And lFlag) <> False Then
+        iGotScroll = True
+        MsgBox "File List Box has a scroll bar"
+    Else
+        iGotScroll = False
+        MsgBox "File List Box does NOT have a scroll bar"
+    End If
+
+    lFlag = GetWindowLong(Command1.hwnd, GWL_STYLE)
+    If (&H200000 And lFlag) <> False Then
+        iGotScroll = True
+        MsgBox "Command Button has a scroll bar"
+    Else
+        iGotScroll = False
+        MsgBox "Command Button does NOT have a scroll bar"
+    End If
+
+End Sub
+
+Run the example program by pressing F5. Click the Command Button control. A message box appears indicating that the File List Box control does have a scroll bar. Click OK. A message box appears indicating that the Command Button control does not have a scroll bar. Click OK.
+

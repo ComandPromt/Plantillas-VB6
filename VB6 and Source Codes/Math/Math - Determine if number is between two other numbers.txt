@@ -1,0 +1,18 @@
+Description: Function returns True if num is between X and Y
+
+'Function InBetween(ByVal Num As Variant, ByVal X As Variant, ByVal Y As Variant) As Boolean
+	Dim bResult As Boolean
+	bResult = False
+	If IsNumeric(Num) And IsNumeric(X) And IsNumeric(Y) Then
+        	If X < Y Then
+            		If Num > X And Num < Y Then
+               			bResult = True
+            		End If
+        	ElseIf Y < X Then
+            		If Num > Y And Num < X Then
+               			bResult = True
+            		End If
+        	End If
+     End If
+InBetween = bResult
+'End Function

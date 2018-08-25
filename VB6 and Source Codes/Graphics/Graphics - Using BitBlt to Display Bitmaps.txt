@@ -1,0 +1,187 @@
+Tip 45: Using BitBlt to Display Bitmaps
+Created: April 2, 1995
+
+Abstract
+The Windows® BitBlt function can be used to display a bitmap image on a Visual Basic® form. The bitmap image can be an image stored in memory or an image stored on disk. This article demonstrates how the BitBlt function can display a bitmap file on the screen.
+
+Copying Bitmaps from One Source to Another
+In a Visual Basic® application, you can use the BitBlt function to copy a bitmap from one device context to another as long as both device contexts are compatible. (See "Tip 31: Creating the Windows Wallpaper Effect," for a complete explanation of BitBlt.)
+
+If you're trying to copy a bitmap and the source and destination contexts are not compatible, you must first use the CreateDIBitmap function. This function takes a device-independent bitmap and converts it to a device-dependent bitmap. To declare this function within your program, include the following Declare statement in the General Declarations section of your form:
+
+Declare Function CreateDIBitmap Lib "GDI" (ByVal hDC As Integer, lpInfoHeader
+   As BITMAPINFOHEADER, ByVal dwUsage As Long, ByVal lpInitBits As String,
+   lpInitInfo As BITMAPINFO, ByVal wUsage As Integer) As Integer
+
+Note that this statement must be typed as a single line of text.
+
+The CreateDIBitmap function requires the following arguments:
+
+hDC An integer value set to the device context's handle. This device context describes the device-dependent bitmap that will be created. 
+lpInfoHeader A BITMAPINFOHEADER structure that describes the device-independent bitmap's format. 
+dwUsage If the CBM_INIT constant is specified, the bitmap is initialized as per the lpInitBits and lpInitInfo parameters. If the bitmap data should not be initialized, this long value should be set to zero. 
+lpInitBits A string containing the bitmap data in device-independent format, or a long value containing a pointer to same. 
+lpInitInfo A BITMAPINFO structure that describes the lpInitBits device-independent bitmap. 
+wUsage Set to the DIB_PAL_COLORS constant to specify the color table relative to the currently selected palette, or to DIB_RGB_COLORS if the color table contains RGB colors. 
+
+CreateDIBitmap returns an integer value of 1 or greater as the newly created bitmap's handle, or zero if the function was unable to create the bitmap.
+
+Once you have created the compatible bitmap, you need to create a compatible memory device context. The CreateCompatibleDC function will do this work. This function's declaration is:
+
+Declare Function CreateCompatibleDC Lib "GDI" (ByVal hDC As Integer) As Integer
+
+This function needs only one argument to be passed to it: the device context's handle. If you specify the handle as being zero, a device context that is compatible with the screen will be created.
+
+Now you can call the BitBlt function to draw the bitmap image on the screen. This works exactly as if you had used the LoadPicture method.
+
+You should also use the DeleteDC and DeleteObject functions to release the Windows resources used by the device context and bitmap you have just created.
+
+Example Program
+The following program shows how you can quickly draw a bitmap image on your Visual Basic form. The TARTAN.BMP file shipped with Windows® is used in this example, but any other bitmap that is 32 x 32 pixels can be substituted. 
+
+Create a new project in Visual Basic. Form1 is created by default. Set its AutoRedraw property to True. 
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+    Call DrawBitMap
+End Sub
+
+Add the following Constant and Declare statements to the General Declarations section of your program (note that each statement must be typed as a single line of code): 
+Const CBM_INIT = &H4&
+Const SRCCOPY = &HCC0020 
+
+Declare Function CreateDIBitmap Lib "GDI" (ByVal hDC As Integer, lpInfoHeader
+   As BITMAPINFOHEADER, ByVal dwUsage As Long, ByVal lpInitBits As String, 
+   lpInitInfo As BITMAPINFO, ByVal wUsage As Integer) As Integer
+
+Declare Function DeleteObject Lib "GDI" (ByVal hObject As Integer) As Integer
+
+Declare Function BitBlt Lib "GDI" (ByVal hDestDC As Integer, ByVal X As Integer, 
+   ByVal Y As Integer, ByVal nWidth As Integer, ByVal nHeight As Integer, ByVal 
+   hSrcDC As Integer, ByVal XSrc As Integer, ByVal YSrc As Integer, ByVal dwRop 
+   As Long) As Integer
+
+Declare Function CreateCompatibleDC Lib "GDI" (ByVal hDC As Integer) As Integer
+
+Declare Function SelectObject Lib "GDI" (ByVal hDC As Integer, ByVal hObject As 
+   Integer) As Integer
+
+Declare Function DeleteDC Lib "GDI" (ByVal hDC As Integer) As Integer
+
+Create a new function called ReadBitmapFile. Add the following code to this function: 
+Function ReadBitmapFile(fname As String, bm As BITMAPINFO, bmdata As String)
+   As Integer
+ ' Function only handles 16-color uncompressed bitmaps.
+  Dim A As String
+  Dim I As Integer
+  Dim BitMapSize As Long
+  
+  Open fname$ For Binary As #1
+  A = String$(2, 0)
+  Get #1, , A
+  If A <> "BM" Then Close #1: Exit Function
+    
+  Seek #1, 15:        ' Move to next bit.
+  Get #1, , bm.bmiHeader.biSize
+  Get #1, , bm.bmiHeader.biWidth
+  Get #1, , bm.bmiHeader.biHeight
+  Get #1, , bm.bmiHeader.biPlanes
+  Get #1, , bm.bmiHeader.biBitCount
+  
+  If bm.bmiHeader.biBitCount <> 4 Then
+      Close #1
+      ReadBitmapFile = -1
+      Exit Function
+  End If
+    
+  Get #1, , bm.bmiHeader.biCompression
+  If bm.bmiHeader.biCompression <> 0 Then
+    Close #1
+    ReadBitmapFile = -1
+    Exit Function
+  End If
+  
+  Seek #1, 47:        ' Skip to next bit.
+  Get #1, , bm.bmiHeader.biClrUsed
+  ' The number of RGB quads depends on the number of
+  ' colors - the defaults are enumerated below if bmnumcols& = 0.
+  If bm.bmiHeader.biClrUsed = 0 Then
+      bm.bmiHeader.biClrUsed = 16
+  End If    
+  
+  If bm.bmiHeader.biClrUsed <> 16 Then
+      Close #1
+      ReadBitmapFile = -1
+      Exit Function
+  End If    
+  
+  Get #1, , bm.bmiHeader.biClrImportant
+  ' We are now at offset 55 in the file
+  For I = 0 To bm.bmiHeader.biClrUsed - 1
+  ' Get RGB quads and set palette entries as appropriate. Note that BASIC
+  ' palette entries are not the same as standard Windows palette entries.
+      Get #1, , bm.bmicolors(I)
+  Next I    
+  
+  ' Now read the bitmap information
+  BitMapSize = BitMapRowSize(bm.bmiHeader.biWidth, bm.bmiHeader.biBitCount)
+    * bm.bmiHeader.biHeight
+  bmdata = String$(BitMapSize, 0)
+ Get #1, , bmdata
+  Close #1
+End Function
+
+Add a new function called BitMapRowSize to the project. Add the following code to this function: 
+Function BitMapRowSize(bmwidth As Long, bmbitspixel) As Long
+  ' Given bitmap width in pixels, and the number of bits
+  ' per pixel, calculate the bitmap row size in bytes.
+  Dim B As Integer
+  B = bmwidth * bmbitspixel
+  If (B Mod 32) <> 0 Then
+      BitMapRowSize = ((B + 32 - (B Mod 32)) \ 8) ' Pad to nearest 4 bytes.
+  Else
+      BitMapRowSize = B \ 8
+  End If
+End Function
+
+Add a new Module to your project. Module1.Bas is created by default. Add the following Type structures to Module1.Bas: 
+Type BITMAPINFOHEADER       ' 40 bytes
+  biSize As Long
+  biWidth As Long
+  biHeight As Long
+  biPlanes As Integer
+  biBitCount As Integer
+  biCompression As Long
+  biSizeImage As Long
+  biXPelsPerMeter As Long
+  biYPelsPerMeter As Long
+  biClrUsed As Long
+  biClrImportant As Long
+End Type
+
+Type BITMAPINFO
+  bmiHeader As BITMAPINFOHEADER
+  bmicolors(15) As Long
+End Type
+
+Add a new function called DrawBitMap to your project. Add the following code to this function: 
+Sub DrawBitMap()
+  Dim hbmap As Integer
+  Dim bitmap As String
+  Dim RC As Integer
+  Dim chdc As Integer
+  Dim bm As BITMAPINFO
+  Dim I As Integer    
+  RC = ReadBitmapFile("C:\windows\tartan.bmp", bm, bitmap)
+  hbmap = CreateDIBitmap(Me.hDC, bm.bmiHeader, CBM_INIT, bitmap, bm, 0)
+  chdc = CreateCompatibleDC(Me.hDC)
+  If chdc <> 0 And hbmap <> 0 Then
+      RC = SelectObject(chdc, hbmap)
+  ' Just put it up at 10,10 for now.
+      RC = BitBlt(Me.hDC, 10, 10, bm.bmiHeader.biWidth, bm.bmiHeader.biHeight,
+                  chdc, 0, 0, SRCCOPY)
+      RC = DeleteDC(chdc)
+      RC = DeleteObject(hbmap)
+  End If
+End Sub
+
+[Note: The RC = BitBlt line above must be typed or pasted as a single line of text.—Ed.]

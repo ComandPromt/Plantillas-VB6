@@ -1,0 +1,20 @@
+'Description: Sub Main() code to install the add-in in the VB .ini file 
+
+'Place the following code in a Module. Set the Add-In project to start from
+'its Sub Main() subroutine.
+
+'Global gobjIDEAppInst As Object
+'Declare Function OSWritePrivateProfileString% Lib "kernel32" Alias "WritePrivateProfileStringA" (ByVal AppName$, ByVal KeyName$, ByVal keydefault$, ByVal FileName$)
+'Declare Function OSGetPrivateProfileString% Lib "kernel32" Alias "GetPrivateProfileStringA" (ByVal AppName$, ByVal KeyName$, ByVal keydefault$, ByVal returnstring$, ByVal NumBytes As Integer, ByVal FileName$)
+
+'Sub Main()
+'change "Project1.class1" to projectname.classname where the class contains AfterClick()
+'events, etc.
+Dim returnstring As String
+Section$ = "Add-Ins32"
+returnstring = String$(12, Chr$(0))
+errcode = OSGetPrivateProfileString(Section$, "Project1.class1", "NotFound", returnstring, Len(returnstring) + 1, "VB.INI")
+If Left(returnstring, errcode) = "NotFound" Then
+   errcode = OSWritePrivateProfileString%(Section$, "Project1.class1", "0", "VB.INI")
+End If
+'End Sub

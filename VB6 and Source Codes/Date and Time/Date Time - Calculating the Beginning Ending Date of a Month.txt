@@ -1,0 +1,49 @@
+Tip 128: Calculating the Beginning and Ending Date of a Month
+July 1, 1995
+
+Abstract
+When developing an application in Microsoft® Visual Basic®, you may need to calculate the specific date of the first and last days of a month. This article explains how to accomplish this task in Visual Basic.
+
+Manipulating Dates in Visual Basic
+Microsoft® Visual Basic® offers many functions that you can use to determine what day a specific date falls on, what month it is, and so on. You can use the DateValue function to convert a date string, such as July 3, 1995, to a date serial number. This function usually determines what day of the week a specific date falls on.
+
+The DateSerial function converts a numeric value to a date serial number. The serial number is a unique number that represents each possible date from January 1, 100 A.D. through December 31, 9999. Therefore, you can easily calculate how many days elapsed between two specific dates by using the DateSerial function.
+
+In the example program below, you want to find the first and last dates in the month of July, 1995. To do this, you convert the string date (July 3, 1995) to a date serial number. Then you use the DateSerial function in conjunction with the Year and Month functions to calculate the first date in the month of July. You repeat this routine to determine the last date in the month of July.
+
+After calling the DateSerial function, you must use the Visual Basic Year, Month, and Day functions to extract and decode specific portions of information from the date serial number. You must do this because the date serial number is encoded in a special format.
+
+In the example program below, you use the Year and Month functions to determine which date is the first day of the month. The Month function returns a value of 1 through 12 that represents the specified month. In a similar fashion, the Visual Basic Year function returns the year from the encoded serial number.
+
+The MonthEnd function in the example program actually calculates the next month's first day. It then backtracks by one day to calculate the correct date for the last day of the month.
+
+Example Program
+This program shows how to retrieve the first and last date for a specified month. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. Set its MultiLine property to True. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim LastDay As Variant
+    Dim FirstDay As Variant
+    Dim ThisDate As Variant
+    text1.TEXT = ""
+    ThisDate = DateValue("July 3, 1995")
+    FirstDay = MonthBegin(ThisDate)
+    text1.TEXT = Str$(FirstDay) & Chr$(13) & Chr$(10)
+    LastDay = MonthEnd(ThisDate)
+    text1.TEXT = text1.TEXT & Str$(LastDay)
+End Sub
+
+Create a new function called MonthBegin. Add the following code to this function: 
+Function MonthBegin(vbdate As Variant) As Variant
+    MonthBegin = DateSerial(Year(vbdate), Month(vbdate), 1)
+End Function
+
+Create a new function called MonthEnd. Add the following code to this function: 
+Function MonthEnd(vbdate As Variant) As Variant
+    MonthEnd = DateSerial(Year(vbdate), Month(vbdate) + 1, 0)
+End Function
+
+Run the example program by pressing F5. Click the command button. The first and last days in the month of July are displayed as 7/1/95 and 7/31/95, respectively.

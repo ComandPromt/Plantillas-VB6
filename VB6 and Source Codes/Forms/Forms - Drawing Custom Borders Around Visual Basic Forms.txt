@@ -1,0 +1,32 @@
+Tip 39: Drawing Custom Borders Around Visual Basic Forms
+Created: March 1, 1995
+
+Abstract
+You can use the Visual Basic® Line method to add special effects to your application's appearance. This article explains how you can draw a double-line border around a form's window.
+
+Drawing Borders Around Forms
+The Line method can be used to draw individual lines or boxes on a Visual Basic® form. To draw a box using the Line method, you tell the function the coordinates of the upper-left and lower-right corners of the box. The syntax for the line method is:
+
+Line(StartX,StartY) - (EndX,EndY), , B
+
+The B argument tells the Line method to draw a box using the color (in this case we used the default color, so we didn't specify anything for this argument) and the coordinates we specify.
+
+Because we want to draw a double-line border around a form, we need to actually draw two boxes. First, however, we have to determine the height and width of the form. We can do this by using the form's ScaleHeight and ScaleWidth properties. These two properties tell us how many points high and wide the form is. Then we only need to set the ScaleMode property to 3 (pixel) and draw two boxes around the form. This gives us the double-line effect we want on the form.
+
+Example Program
+The following Visual Basic program draws a double-line border around a form's window area. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+    Dim I As Integer
+    ScaleMode = 3
+    DrawWidth = 2
+    AutoRedraw = True
+    For I = DrawWidth - 1 To 4 Step 3
+        Line (I, I)-(ScaleWidth - 1 - I, ScaleHeight - 1 - I), , B
+    Next I
+    AutoRedraw = False
+End Sub
+
+If your form contains a menu, the double-line border will be drawn directly underneath the menu so that the menu is not included within the box that is drawn.

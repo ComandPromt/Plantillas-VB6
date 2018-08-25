@@ -1,0 +1,9 @@
+Description: Function returns True if year is a leap year
+
+'Function IsLeapYear(ByVal sYear As String) As Boolean
+ 	If IsDate("02/29/" & sYear) Then
+        	IsLeapYear = True
+	Else
+        	IsLeapYear = False
+	End If
+'End Function

@@ -1,0 +1,29 @@
+Tip 23: Converting Fractional Values to Two-Decimal-Place Currency Values
+Created: March 1, 1995
+
+Abstract
+Visual Basic® offers many functions that can convert values from one type to another. One of these functions is CCur. This function will take a string variable containing a value with four digits after the decimal place and convert the fractional portion of the value to the next highest (rounded) two-digit decimal value.
+
+Rounding Fractional Values to Two Decimal Places
+Let's assume that your Visual Basic® program has a string variable that contains the result of some kind of percentage calculation and that value represents a dollar amount. After the calculation has been done, that value is returned as 14.2399. However, you need to round this dollar amount to only two decimal places so your final value is 14.24.
+
+The CCur function converts a number to a Currency type number—that is, a number that can contain, at maximum, four digits after the decimal place. The variable passed to the CCur function must be no larger than 8 bytes in length and must contain a fixed decimal point.
+
+By combining the Format and CCur functions, you can easily convert the number to a rounded dollar amount with only two digits after the decimal point.
+
+Example Program
+The program below shows how to use the CCur function in a Visual Basic program. When it is executed, this program displays the value 14.2399 in the first Text Box and its properly formatted currency value, 14.24, in the second Text Box. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+In the General Declarations section of Form1, add the following two statements: 
+Dim Amount As Currency
+Dim Total As String
+
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+    Amount = 14.2399
+    Text1.Text = Str$(Amount) 
+    Total = CCur(Format(Amount, "#,##0.00"))
+    Text2.Text = Total
+End Sub
+

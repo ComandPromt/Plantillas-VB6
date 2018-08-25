@@ -1,0 +1,9 @@
+'Description: Example DisconnectAddIn subroutine. Event occurs when VB session ends or
+'             add-in is removed.
+
+'Paste into class module
+
+'Sub DisconnectAddIn(ByVal mode As Integer)
+mymenu.DisconnectEvents ConnectID
+AddInItems.Remove mymenu
+'End Sub

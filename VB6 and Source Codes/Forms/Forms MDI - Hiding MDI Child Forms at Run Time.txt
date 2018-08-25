@@ -1,0 +1,42 @@
+Tip 85: Hiding MDI Child Forms at Run Time
+May 15, 1995
+
+Abstract
+There may be situations in which you do not want a multiple-document interface (MDI) child form displayed while your program is executing. This article explains how you can hide an MDI child form.
+
+Making MDI Forms Invisible
+A multiple-document interface (MDI) child form allows you to have several windows open at the same time with different documents loaded in each window. This is how Notepad and similar programs operate so that you can switch between different text files. You cannot, however, hide an MDI child form at run time.
+
+So how can you temporarily hide an MDI child window from the user? By moving the window to a nonexistent position on your screen.
+
+In the example program below, the MDI child form is moved off the current viewing area of the screen. Windows® itself doesn't care where you place the window; and, to your user, it appears as if the window has been hidden.
+
+Example Program
+This program shows how you can temporarily hide an MDI child form in your Visual Basic® application. Run the program by pressing the F5 function key. The MDI child window is visible on the screen. Click the mouse on the main form. The MDI child window disappears from view. Double-click the main form and the MDI child form is again visible on the screen. 
+
+Create a new project in Visual Basic. Form1 is created by default. Set the following properties for Form1: 
+BorderStyle = 1-Fixed Single
+Height = 1140
+Left = 2220
+Top = 3030
+Width = 4605 
+
+From the Insert menu, select MDI Form. MDIForm1 is created by default. 
+From the Insert menu, select Form. Form2 is created by default. Set the form's MDIChild property to True. 
+Add the following code to the Click event for MDIForm: 
+Private Sub MDIForm_Click()
+Form1.Move -(2 * Form1.Width), -(2 * Form1.Height)
+End Sub
+
+Add the following code to the DblClick event for MDIForm: 
+Private Sub MDIForm_DblClick()
+Form1.Move 2220, 3030, 4605, 1140
+End Sub
+
+Add the following code to the Form_Load event for MDIForm: 
+Private Sub 
+MDIForm_Load()
+    Form1.Show
+    Form2.Show
+End Sub
+

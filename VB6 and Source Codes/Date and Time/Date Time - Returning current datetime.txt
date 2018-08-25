@@ -1,0 +1,8 @@
+'Description: Returns current time and date
+
+'Place the following code in a Form_Load()
+
+appdate = date
+apptime = time
+nl = chr$(10) + chr$(13)
+label1.caption = "Current Time : " & apptime & nl & "Todays Date : " & appdate

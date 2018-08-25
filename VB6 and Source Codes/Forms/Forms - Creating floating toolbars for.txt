@@ -1,0 +1,9 @@
+'Description: Use this code to create a toolbar that floats only
+'             within your application.
+
+'declare Function SetWindowWord Lib "User32" (ByVal hWnd as Long, ByVal _
+ nIndex as long,  ByVal nNewWord as long) as long
+
+'Place the following code in Form_Load() of toolbar form. 
+'Change MainForm to your app's Main Form
+SetWindowWord Me.hWnd, -8, MainForm.hWnd

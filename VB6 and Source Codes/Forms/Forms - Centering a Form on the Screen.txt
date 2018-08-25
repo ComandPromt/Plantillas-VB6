@@ -1,0 +1,34 @@
+Tip 157: Centering a Form on the Screen
+December 5, 1995
+
+Abstract
+This article explains how to center forms on the screen in your Microsoft® Visual Basic® application.
+
+Using the Height and Width Properties to Center Forms
+You can add visual appeal to your Microsoft® Visual Basic® application by creating well-designed forms. One such enhancement is the ability to center your forms both horizontally and vertically on the screen.
+
+Every form created in Visual Basic is set to a certain default size. You can change the size of the form, at both design time and run time, by changing the form's Height and Width properties.
+
+In addition, you can use the Height and Width properties of the form to physically center the form on the screen. Like forms, the screen has Height and Width properties, but these are not normally changed.
+
+To center a form horizontally on the screen, you need to calculate the difference between the width of the screen and the width of the form, and then divide this result by two. This gives you the horizontal position for the form.
+
+Likewise, to center a form vertically on the screen, you calculate the difference between the height of the screen and the height of the form, and then divide the result by two. This gives you the vertical position for the form.
+
+Once you have calculated where on the screen the form should be placed, you use the Move method to position the form in the center of the screen.
+
+Example Program
+This program shows how to center a form on the screen. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    CenterForm Form1
+End Sub
+
+Create a new subroutine called CenterForm. Add the following code to this subroutine: 
+Sub CenterForm(frm As Form)
+    frm.Move (Screen.Width - frm.Width) \2, (Screen.Height - frm.Height) \2
+End Sub
+
+Run the example program by pressing F5. Form1 appears in the center of the screen.

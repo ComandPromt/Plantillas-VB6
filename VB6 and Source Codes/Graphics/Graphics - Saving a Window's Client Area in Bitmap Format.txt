@@ -1,0 +1,100 @@
+Tip 98: Saving a Window's Client Area in Bitmap Format
+May 29, 1995
+
+Abstract
+You may need to create a bitmap (.BMP) image file that contains a window's client area. This article explains how to save a window's client area to disk in a bitmap image file format.
+
+Saving Bitmap Images to Disk
+You can save the contents of a window to a disk file in bitmap format by retrieving the target window's rectangle area and then using several Windows® application programming interface (API) functions to save that image to a device context such as a Picture Box control.
+
+The GetWindowRect function can be used to retrieve the bounding rectangle of a window or form. This rectangle includes the window's borders, title bars, and other attributes associated with a window. The Declare statement for the GetWindowRect function is as follows:
+
+Private Declare Sub GetWindowRect Lib "User" (ByVal hWnd As Integer, lpRect 
+  As RECT)
+
+The GetWindowRect function takes two arguments: an integer value containing the window's handle and a pointer to a RECT rectangle structure. The RECT structure will contain the dimensions of the window's rectangle area after the function is called.
+
+The BitBlt function uses the rectangle that contains the image you want to save to disk to copy the image from one device context to another. In this case, BitBlt is used to copy the window's client area to the Picture Box control. Then the Save As dialog box is used to save the contents of the Picture Box to disk as a .BMP file.
+
+Example Program
+This program shows how to save the client area of a form or window and save it as a .BMP file. 
+
+Create a new project in Visual Basic®. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Private Declare Function GetActiveWindow Lib "User" () As Integer
+Private Declare Function GetWindowDC Lib "User" (ByVal hWnd As Integer) 
+   As Integer
+Private Declare Sub GetWindowRect Lib "User" (ByVal hWnd As Integer, lpRect 
+   As RECT)
+Private Declare Function ReleaseDC Lib "User" (ByVal hWnd As Integer, ByVal hDC 
+   As Integer) As Integer
+Private Declare Function BitBlt% Lib "GDI" (ByVal hDestDC%, ByVal X%, ByVal Y%, 
+   ByVal nWidth%, ByVal nHeight%, ByVal hSrcDC%, ByVal XSrc%, ByVal YSrc%, ByVal 
+   dwRop&)
+Const SRCCOPY = &HCC0020
+
+From the Insert menu, select Form to create a second form. Form2 is created by default. Set its Picture property to "C:\WINDOWS\ARCHES.BMP". 
+From the Insert menu, select Module to create a BASIC module. Module1.Bas is created by default. 
+Add the following Type structure to Module1.Bas: 
+Type RECT
+    Left As Integer
+    Top As Integer
+    Right As Integer
+    Bottom As Integer
+End Type
+
+Add a Timer control to Form1. Timer1 is created by default. 
+Add a Picture Box control to Form1. Picture1 is created by default. Set its AutoRedraw property to True. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    SaveToPicture
+End Sub
+
+Create a new function called SaveToPicture. Add the following code to this function: 
+Sub SaveToPicture()
+    Dim hDCCur As Long
+    Dim hWndCur As Long
+    Dim HWndOld As Long
+    Dim Tim As Double
+    Dim ThisRect As RECT
+    Dim DX As Long
+    Dim DY As Long
+    
+    HWndOld = GetActiveWindow()
+    Form2.Show
+    hWndCur = Form2.hWnd
+    Tim = Timer + 0.5
+    
+    Do
+        DoEvents
+    Loop Until Timer >= Tim
+        
+    hDCCur = GetWindowDC(hWndCur)
+    Call GetWindowRect(hWndCur, ThisRect)
+    DX = ThisRect.Right - ThisRect.Left + 2: DY = ThisRect.Bottom - ThisRect.Top 
+        + 2
+    
+    With Picture1
+        .Width = Screen.TwipsPerPixelX * DX
+        .Height = Screen.TwipsPerPixelY * DY
+        Call BitBlt(.hDC, 0, 0, DX, DY, hDCCur, 0, 0, SRCCOPY)
+        .Picture = .Image
+    End With
+    
+    Call ReleaseDC(hWndCur, hDCCur)
+    Form2.Hide
+    
+    CommonDialog1.DefaultExt = "BMP"
+    CommonDialog1.DialogTitle = "Save Window As"
+    CommonDialog1.FileName = "*.BMP"
+    CommonDialog1.Action = 2  
+    
+    If CommonDialog1.FileName <> Empty Then
+        SavePicture Picture1.Picture, CommonDialog1.FileName
+    End If
+End Sub
+
+Add a Common Dialog control to Form1. CommonDialog1 is created by default. 
+Run this program by pressing the F5 function key. Click once on the command button. The ARCHES.BMP picture is displayed on Form2. Next, the Save File As dialog box pops up on the screen. Type a filename for the .BMP file and Visual Basic will save Form2's window (which contains the ARCHES.BMP picture) to a new bitmap file.
+

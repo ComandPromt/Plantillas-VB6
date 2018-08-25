@@ -1,0 +1,13 @@
+'Description: Displays a two frame animation using a timer
+
+'Place code in timer and set interval as needed
+
+Static Choice As Integer
+'Uses 3 picture boxes.
+'Picture1 - visible display   Picture2&3 - pictures
+If Choice Then 
+    Picture1.Picture = Picture2.Picture 
+Else   
+    Picture1.Picture = Picture3.Picture 
+End If
+Choice = Not Choice

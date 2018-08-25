@@ -1,0 +1,19 @@
+'Description: Unloads an application properly ensuring restoration of resources
+
+'Place the following code in a Form_Unload()
+
+Dim i as integer
+While forms.Count > 1
+    ' Find first form besides "me" to unload
+    i = 0
+
+    While forms(i).Caption = Me.Caption
+         i = i + 1
+    Wend
+
+    Unload forms(i)
+Wend
+
+' Last thing to be done...
+Unload Me
+End

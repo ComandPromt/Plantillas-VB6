@@ -1,0 +1,15 @@
+'Description: Creates a menu system on the active form
+
+'Place the following code in under a command button or in a menu, etc...
+
+Dim currentform As Object
+Set currentform = gobjIDEAppInst.ActiveProject.ActiveForm
+Dim menufile As Object
+Dim file As Object
+
+Set menufile = currentform.AddMenuTemplate("menufile", Nothing)
+menufile.Properties("Caption").Value = "&File"
+Set file = currentform.AddMenuTemplate("file", menufile)
+file.Properties("Caption").Value = "&New"
+file.Properties("Index").Value = 0
+'the index value (they must be in order!)

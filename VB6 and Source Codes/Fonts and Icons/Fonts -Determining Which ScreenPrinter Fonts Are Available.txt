@@ -1,0 +1,43 @@
+Tip 189: Determining Which Screen and Printer Fonts Are Available
+December 5, 1995
+
+Abstract
+When displaying text in a Microsoft® Visual Basic® application, you may want to specify which fonts are assigned to the text on the screen and the text sent to the printer. This article explains how you can retrieve a list of screen fonts and a list of printer fonts currently installed on your computer system.
+
+Retrieving Lists of Installed Screen and Printer Fonts
+The Fonts collection provided in Microsoft® Visual Basic® is a list of the names of all fonts installed in the Microsoft Windows® operating system. You can retrieve a specific font by specifying an index value with a statement such as:
+
+X$ = Screen.Fonts(2)
+
+Note that you cannot modify the Fonts property of an object but can only ask which font is currently being used.
+
+The Fonts collection exists for both the Screen object and the Printer object, which both have a FontCount property. The FontCount property indicates exactly how many fonts for that particular object are available.
+
+You can create a list of all available fonts by interrogating the items contained in the Fonts collection. In the example program below, a For-Next loop retrieves each font's name from the Fonts collection. The routine ends when the maximum number of installed fonts (FontCount - 1) has been reached.
+
+Example Program
+This program shows how to retrieve a list of all printer and screen fonts installed in the computer system. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a List Box control to Form1. List1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    List1.Clear
+    Dim X As Integer
+    For X = 0 To Printer.FontCount - 1
+        List1.AddItem Printer.Fonts(X)
+    Next X
+End Sub
+
+Add a second Command Button control to Form1. Command2 is created by default. 
+Add the following code to the Click event for Command2: 
+Private Sub Command2_Click()
+    List1.Clear
+    Dim X As Integer
+    For X = 0 To Screen.FontCount - 1
+        List1.AddItem Screen.Fonts(X)
+    Next X
+End Sub
+
+Run the example program by pressing F5. Click the first Command Button control. A list of all printer fonts appears in the List Box control. Click the second Command Button control. A list of all screen fonts appears in the List Box control.

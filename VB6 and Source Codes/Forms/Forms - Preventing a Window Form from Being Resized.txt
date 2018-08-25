@@ -1,0 +1,146 @@
+Tip 54: Preventing a Window Form from Being Resized
+Created: April 10, 1995
+
+Abstract
+In many Windows®-based applications, the user can resize a window by dragging one of the window's borders to a new position. This article will tell you how to prevent a form from being resized. You can also modify the example program so that it will allow the user to resize the form only to a certain size.
+
+Using Get/SetWindowPlacement to Size a Form
+In a Visual Basic® application, you can use the Windows® application programming interface (API) GetWindowPlacement and SetWindowPlacement functions to restrict a form's size. Each time Visual Basic loads a form or the form is resized by the user, the Resize event is triggered. By including code in the Resize event, you can prevent a form from being resized smaller, larger, or at all.
+
+The GetWindowPlacement function returns the specified window's current location, visibility status, and its minimized and maximized positions. The SetWindowPlacement function sets the specified window's current location, visibility status, and its minimized and maximized positions. Both functions use the same type structures and arguments.
+
+To declare these two functions within your program, include the following Declare statements in the Global Module or General Declarations section of your application's form (note that each Declare statement must be typed as one single line of text):
+
+Declare Sub GetWindowPlacement Lib "User" (ByVal hWnd As Integer, lpWnd
+   As WINDOWPLACEMENT)
+
+Declare Function SetWindowPlacement Lib "User" (ByVal hWnd As Integer, lpWndPl 
+   As WINDOWPLACEMENT) As Integer
+
+The GetWindowPlacement or SetWindowPlacement function must be called with two arguments: The hWnd argument must contain the handle of the window that you want to retrieve information for; the lpWndPl argument is a WINDOWPLACEMENT structure that will hold the window's information.
+
+The WINDOWPLACEMENT structure uses the RECT and POINTAPI structures as well, and is defined as follows:
+
+Type WINDOWPLACEMENT    '22 bytes
+  Length As Integer
+  Flags As Integer
+  ShowCmd As Integer
+  PtMinPosition As POINTAPI
+  PtMaxPosition As POINTAPI
+  RcNormalPosition As RECT
+End Type
+
+The RECT structure, which describes the coordinates of a rectangle, is defined as follows:
+
+Type RECT       '8 bytes
+  Left As Integer
+  Top As Integer
+  Right As Integer
+  Bottom As Integer
+End Type
+
+The values in the RECT structure represent the position of the window, in screen coordinates.
+
+And, finally, the POINTAPI structure is defined as follows:
+
+Type POINTAPI   '4 bytes
+  X As Integer
+  Y As Integer
+End Type
+
+The following table describes each field in the WINDOWPLACEMENT structure.
+
+Length An integer value that must be set to 22, the length of this structure. 
+Flags An integer value containing either WPF_SETMINPOSITION (the PtMinPosition specifies the X,Y location of the window when minimized) or WPF_RESTORETOMAXIMIZED (the SW_SHOWMINIMIZED constant must be specified in the ShowCmd parameter; it indicates the window should be maximized the next time it is restored). 
+ShowCmd An integer value that describes the visibility flags. 
+PtMinPosition A POINTAPI structure containing the X,Y location of the window when it is minimized. 
+PtMaxPosition A POINTAPI structure containing the X,Y location of the window when it is maximized. 
+RcNormalPosition A RECT structure containing the position of the window when it is restored (set to its normal size). 
+
+After we call the GetWindowPlacement function, we can retrieve the window's current size and save these values in variables for later use in our application.
+
+Because we want to prevent the user from resizing a form, we insert code in the form's resize event. This code uses the GetWindowPlacement function to retrieve the form's current size. If the window's size is not the same as it was when our program was first executed, we call SetWindowPlacement, which sets the window's size back to its original coordinates. This function has the same arguments as the GetWindowPlacement function.
+
+Example Program
+The example program below uses the GetWindowPlacement and SetWindowPlacement functions to prevent the form from being resized. You can optionally add code to allow the window to be resized only to a specific size, if desired. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the general declarations section of Form1: 
+Dim lpRect As RECT
+  Dim lpWnd As WINDOWPLACEMENT
+  Dim nPoint As POINTAPI
+  Dim lpRect2 As RECT
+  Dim lpWnd2 As WINDOWPLACEMENT
+  Dim nPoint2 As POINTAPI
+  Dim lpWndPl As WINDOWPLACEMENT
+  Dim X As Integer
+  Dim FormWidth As Integer
+  Dim FormHeight As Integer
+  Dim FormWidth2 As Integer
+  Dim FormHeight2 As Integer
+
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+  'Get the form's current size and position.
+  lpWnd.Length = 22   'set length of lpWnd first!
+  
+  Call GetWindowPlacement(Form1.hWnd, lpWnd)
+  FormWidth = lpWnd.RcNormalPosition.Right - lpWnd.RcNormalPosition.Left
+  FormHeight = lpWnd.RcNormalPosition.Bottom - lpWnd.RcNormalPosition.Top
+End Sub
+
+Add the following code to the Form_Resize event for Form1: 
+Sub Form_Resize()
+  lpWnd2.Length = 22   'set length of lpWnd2 first!
+  Call GetWindowPlacement(Form1.hWnd, lpWnd2)
+  FormWidth2 = lpWnd2.RcNormalPosition.Right - lpWnd2.RcNormalPosition.Left
+  FormHeight2 = lpWnd2.RcNormalPosition.Bottom - lpWnd2.RcNormalPosition.Top
+  
+  If FormWidth <> FormWidth2 Then
+      GoTo NoWidthChange
+  End If
+  If FormHeight <> FormHeight2 Then
+      GoTo NoHeightChange
+  End If
+    
+  Exit Sub
+'Do not allow form's width or height to be changed. Reset to original values.
+
+NoWidthChange:
+  X = SetWindowPlacement(Form1.hWnd, lpWnd)
+  Exit Sub
+NoHeightChange:
+  X = SetWindowPlacement(Form1.hWnd, lpWnd)
+  
+End Sub
+
+Add a new BAS module to the project. Module1.Bas is created by default. 
+Add the following Declare statements and type structures to Module1.Bas (note that each Declare statement should be typed as a single line of text): 
+Declare Sub GetWindowPlacement Lib "User" (ByVal hWnd As Integer, lpWnd
+   As WINDOWPLACEMENT)
+
+Declare Function SetWindowPlacement Lib "User" (ByVal hWnd As Integer, lpWndPl 
+   As WINDOWPLACEMENT) As Integer
+
+Type RECT       '8 bytes
+    Left As Integer
+    Top As Integer
+    Right As Integer
+    Bottom As Integer
+End Type
+
+Type POINTAPI   '4 bytes
+    X As Integer
+    Y As Integer
+End Type
+
+Type WINDOWPLACEMENT    '22 bytes
+    Length As Integer
+    Flags As Integer
+    ShowCmd As Integer
+    PtMinPosition As POINTAPI
+    PtMaxPosition As POINTAPI
+    RcNormalPosition As RECT
+End Type
+
+Run the program. Try to resize the form by clicking and dragging one of the form's borders. The form will immediately reset to its previous size. 

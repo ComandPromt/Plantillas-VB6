@@ -1,0 +1,69 @@
+Tip 102: Modifying a Child Window's Caption
+June 5, 1995
+
+Abstract
+This article explains how you can modify the caption displayed in a multiple-document interface (MDI) child window.
+
+Changing the Caption of Child Windows or Forms
+The Microsoft® Word for Windows® application allows you to have several documents loaded into memory at one time. These text files are displayed in multiple-document interface (MDI) child windows.
+
+An MDI child window automatically inherits the parent window's caption. This caption is inserted before the child window's own caption. As an example, if the parent window's caption is MDIForm1 and the child window's caption is Form1, the child window's caption, at run time, will be set to MDIForm1 - [Form1].
+
+In your Visual Basic® application, you can set the child form's caption to a NULL string so that only the caption of the parent window is displayed. However, the dash and bracket characters must also be deleted. Because the caption is displayed in the non-client area of a window, you must use a subclassing control to process the paint event yourself. The Message Blaster custom control can be used to modify a child window's caption.
+
+However, another solution can do the same thing without using a subclassing control. Just use Visual Basic's string functions (Mid and InStr) to remove the unwanted text from the child window's caption. This code, as shown below in the example program, is placed in the child form's Resize event. Each time Windows needs to repaint the window, the caption will be modified.
+
+Example Program
+This program shows how to modify a child window's caption text. Start this program by pressing F5. The original caption is "MDIForm1 - [Form1]".
+
+Start this program again after removing the Exit Sub statement from the Resize event (at the beginning of the code listing). The caption for the MDIForm1 window now reads, "MDIForm1 - Form1". The dash and bracket characters have been removed from the string. In addition, if you set Form1's caption to a NULL string, MDIForm1 will simply display its own caption—even when Form1 is minimized. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+From the Visual Basic Insert menu, select MDI Form. MDIForm1 is created by default. 
+Set Form1's MDIChild property to True. Modify the size of this form so that it is smaller than the MDIForm1 form. 
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Form1.Tag = Form1.Caption
+    MDIForm1.Tag = MDIForm1.Caption
+    Form1.WindowState = 2 'Maximize this form
+    
+End Sub
+
+Add the following code to the Resize event for Form1: 
+Private Sub Form_Resize()
+   ' Exit Sub
+    
+    Dim Cap As String
+    Dim Postn As Integer
+    
+    If (Form1.WindowState = 2) Then
+        Cap = MDIForm1.Caption
+        
+        MDIForm1.Caption = ""
+        Postn = InStr(Cap, "[")
+        If (Postn) Then
+            Mid(Cap, Postn, 1) = " "
+        End If
+        
+        Postn = InStr(Cap, "]")
+        If (Postn) Then
+            Mid(Cap, Postn, 1) = " "
+        End If
+        
+        Postn = InStr(Cap, "-")
+        If (Postn) Then
+            Mid(Cap, Postn, 1) = " "
+        End If
+        
+        Form1.Caption = ""
+        MDIForm1.Caption = Cap
+        
+    End If
+    
+    If (Form1.WindowState = 0) Then
+        Form1.Caption = Form1.Tag
+        MDIForm1.Caption = MDIForm1.Tag
+    End If
+    
+End Sub
+

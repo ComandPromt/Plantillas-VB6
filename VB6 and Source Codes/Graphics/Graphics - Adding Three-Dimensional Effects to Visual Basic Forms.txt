@@ -1,0 +1,60 @@
+Tip 99: Adding Three-Dimensional Effects to Visual Basic Forms
+May 29, 1995
+
+Abstract
+You can use functions in the CTL3D.DLL dynamic-link library to add a three-dimensional (3-D) look to any form. This article explains how to use this .DLL to create a 3-D form in a Visual Basic® application.
+
+Creating 3-D Forms
+The CTL3D.DLL dynamic-link library contains Windows® application programming interface (API) functions you can use to create three-dimensional (3-D) message boxes and common dialog boxes in your Visual Basic® applications. You can also use these functions to create a 3-D form. The form must have a fixed-double-style border. In addition, the form's MinButton and MaxButton properties must be set to False.
+
+As the example program below shows, the CTL3D.DLL functions can enable your Visual Basic application to display 3-D forms, message boxes, and common dialog boxes.
+
+Example Program
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+Form2.Show
+End Sub
+
+From the Insert menu, select Form to create a second form. Form2 is created by default. Set the form's BorderStyle property to 3-Fixed Double, the MinButton property to False, and the MaxButton property to False. 
+Add the following code to the Form_Load event for Form2: 
+Private Sub Form_Load()
+Call Ctl3DForm(Me)
+End Sub
+
+From the Insert menu, select Module to create a new module. Module1.Bas is created by default. 
+Add the following code to Module1.Bas (note that the Private lines must each be typed as a single line of code): 
+Const SWW_HPARENT = -8
+Const GWW_HINSTANCE = -6
+Const GWW_HPARENT = -8
+Const BUTTON_FACE = &H8000000F
+Const FIXED_DOUBLE = 3
+Const DS_MODALFRAME = &H80&
+Const GWL_STYLE = (-16)
+Private Declare Function Ctl3DSubClassDlgEx Lib "CTL3D.DLL" (ByVal hWnd As 
+   Integer, ByVal Flags As Long) As Integer
+Private Declare Function GetWindowLong Lib "User" (ByVal hWnd As Integer, ByVal 
+   nIndex As Integer) As Long
+Private Declare Function SetWindowLong Lib "User" (ByVal hWnd As Integer, ByVal 
+   nIndex As Integer, ByVal dwNewLong As Long) As Long
+Sub Ctl3DForm(frm As Form)
+    Dim hWnd As Integer
+    Dim Result As Integer
+    Dim lStyle As Long
+    Dim Flag1 As Long
+    
+    hWnd = frm.hWnd
+    Flag1 = 0
+    
+    If frm.BorderStyle = FIXED_DOUBLE Then
+        frm.BackColor = BUTTON_FACE
+        lStyle = GetWindowLong(hWnd, GWL_STYLE)
+        lStyle = lStyle Or DS_MODALFRAME
+        lStyle = SetWindowLong(hWnd, GWL_STYLE, lStyle)
+        Result = Ctl3DSubClassDlgEx(hWnd, Flag1)
+    End If
+End Sub
+
+Run the example program by pressing the F5 function key. Click the Command Button to display Form2. Form2 is modified so that it has a three-dimensional look.
+

@@ -1,0 +1,28 @@
+Tip 41: Creating Custom Bitmap Files
+Created: April 1, 1995
+
+Abstract
+When creating a new Visual Basic® application, you can add much to the program's appearance and ease of use if you include bitmap (.BMP) graphic files. Bitmap files are simply pictures or images saved in a special format. These bitmaps are available from many different sources, including commercial online services. This article explains how you can create your own custom bitmap files.
+
+Designing a Bitmap File from Scratch
+If you subscribe to any kind of online communications system, such as the Internet or Microsoft's own MSN (The Microsoft Network), you can probably find thousands of bitmap graphic files. These .BMP files can be included as part of your Visual Basic® application. However, you may not find just the right bitmap to use in your application. In this case, you can use a paint program, such as Windows® Paintbrush, to create your own bitmap, or create very simple textual bitmaps using the Picture Box control.
+
+Let's suppose that you want to design a bitmap that contains just the name of your Visual Basic program. By setting a string variable to the application's name and using the SavePicture statement, you can quickly create the desired bitmap file. The syntax for the SavePicture statement is:
+
+SavePicture Image, <filename>
+where <filename> is the name of the bitmap file you want to create and Image is the .BMP, .ICO, or .WMF graphic file format. In the example program below, we have drawn the text on the Picture Box control; therefore, to save it to disk with the SavePicture statement, we must also include the control's name in the command string.
+
+Example Program
+The following Visual Basic program uses the Print method to draw the text on the Picture Box and then saves the resulting image to disk as a bitmap file. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Picture Box control to Form1. Picture1 is created by default. Set its AutoRedraw property to True. 
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+     Dim Text As String
+     Text = "BMP Demo"
+     Picture1.Print Text
+     SavePicture Picture1.Image, "C:\DEMO.BMP"
+End Sub
+
+When you execute this program, Visual Basic will create a file called DEMO.BMP in the root directory of the default disk drive. The file is a bitmap image file containing the text "BMP Demo". This text is first printed on the Picture Box control, then the SavePicture statement is used to create the actual bitmap file.

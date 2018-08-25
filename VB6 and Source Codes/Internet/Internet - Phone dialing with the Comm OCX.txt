@@ -1,0 +1,12 @@
+'Description: Dials the phone and hanges up after message box prompt
+
+'Place the following code in a Form_Load()
+
+dim A$
+A$ = "555-1234"
+comOne.commport = 1
+comOne.settings = "9600, N, 8, 1"
+comOne.portopen = true
+comOne.output = "ATDT" & A$ & vbCr
+msgbox "Dialing " & A$
+comOne.portopen = false

@@ -1,0 +1,39 @@
+Tip 95: Deleting All Records from Every Table in a Microsoft Access Database
+May 22, 1995
+
+Abstract
+A Microsoft® Access® database may contain several tables, with each table holding many records. This article explains how to delete all records from all tables associated with a Microsoft Access database application.
+
+Removing Records from Tables
+There may be occasions when you need to delete all records in a table from a Microsoft® Access® database application. For instance, if you have an inventory program that contains a table of stock and another table of purchase orders, at the end of the year you would need to remove these records in preparation for the next year's information. To remove each record from both tables would be a tedious job.
+
+You can create an Access Basic function that will remove every record from the specified table. However, if your Microsoft Access database contains many tables, you need to process each individual table associated with that specific Microsoft Access database.
+
+Example Program
+This example Access program shows how to delete all records from every table in a Microsoft Access database application. Note that this function also processes those table names that include space characters in them (Inventory Year1, for example). 
+
+Open the sample database ORDERS.MDB. (This database can usually be found in the C:\ACCESS\SAMPAPPS directory.) 
+Note: The example program will permanently modify this Access database. Therefore, you should copy ORDERS.MDB to another directory and run this program on the temporary copy of ORDERS.MDB. 
+
+From the File menu, choose New, and select Module. 
+Enter the following code to create the DeleteAllRecords() function: 
+Function DeleteAllRecords ()
+Dim DB As Database
+Dim X As Integer
+Dim TDF As TableDef
+DoCmd SetWarnings False
+Set DB = CurrentDB()
+For X = 0 To DB.TableDefs.Count - 1
+Set TDF = DB.TableDefs(X)
+If (TDF.Attributes And DB_SYSTEMOBJECT) = 0 Then
+DB.Execute "Delete * From [" & DB.TableDefs(X).Name & "]"
+End If
+Next X
+DoCmd SetWarnings True
+End Function
+
+From the View menu, choose Immediate Window. 
+In the Immediate Window, type the following line and press the ENTER key: 
+?DeleteAllRecords()
+
+This statement will execute the DeleteAllRecords() function. After a short time, all records will be deleted from each table included in the ORDERS.MDB database. 

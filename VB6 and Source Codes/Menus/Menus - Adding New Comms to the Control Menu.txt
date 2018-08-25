@@ -1,0 +1,95 @@
+Tip 188: Adding New Commands to the Control Menu
+December 5, 1995
+
+Abstract
+This article explains how to add a new command to your Microsoft® Visual Basic® Control menu.
+
+Adding New Commands
+When developing a Microsoft® Visual Basic® application, you may need to customize the application's Control menu. For example, you may want to add an Always On Top command to the Control menu that gives the user the ability to have the application window always displayed on top of other windows.
+
+To add a new command to the Control menu, you need to perform several steps. First, you need to use the Microsoft Windows® application programming interface (API) GetSystemMenu function to retrieve the handle of the Control menu. (Note that this tip applies to Windows 95 only.) The following code is the Declare statement for this function:
+
+Private Declare Function GetSystemMenu Lib "user32" 
+   (ByVal hWnd As Long, ByVal bRevert As Long) As Long
+
+The GetSystemMenu function requires two arguments. The hWnd argument is the handle of the window that owns the Control menu. In this case, this argument is the handle of your application's window. The bRevert argument tells the GetSystemMenu function which of two actions you want to perform.
+
+If the bRevert argument is set to True, the GetSystemMenu function will reset the Control menu back to its original state (the Windows 95 default). Other applications, as well as your own, may have previously modified the Control menu.
+
+If the bRevert argument is set to False, the GetSystemMenu function will return the handle of the current Control menu. This may or may not be the original Control menu (the Windows 95 default).
+
+In the example program below, you want to add a new command to the Control menu. Therefore, you run the GetSystemMenu function with the bRevert argument set to False.
+
+Once you have the handle of the Control menu, you need to call the Windows API AppendMenu function. The following code is the Declare statement for this function:
+
+Private Declare Function AppendMenu Lib "user32" Alias "AppendMenuA" 
+   (ByVal hMenu As Long, ByVal wFlags As Long, ByVal wIDNewItem 
+   As Long, ByVal lpNewItem As String) As Long
+
+You can use the AppendMenu function to modify an existing menu's structure. You can also use this function to modify the appearance of a new menu command. In this case, however, you just want the command to appear as normal (that is, a textual description).
+
+The AppendMenu function requires the following four arguments:
+
+hMenu A long value containing the handle of the menu you want to modify. 
+wFlags A long value that consists of one or more of the following flags that define the appearance and behavior of the new menu command: 
+  MF_BITMAP A bitmap is used as the command. The lpNewItem argument must contain the bitmap's handle. 
+  MF_CHECKED A check mark is placed next to the command. 
+  MF_DISABLED The command is disabled but not grayed. 
+  MF_ENABLED The command is enabled. 
+  MF_GRAYED The command is grayed. 
+  MF_MENUBARBREAK The command is placed on a new line. If this is a pop-up menu, the new command is placed in a new column and a vertical line separates the columns. 
+  MF_MENUBREAK The command is placed on a new line. If this is a pop-up menu, the new command is placed in a new column. 
+  MF_OWNERDRAW The command is an owner-drawn command. 
+  MF_POPUP The command is a pop-up command. Selecting this command displays a pop-up menu. The pop-up menu's handle must be in the wIDNewItem argument. 
+  MF_SEPARATOR A horizontal dividing line is drawn in a pop-up menu only. 
+  MF_STRING The command is a string. The lpNewItem argument must contain the string itself. 
+  MF_UNCHECKED A check mark is not placed next to the command. This is the default setting. 
+wIDNewItem A long value containing the new menu command's identifier. If the wFlags argument is set to MF_POPUP, this argument contains the pop-up menu's handle. 
+lpNewItem A string containing the content of the new menu command according to the wFlags argument, as follows: 
+  MF_BITMAP A bitmap handle. 
+  MF_OWNERDRAW A 32-bit value specifying an application's appearance and behavior instructions for the owner-drawn command. 
+  MF_STRING The command's text. 
+
+In the example program below, you use the AppendMenu function to add a new command called "NewMenu" to the Control menu. However, in order to perform some action when a user clicks NewMenu, you need to determine when the application receives a Click event for that new menu command.
+
+To do this, you need to use a third-party subclassing control such as Message Blaster. The application's window will receive a WM_SYSCOMMAND message each time the user clicks a command on the Control menu. The subclassing control traps each WM_SYSCOMMAND received. If the command corresponds to the new command (identified as SC_NEWMENU), you can perform your own function. In all other cases, Windows 95 will process the menu selection as normal.
+
+Example Program
+This program shows how to add a new command to your application's Control menu. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Private Declare Function AppendMenu Lib "user32" Alias "AppendMenuA" 
+   (ByVal hMenu As Long, ByVal wFlags As Long, ByVal wIDNewItem As Long, 
+   ByVal lpNewItem As String) As Long
+Private Declare Function GetSystemMenu Lib "user32" (ByVal hWnd As Long, ByVal 
+   bRevert As Long) As Long
+Const WM_SYSCOMMAND = &H112
+Const MF_STRING = &H0
+Const SC_NEWMENU = 1
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Dim hw As Long
+    Dim hMenu As Long
+
+    hw = Me.hWnd
+    hMenu = GetSystemMenu(hw, False)
+
+    If AppendMenu(hMenu, MF_STRING, SC_NEWMENU, "&NewMenu") Then
+        MsgBlaster1.hWndTarget = hw
+        MsgBlaster1.AddMessage WM_SYSCOMMAND, POSTPROCESS
+    End If
+
+End Sub
+
+Add a Message Blaster control to Form1. MsgBlaster1 is created by default. 
+Add the following code to the MsgBlaster1_Message event: 
+Private Sub MsgBlaster1_Message(ByVal hWnd As Long, ByVal Msg As Long, wParam As 
+   Long, lParam As Long, nPassage As Integer, lReturnValue As Long)
+    If (wParam = SC_NEWMENU) Then
+        MsgBox "NewMenu menu command selected"
+    End If
+End Sub
+
+Run the example program by pressing F5. Form1 appears on the screen. Click the form's Control menu. The new command, NewMenu, is shown on the Control menu. When you click this new command, a message box appears indicating that NewMenu was selected.

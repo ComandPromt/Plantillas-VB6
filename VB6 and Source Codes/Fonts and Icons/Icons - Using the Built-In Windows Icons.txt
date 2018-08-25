@@ -1,0 +1,59 @@
+Tip 101: Using the Built-In Windows Icons
+May 29, 1995
+
+Abstract
+There are several icons built into the Windows® operating system that are used by Windows when displaying message boxes. This article explains how to use the built-in icons in your own Visual Basic® applications.
+
+Displaying the Built-In Windows Icons
+In a Visual Basic® application, you can use the icons built into the Windows® operating system. These include the hand, exclamation point, question mark, asterisk, and application icons. The CONSTANT.TXT file defines these as follows:
+
+Const IDI_APPLICATION = 32512&
+Const IDI_HAND = 32513&
+Const IDI_QUESTION = 32514&
+Const IDI_EXCLAMATION = 32515&
+Const IDI_ASTERISK = 32516&
+
+Before you can use one of these icons in your Visual Basic application, you must load the icon using the Windows application programming interface (API) LoadIcon function. This function loads a specified icon into the device context. In the example program below, we want to display the icon in a Picture Box control. Therefore, we must first retrieve a device context for the Picture Box control.
+
+To retrieve a device context for a window, you use the Windows application programming interface (API) GetWindowDC function, as follows:
+
+Private Declare Function GetWindowDC Lib "User" (ByVal hWnd As Integer) 
+   As Integer
+
+(Note that this statement must be typed as a single line of code.)
+
+This function requires only one argument—an integer value containing the window's handle. The device context's handle is returned as an integer value or, if the function was not successful, a value of zero is returned.
+
+When you have finished using the device context you must remember to release the device context. This can be done by calling the ReleaseDC function, passing it the handle of the device context that you want to release.
+
+After retrieving the device context, you can call the LoadIcon function to display the specified icon in the device context. Because this is a built-in Windows icon, we set the first argument to a value of zero. The second argument to the LoadIcon function is a constant value telling the function which icon you want to load.
+
+Example Program
+This program shows how to use the built-in icons used by the Windows operating system. This program displays the exclamation icon in the Picture Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Private Declare Function DrawIcon Lib "User" (ByVal hDC As Integer, ByVal X 
+   As Integer, ByVal y As Integer, ByVal hIcon As Integer) As Integer
+Private Declare Function LoadIcon Lib "User" (ByVal hInstance As Integer, ByVal 
+   lpIconName As Any) As Integer
+Private Declare Function GetWindowDC Lib "User" (ByVal hWnd As Integer) As 
+   Integer
+Private Declare Function ReleaseDC Lib "User" (ByVal hWnd As Integer, ByVal hDC 
+   As Integer) As Integer
+Const IDI_EXCLAMATION = 32515&
+
+Add a Picture Box control to Form1. Picture1 is created by default. Set its AutoRedraw property to True. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim hDCCur As Long
+    Dim hIcon As Integer
+    Dim X As Integer
+    
+    hDCCur = GetWindowDC(Picture1.hWnd)
+    hIcon = LoadIcon(0, IDI_EXCLAMATION)
+    X = DrawIcon(hDCCur, 0, 0, hIcon)
+    Call ReleaseDC(Picture1.hWnd, hDCCur)
+End Sub
+

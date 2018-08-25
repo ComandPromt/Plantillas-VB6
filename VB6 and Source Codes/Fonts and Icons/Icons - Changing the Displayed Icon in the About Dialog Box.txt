@@ -1,0 +1,40 @@
+Tip 208: Changing the Displayed Icon in the About Dialog Box in Visual Basic 4.0
+February 28, 1996
+
+Abstract
+In Microsoft® Visual Basic® version 4.0, the Microsoft Windows® application programming interface (API) ShellAbout function lets you display the standard Microsoft Windows About dialog box seen in applications such as Notepad and Explorer. This article explains how to use an icon other than the default Microsoft Windows icon that appears in the About dialog box of your Visual Basic 4.0 application.
+
+Selecting Icons for the ShellAbout Function
+Many Microsoft® Windows® applications, such as Notepad and Explorer, display a standard About dialog box. This About dialog box displays information such as the name of the application, a copyright notice, system information, or anything else the developer wants to include in the window. Usually, the About dialog box is accessed from the application's menu system. You can use the Microsoft Windows application programming interface (API) ShellAbout function to display an About dialog box in your Microsoft Visual Basic® version 4.0 application.
+
+To use the ShellAbout function, you must include the following Declare statement in your Visual Basic project:
+
+Private Declare Function ShellAbout Lib "shell32.dll" Alias "ShellAboutA" 
+   (ByVal hwnd As Long, ByVal szApp As String, ByVal szOtherStuff As String, 
+   ByVal hIcon As Long) As Long
+
+As you can see, the ShellAbout function requires four arguments, as follows:
+
+hWnd A long value containing the window handle. 
+szApp A string containing the text that appears in the title bar of the About dialog box. 
+szOtherStuff A string containing the text that appears after the version and copyright information. 
+hIcon A long value containing the handle of an icon resource. When set to NULL, the ShellAbout function displays the default Microsoft Windows icon. 
+
+You can tell the ShellAbout function to display your About dialog box with an icon of your choice rather than having the function use the Microsoft Windows icon. You can do this by using the icon that is assigned to your Visual Basic 4.0 application, for example. Then, when you call the ShellAbout function, you specify the handle of that icon (Me.Icon) as the hIcon argument to the function.
+
+Example Program
+This program shows how to change the icon that appears in the About dialog box when using the ShellAbout function to create the dialog box. 
+
+Create a new project in Visual Basic. Form1 is created by default. Set the Icon property of Form1 to an icon of your choice. 
+Add the following Declare statement to the General Declarations section of Form1 (note that this Declare statement must be typed as a single line of code): 
+Private Declare Function ShellAbout Lib "shell32.dll" Alias "ShellAboutA" 
+   (ByVal hwnd As Long, ByVal szApp As String, ByVal szOtherStuff As String, 
+   ByVal hIcon As Long) As Long
+
+Add the following code to the Click event for Form1: 
+Private Sub Form_Click()
+    Call ShellAbout(Me.hwnd, App.Title, "My App's Details.", Me.Icon)
+End Sub
+
+Run the example program by pressing Click the form to display the standard About dialog box. Notice that the icon appearing in the About dialog box is the icon you assigned to Form1 at design time.
+

@@ -1,0 +1,31 @@
+Abstract
+Many Windows®-based applications can be written so that, when executed, they are shown on the desktop simply as an icon. These type of programs usually perform some kind of background task and are never maximized because no user input is required. Double-clicking an icon automatically tells Windows to maximize the application's window to a full-screen display. This article tells you how to create iconized applications in Visual Basic® that cannot be maximized.
+
+Terminating Iconized Applications
+When running an application as an icon, you must intercept the form's resize event to prevent the user from maximizing its window. The WindowState property of a form controls how a form is displayed. WindowState provides three possibilities: 
+
+The window is displayed as normal (the default setting). This is the size you made the window when designing the application in Visual Basic®. 
+The window is minimized. It is displayed as an icon. 
+The window is maximized. It occupies the entire screen. 
+If we want to make a program appear as an icon on the desktop, we set the WindowState property to a value of 1. This should be done in the Form_Load event for the startup form in Visual Basic.
+
+When a user double-clicks on a program's icon, Windows® automatically sets its WindowState property to normal. The double-clicking triggers the Form_Resize event, which in turn maximizes the program's window. Because we don't want our program's window to be maximized at any time, we set the WindowState property to a value of 1 in the Form_Resize event. Every time our program is double-clicked, the WindowState property is always reset to "minimized." Thus, the program is never seen in a maximized state.
+
+Example Program
+The following program creates a Visual Basic application that is minimized to an icon when it is executed. To terminate the program, double-click its icon. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Form_Load event for Form1.Sub Form_Load(): 
+WindowState = 1
+End Sub
+
+Add the following code to the Form_Resize event for Form1: 
+Sub Form_Resize()
+If WindowState <> 1 Then
+WindowState = 1
+End
+End If
+End Sub
+
+From the Visual Basic File menu, select "Make EXE File" to create a stand-alone .EXE program file. 
+Next, execute the program from Program Manager's Run command. The program's icon will be displayed on the desktop. You cannot maximize this window by double-clicking the icon; that will cause the application to be terminated. 

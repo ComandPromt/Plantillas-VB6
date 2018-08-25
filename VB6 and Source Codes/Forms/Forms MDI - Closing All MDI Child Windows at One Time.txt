@@ -1,0 +1,44 @@
+Tip 79: Closing All MDI Child Windows at One Time
+May 8, 1995
+
+Abstract
+This article explains how you can simultaneously close all child windows of a running Visual Basic® application.
+
+Using the Count Property of MDI Forms
+The multiple document interface (MDI) feature of Visual Basic® allows you to create applications that have multiple forms within a single parent form. This allows you to use the multitasking functions of the Windows® operating system in your programs.
+
+The Windows Notepad is an example of an MDI application. You can open several text files at one time and move between each document with a click of the mouse.
+
+When you create a child form while your program is executing, you must also remember to close all the open child windows before your application terminates. Otherwise, you could cause some unforeseen problems with other applications.
+
+The count property of a control, such as a form, can be used to determine how many members of that particular collection exist. In this case, the collection refers to the child forms of the parent form. We can, therefore, determine how many child forms exist in our application program by executing a statement such as:
+
+X = Forms.Count
+
+After this statement executes, the variable X will contain the number of child forms that we have created. It is important to decrement this value by one because the count starts with the value of one, not zero. Once we know how many child forms we have created within our application program, we can use the TypeOf statement in a loop to close each child form that exists. The TypeOf statement is used to determine the type of object you are dealing with. In this case, we want to find out if the object is a form (Form1, the name of the child form).
+
+The final step to removing the child forms from the parent form is to use the Unload statement. Therefore, to remove all child forms from our program while it is running, we simply check each object in the form, making sure that it is indeed a child form of the MDI form, and execute an Unload statement to close the form.
+
+Example Program
+The following program shows how to close all child forms at one time. Run the program by pressing the F5 function key. The MDIForm1 form is displayed. Double-click the client area of MDIForm1 to create a child form (Form1). Do this until you have several child forms visible on the screen. Click the "Close Children" menu option to close all child windows. 
+
+Create a new project in Visual Basic. Form1 is created by default. Set the MDIChild property to True. 
+From Visual Basic's Insert menu, click "MDI Form" to create a Multiple Document Interface form. MDIForm1 is created by default. 
+Add the following code to the DblClick event for MDIForm1: 
+Private Sub MDIForm_DblClick()
+    Dim X As New Form1
+    X.Show
+End Sub
+
+From Visual Basic's Tools menu, click Menu Editor. Set the Caption field to "&Close Children" and the Name field to "mnuClose". 
+Add the following code to the mnuClose_Click event: 
+Private Sub mnuClose_Click()
+    Dim X As Integer
+    For X = (Forms.Count - 1) To 0 Step -1
+        If TypeOf Forms(X) Is Form1 Then
+            Unload Forms(X)
+        End If
+    Next X
+End Sub
+
+From Visual Basic's Tools menu, select Project Options. Set the StartUp Form to MDIForm1. 

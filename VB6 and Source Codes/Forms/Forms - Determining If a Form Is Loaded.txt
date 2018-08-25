@@ -1,0 +1,48 @@
+Tip 91: Determining If a Form Is Loaded
+May 22, 1995
+
+Abstract
+A Visual Basic® application may contain many different forms. This article presents a function that can be used to determine if a form is currently loaded into memory.
+
+Is the Form Loaded in Memory?
+Because a Visual Basic® application can contain several forms, you need to be able to determine if a form is actually loaded into memory. The function presented in the example program below tests to see if a form is loaded. This function will not load the form—it simply tests to see if it is already in memory.
+
+Example Program
+This program shows how to find out if a specific form is already loaded in a running Visual Basic application. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+From the Insert menu, select Form. Form2 is created by default. 
+From the Insert menu, select Form. Form3 is created by default. 
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+Form2.Show
+End Sub
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+Dim X As Integer
+X = IsFormLoaded(Form2)
+If X Then
+MsgBox "Form2 is loaded"
+End If
+X = IsFormLoaded(Form3)
+If X = False Then
+MsgBox "Form3 is not loaded"
+End If
+End Sub
+
+Create a new function called IsFormLoaded. Add the following code to this function: 
+Function IsFormLoaded(FormToCheck As Form) As Integer
+    Dim Y As Integer
+    
+    For Y = 0 To Forms.Count - 1
+        If Forms(Y) Is FormToCheck Then
+            IsFormLoaded = True
+            Exit Function
+        End If
+    Next
+    IsFormLoaded = False
+End Function
+
+When you run this program, click the Command Button. A message box will pop up on the screen displaying the "Form2 is loaded" message. Click the OK command button. A second message box is immediately shown displaying the "Form3 is not loaded" message.

@@ -1,0 +1,10 @@
+'Description: Example ConnectAddIn subroutine. 
+
+'Paste into class module
+
+'Sub ConnectAddIn(VBInst As VBIDE.Application)
+Set gobjIDEAppInst = VBInst
+Set AddInItems = VBInst.AddInMenu.MenuItems
+Set mymenu = AddInItems.Add("I've Created An Add-In!!!!")
+ConnectID = mymenu.ConnectEvents(Me)
+'End Sub

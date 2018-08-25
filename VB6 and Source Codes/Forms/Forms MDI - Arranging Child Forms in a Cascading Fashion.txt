@@ -1,0 +1,30 @@
+Tip 181: Arranging Child Forms in a Cascading Fashion
+December 5, 1995
+
+Abstract
+This article explains how to design your Microsoft® Visual Basic® application so that after the user closes one child form on the screen the remaining child forms are automatically cascaded.
+
+Using the Arrange Method to Cascade Forms
+When you design a Microsoft® Visual Basic® application in which one form contains several child forms, the user can selectively close a child form to remove it from the screen. However, when you close a child form in this manner, its space is still occupied in the multiple document interface (MDI) form. You can use the Arrange method to automatically cascade all remaining child forms each time a child form is closed or unloaded from memory.
+
+Example Program
+This program shows how to arrange child forms in a cascading format whenever child forms are loaded or unloaded. 
+
+Create a new project in Visual Basic. Form1 is created by default. Set its MDIChild property to True. Size the form so that it is relatively small in size. 
+Add the following code to the Unload event for Form1: 
+Private Sub Form_Unload(Cancel As Integer)
+    MDIForm1.Arrange 0
+End Sub
+
+From the Visual Basic Insert menu, select MDIForm to create an MDI form. MDIForm1 is created by default. 
+Add a menu to MDIForm1. From the Visual Basic Tools menu, select Menu Editor. Type the Caption as "&New Form" and the Name as NewForm. 
+Add the following code to the Click event for NewForm: 
+Private Sub NewForm_Click()
+    Static X
+    Dim Form As New Form1
+    X = X + 1
+    Form.Caption = "Child" & X
+    MDIForm1.Arrange 0
+End Sub
+
+Run the example program by pressing F5. Click several times on the New Form menu. Each time you click this menu entry, a new child form is created, with each form being named sequentially as Child1, Child2, and so on. When you click the Close button, the child form is unloaded, and the remaining child forms are arranged in a cascading fashion, with no blank positions where the unloaded child forms used to appear.

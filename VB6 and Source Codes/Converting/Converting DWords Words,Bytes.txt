@@ -1,0 +1,82 @@
+Tip 22: Converting DWords, Words, and Bytes
+Created: March 1, 1995
+
+Abstract
+You can write functions in Visual Basic® that split and combine DWords, Words, and Bytes. These functions can be used to do such things as taking two integer values and transferring them to a long integer value, where the first integer is the high word and the second integer is the low word.
+
+Conversion Routines for Visual Basic
+The seven functions listed below can be used to convert DWords, Words, and Bytes to other equivalent values. These routines can be used when calling Windows® application programming interface (API) functions that require specific parameters that Visual Basic® itself does not provide.
+
+Function HiByte(ByVal w As Integer) As Byte
+
+    If w And &H8000 Then
+        HiByte = &H80 Or ((w And &H7FFF) \ &HFF)
+    Else
+        HiByte = w \ 256
+    End If
+End Function
+
+Function HiWord(dw As Long) As Integer
+
+    If dw And &H80000000 Then
+        HiWord = (dw \ 65535) - 1
+    Else
+        HiWord = dw \ 65535
+    End If
+End Function
+
+Function LoByte(w As Integer) As Byte
+
+    LoByte = w And &HFF
+End Function
+
+Function LoWord(dw As Long) As Integer
+
+    If dw And &H8000& Then
+        LoWord = &H8000 Or (dw And &H7FFF&)
+    Else
+        LoWord = dw And &HFFFF&
+    End If
+End Function
+
+Function LShiftWord(ByVal w As Integer, ByVal c As Integer) As Integer
+
+    Dim dw As Long
+    dw = w * (2 ^ c)
+    If dw And &H8000& Then
+        LShiftWord = CInt(dw And &H7FFF&) Or &H8000
+    Else
+        LShiftWord = dw And &HFFFF&
+    End If
+End Function
+
+Function RShiftWord(ByVal w As Integer, ByVal c As Integer) As Integer
+
+    Dim dw As Long
+    If c = 0 Then
+        RShiftWord = w
+    Else
+        dw = w And &HFFFF&
+        dw = dw \ (2 ^ c)
+        RShiftWord = dw And &HFFFF&
+    End If
+End Function
+
+Function MakeWord(ByVal bHi As Byte, ByVal bLo As Byte) As Integer
+
+    If bHi And &H80 Then
+        MakeWord = (((bHi And &H7F) * 256) + bLo) Or &H8000
+    Else
+        MakeWord = (bHi * 256) + bLo
+    End If
+End Function
+
+Function MakeDWord(wHi As Integer, wLo As Integer) As Long
+
+    If wHi And &H8000& Then
+        MakeDWord = (((wHi And &H7FFF&) * 65536) Or (wLo And &HFFFF&)) _Or &H80000000
+    Else
+        MakeDWord = (wHi * 65535) + wLo
+    End If
+End Function
+

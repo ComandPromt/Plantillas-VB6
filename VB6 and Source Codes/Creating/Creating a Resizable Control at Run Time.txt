@@ -1,0 +1,58 @@
+Tip 119: Creating a Resizable Control at Run Time
+July 1, 1995
+
+Abstract
+You can add many different controls, such as Text Boxes, to your Microsoft® Visual Basic® forms. At design time, you can adjust the size and position of the control. This article explains how the user can modify the size of these controls at run time from within a Visual Basic application.
+
+Resizing Controls at Run Time
+When designing a Microsoft® Visual Basic® application, you simply add controls to your form as needed. For example, the Text Box control gives your program the features of a mini-word-processing program.
+
+The size of the control must be set at design time. However, by using two Microsoft Windows® application programming interface (API) functions (GetWindowLong and SetWindowLong), you can let your user resize a control such as a Text Box at run time.
+
+When you add a control such as a Text Box to your Visual Basic application, you are essentially creating a new window. Every window created under the Windows operating system has certain style attributes associated with it. For example, a Text Box control may have a window style of ES_MULTILINE. This tells Windows that this control is a multiline edit control.
+
+Normally, a Text Box control cannot be resized at run time. However, by changing the control's style attributes, the user will be able to adjust the physical size of the Text Box while your program is running.
+
+This is accomplished by calling the GetWindowLong and SetWindowLong functions. First, you call the GetWindowLong function to retrieve the window's current style attributes for the Text Box control. Next, you use the bitwise OR operator to set the WS_THICKFRAME attribute for the Text Box control. A window that has a WS_THICKFRAME attribute is drawn with a thick border around its perimeter. You can use this border to change the size of the window.
+
+The SetWindowLong function is then run, which tells Windows to modify the style attribute of the Text Box control.
+
+The final step is to anchor the newly sized Text Box so that its new position and size is registered on the underlying form. The SetWindowPos function accomplishes this task.
+
+Example Program
+This program shows how to create a resizable Text Box control at run time in Visual Basic. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Private Declare Function GetWindowLong Lib "User" (ByVal hWnd As Integer, ByVal
+   nIndex As Integer) As Long
+Private Declare Function SetWindowLong Lib "User" (ByVal hWnd As Integer, ByVal
+   nIndex As Integer, ByVal dwNewLong As Long) As Long
+Private Declare Sub SetWindowPos Lib "User" (ByVal hWnd As Integer, ByVal
+   hWndInsertAfter As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal CX
+   As Integer, ByVal CY As Integer, ByVal wFlags As Integer)
+Const SWP_NOSIZE = &H1
+Const SWP_NOZORDER = &H4
+Const SWP_NOMOVE = &H2
+Const SWP_DRAWFRAME = &H20
+Const GWL_STYLE = (-16)
+Const WS_THICKFRAME = &H40000
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    ResizeControl Text1, Form1
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. 
+Create a new function called ResizeControl. Add the following code to this function: 
+Function ResizeControl(ControlName As Control, FormName As Form)
+    Dim NewStyle As Long
+    NewStyle = GetWindowLong(ControlName.hWnd, GWL_STYLE)
+    NewStyle = NewStyle Or WS_THICKFRAME
+    NewStyle = SetWindowLong(Text1.hWnd, GWL_STYLE, NewStyle)
+    SetWindowPos ControlName.hWnd, FormName.hWnd, 0, 0, 0, 0, SWP_NOZORDER Or SWP_NOSIZE Or SWP_NOMOVE Or SWP_DRAWFRAME
+End Function
+
+Run the example program by pressing F5 Click the command button. You can now make the Text Box any size you want.
+

@@ -1,0 +1,6 @@
+Description: Determines screen resolution
+
+CR$ = Chr$(13) + Chr$(10)
+TWidth% = screen.Width \ screen.TwipsPerPixelX
+THeight% = screen.Height \ screen.TwipsPerPixelY
+MsgBox "Screen Resolution:" + CR$ + CR$ + Str$(TWidth%) + " x" + Str$(THeight%), 64, "Info"

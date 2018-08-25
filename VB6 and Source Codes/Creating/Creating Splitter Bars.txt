@@ -1,0 +1,83 @@
+Tip 61: Creating Splitter Bars
+Created: April 17, 1995
+
+Abstract
+When designing a Visual Basic® application, you may want to include code that allows the user to resize, for example, two Text Boxes by dragging and dropping a splitter bar. This article explains how to create a program that uses a splitter bar to enlarge or shrink the two Text Boxes to different sizes.
+
+Resizing Text Boxes with a Splitter Bar
+You can add both visual appeal and ease of use to a Visual Basic® application by including splitter bars. A splitter bar is a horizontal or vertical bar that the user clicks on to automatically resize a control, such as a Text Box, on a form. By using splitter bars, for instance, you can have two Text Boxes displayed on the application's window, one at the top of the form and the other at the bottom of the form. The splitter bar is positioned between the two text boxes. When the user drags the splitter bar (which is actually a Picture Box control) towards the top of the window, the first Text Box is made smaller and the second Text Box is made larger. Conversely, when the splitter bar is dragged towards the bottom of the window, the first Text Box grows in size vertically while the second Text Box shrinks in size vertically. This technique allows users to size the Text Box controls according to their own preferences, which also allows them to see more or less data in each individual control.
+
+The key to creating a splitter bar in a Visual Basic application is the DragDrop event. Almost every control supports the DragDrop event. Each time a control is dropped at a new location, the DragDrop event is triggered. When the DragDrop event is triggered, the target control that you want to manipulate must contain the code to do whatever it is you want to do. In our example program below, we want to resize the text boxes, therefore we set the DragDrop event to trigger the Resize event for each Text Box on the form.
+
+Each Text Box control is responsible for calling the Resize event of the program's main form, Form1. This Resize event causes Visual Basic to draw each Text Box control to its new size at its new position. This same technique can be applied to almost any other form or control except menus, timers, lines, and shapes.
+
+Example Program
+Create a new project in Visual Basic. Form1 is created by default. Set the following properties for Form1: 
+Height: 3735
+Left: 1470
+Top: 1320
+Width: 6720 
+
+Add the following code to the Resize event for Form1: 
+Sub Form_Resize()
+  Picture1.Left = 0
+  'Make sure the form is not minimized!
+  If Form1.ScaleHeight < Picture1.Height + 1 Then
+      Form1.Height = Form1.Height - Form1.ScaleHeight + Picture1.Height + 1
+  Else
+      If Form1.ScaleHeight < Picture1.Top + Picture1.Height Then
+          Picture1.Top = Form1.ScaleHeight - Picture1.Height - 1
+  End If
+
+  'Set Text1 to the Width and Height of form1
+  Text1.Width = Form1.ScaleWidth
+  Text1.Height = Form1.Picture1.Top
+
+  Picture1.Width = Form1.ScaleWidth
+
+  'Set Text2 to the Width and Height of Form1
+  Text2.Top = Picture1.Top + Picture1.Height
+  Text2.Width = Form1.ScaleWidth
+  Text2.Height = Form1.ScaleHeight - Picture1.Top - Picture1.Height
+  End If
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. Set the following properties for Text1: 
+Height: 1815
+Left: 0
+Top: 0
+Width: 6615 
+
+Add the following code to the DragDrop event for Text1: 
+Sub Text1_DragDrop(Source As Control, X As Single, Y As Single)
+  If Y > 0 Then
+      Picture1.Top = Y    'Move splitter bar.
+      Form_Resize
+  End If
+End Sub
+
+Add a second Text Box control to Form1. Text2 is created by default. Set the following properties for Text2: 
+Height: 1455
+Left: 0
+Top: 1920
+Width: 6615 
+
+Add the following code to the DragDrop event for Text2: 
+Sub Text2_DragDrop(Source As Control, X As Single, Y As Single)
+  If Y < Text2.Height Then
+      Picture1.Top = Y + Text2.Top - Picture1.Height
+      Form_Resize
+  End If
+End Sub
+
+Add a Picture Box control to Form1. Picture1 is created by default. Set the following properties for Picture1: 
+BackColor: &H000000C0 (the color red)
+DragMode: 1 (automatic)
+DrawStyle: 0 (solid)
+Height: 135
+Left: 0
+MousePointer: 7 (size n s)
+Top: 1800
+Width: 6495 
+
+Run the example program. A red bar (that is, the Picture Box control) separates the top Text Box from the bottom Text Box. You can resize either Text Box by clicking on the red bar and dragging the bar towards the top or bottom of Form1. When you release the mouse button, both Text Boxes are resized accordingly

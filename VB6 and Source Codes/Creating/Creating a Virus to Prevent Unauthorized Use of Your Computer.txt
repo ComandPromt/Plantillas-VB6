@@ -1,0 +1,111 @@
+Tip 57: Creating a "Virus" to Prevent Unauthorized Use of Your Computer
+Created: April 17, 1995
+
+Abstract
+This article explains how you can design an application in Visual Basic® that acts like a virus. You can use this program to prevent unauthorized users from using your system for more than 10 minutes.
+
+A 10-Minute Virus Stops Others from Using Your Computer
+If you are working in an office situation where other users have access to your computer system, you may want to develop a Visual Basic® application that can prevent unauthorized use of your computer.
+
+The MSDNBUG.EXE virus program interrupts the currently running Windows®-based application after the computer has been running for 10 minutes. The program immediately displays a stay-on-top form that remains on the screen until the virus program is terminated by holding down the ALT key and typing 169 on the numeric keypad while the focus is on the Picture Box control. In addition, once the virus program has been actuated, the Timer control is used to display a message about not removing the diskette in drive B. This message box is displayed approximately once every second. Again, the user cannot remove the diskette in drive B or return to the previously running Windows-based application—the only alternative is to reboot the computer system, and the user is warned not to do this to prevent further "damage" to the hard drive's contents.
+
+Example Program
+The program below is a sample virus application written in Visual Basic. Because the program is added to the StartUp group on the Windows desktop, it will be executed each time the computer is turned on. After the user has been working on the computer for 10 minutes, the virus will interrupt the currently running application and display its screen. If the user attempts to remove a diskette from drive B, the program will also display a message box telling the user not to remove the diskette because it has a hidden file that is needed to restore the computer to its normal condition. The program can be terminated only by holding down the ALT key and typing 169 on the numeric keypad. 
+
+Create a new project in Visual Basic. Form1 is created by default. Set the following properties for Form1: 
+Caption: WARNING: FATAL VIRUS DETECTED
+ClipControls: False
+ControlBox: False
+KeyPreview: True
+MaxButton: False
+MinButton: False
+Visible: False 
+
+Add the following Dim, Constant, and Declare statements to the General Declarations section of Form1 (note that the Declare statement must be typed as a single line of code): 
+Declare Function SetWindowPos Lib "User" (ByVal hWnd As Integer, ByVal 
+   hWndInsertAfter As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal CX 
+   As Integer, ByVal CY As Integer, ByVal wFlags As Integer) As Integer
+
+Const SWP_NOSIZE = &H1
+Const SWP_NOMOVE = &H2
+Const SWP_NOACTIVATE = &H10
+Dim FunLoad As Integer
+Dim Hwnd_Topmost As Integer
+Dim Wp As Integer
+Dim NumTimerEvents As Integer
+
+Add the following code to the Form_Load event for Form1 (note that the Wp line must be typed as a single line of code): 
+Sub Form_Load()
+  Hwnd_Topmost = -1
+  Wp = SetWindowPos(Form1.hWnd, Hwnd_Topmost, 0, 0, 0, 0, SWP_NOSIZE + 
+    SWP_NOMOVE + SWP_NOACTIVATE)
+  Form1.Hide
+  Timer1.Interval = 65535
+  Timer1.Enabled = True
+  NumTimerEvents = 0
+End Sub
+
+Add the following code to the KeyPress event for Form1: 
+Sub Form_KeyPress(KeyAscii As Integer)
+  If KeyAscii = 3 Then FunLoad = True
+End Sub
+
+Add the following code to the Unload event for Form1: 
+Sub Form_Unload(cancel As Integer)
+  If Not FunLoad Then cancel = True: End
+End Sub
+
+Add a Label control to Form1. Label1 is created by default. Set the following properties for Label1: 
+AutoSize: False
+BorderStyle: 0-None
+Caption: WARNING: The diskette in drive B has the MSDN virus. 
+
+Add a second Label control to Form1. Label2 is created by default. Set the following properties for Label2: 
+BorderStyle: 0-None
+AutoSize: False
+Caption: This virus has corrupted the directory of all files on the hard drive of this computer. This virus copies the original information to a hidden file on the diskette that is required for recovery of the hard drive. DO NOT TURN OFF THE COMPUTER. Please contact Customer Support at (360) 297-4717 for instructions (Monday to Friday, 8 a.m. to 4 p.m. Eastern time). 
+
+Add a Picture Box control to Form1. Picture1 is created by default. Set the following properties for Picture1: 
+BorderStyle: 1-Fixed Single
+Picture: C:\VB\METAFILE\BUSINESS\COMPUTERS.WMF 
+
+Add the following code to the KeyPress event for Picture1 (note that the Wp line must be typed as a single line of code): 
+Sub Picture1_KeyPress(KeyAscii As Integer)
+If KeyAscii <> 169 Then Exit Sub
+  Hwnd_Topmost = -2
+  Wp = SetWindowPos(Form1.hWnd, Hwnd_Topmost, 0, 0, 0, 0, SWP_NOSIZE + 
+       SWP_NOMOVE + SWP_NOACTIVATE)
+  End
+End Sub
+
+Add a Timer control to Form1. Timer1 is created by default. Set the following properties for Timer1: 
+Enabled: True
+Interval: 1000 
+
+Add the following code to the Timer event for Timer1 (please note that the MsgBox line must be typed as a single line of code): 
+Sub Timer1_Timer()
+  Const Max_Intervals = 5     '5 minutes
+  NumTimerEvents = NumTimerEvents + 1
+  If NumTimerEvents >= Max_Intervals Then
+
+On Error Resume Next
+'If the diskette has been removed, the timer is reset 
+'to display the error message box once every second.
+If Len(Dir("B:*.*")) = 0 Then
+  If Visible Then
+      Timer1.Interval = 1000
+      MsgBox "The virus-infected diskette has been removed from the PC -- 
+        recovery may not be possible.", 16, "MSDN Virus"
+  End If
+Else
+  Visible = True
+  WindowState = 2
+
+End If
+On Error GoTo 0
+End If
+
+End Sub
+
+Create an executable program file by selecting File/Make EXE File from the Visual Basic menu. Save the program file as MSDNBUG.EXE. 
+Add the MSDNBUG.EXE program to the StartUp group on your Windows desktop. 

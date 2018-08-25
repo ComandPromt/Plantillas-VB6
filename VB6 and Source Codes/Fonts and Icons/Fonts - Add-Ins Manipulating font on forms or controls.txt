@@ -1,0 +1,20 @@
+'Description: Manipulate the font settings of a control or form with an Add-In 
+
+'Place the following code in under a command button or in a menu, etc...
+
+        Dim currentform As Object
+        Dim c As Object
+        Set currentform = gobjIDEAppInst.ActiveProject.ActiveForm
+        'add-in adds a label to the currentform
+        Set c = currentform.ControlTemplates.Add("label")
+        With c
+             .Properties("Caption") = "Xtreme Software. The Creators of Digital Poetry!"
+             .Properties("Font")!Bold = True
+             .Properties("Font")!Italic = True
+             .Properties("Font")!Strikethrough = False
+             .Properties("Font")!Underline = True
+             .Properties("Font")!Name = "Arial"
+             .Properties("Font")!Size = 10
+             .Properties("Autosize") = True
+             .Properties("left") = (currentform.Properties("width") - .Properties("width")) / 2
+        End With

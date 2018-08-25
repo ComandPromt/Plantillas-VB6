@@ -1,0 +1,13 @@
+'Description: Returns time information left in a specified time
+
+'Place the following code in a Form_Load()
+
+dim rightnow, daysleft, hoursleft, minutesleft
+rightnow = now
+daysleft = Int (dateserial (year (rightnow) + 1, 1, 1) - rightnow)
+hoursleft = 24 - hour (rightnow)
+minutesleft = 60 - minute (rightnow)
+
+label1(1).caption = daysleft & " days left in the year."
+label1(2).caption = hoursleft & " hours left in the day."
+label1(3).caption = minutesleft & " minutes left in the hour."

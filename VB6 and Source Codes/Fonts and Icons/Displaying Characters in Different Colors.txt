@@ -1,0 +1,36 @@
+Tip 34: Displaying Characters in Different Colors
+Created: March 1, 1995
+
+Abstract
+In a Visual Basic® application, you have several methods available to display printed text to your user. For example, you can use the Text property of a Text Box. However, the text you display in the Text Box is limited to a specific color. This article shows how text can be displayed with any number of color combinations.
+
+Displaying Text in Color
+Each time a form's size is changed, or a window has covered a form, the Paint event is triggered. The Paint event is used to redraw the contents of a form or Picture Box whenever the contents of that control have been changed.
+
+Therefore, by using the Line method to draw text on a form, which in turn causes a Paint event to be triggered, you can display text in whatever color you desire.
+
+The Line method is used to draw lines, boxes, and filled boxes on the printer, the Picture Box, and the form controls. To draw a line, you specify the starting position, the ending position, and an optional color to be used. The CurrentX and CurrentY properties can be used to set or retrieve the current print position within the control where printing takes place.
+
+When drawing text to a control, you must first calculate the space required to draw the character. You do this using the TextWidth and TextHeight methods. Once you have drawn the character on the control with the Line method, you can then use the ForeColor property to change the color of the drawn character.
+
+Example Program
+The following Visual Basic program displays the letters A–Z in different colors on the program's form. 
+
+Start a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Paint event for Form1: 
+Sub Form_Paint()
+    Dim I As Integer, X As Integer, Y As Integer
+    Dim C As String
+    Cls
+    For I = 65 To 91
+        X = CurrentX
+        Y = CurrentY
+        C = Chr(I)
+        Line -(X + TextWidth(C), Y = TextHeight(C)), QBColor(Rnd * 16), BF
+        CurrentX = X
+        CurrentY = Y
+        ForeColor = RGB(Rnd * 256, Rnd * 256, Rnd * 256)
+        Print C;
+    Next
+End Sub
+

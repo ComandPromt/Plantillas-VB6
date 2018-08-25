@@ -1,0 +1,50 @@
+Description: Smoothly scrolls either text, graphics or controls across a form
+
+               'Public Declare Function BitBlt Lib "GDI32" (ByVal hDestDC As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal nWidth As Integer, ByVal nHeight As Integer, ByVal hSrcDC As Integer, ByVal XSrc As Integer, ByVal YSrc As Integer, ByVal dwRop As Long) As Integer
+
+               Dim thetop As Long
+               Dim p1hgt  As Long
+               Dim p1wid  As Long
+               Dim theleft As Long
+
+
+               'Sub centerIT (C As Control, Txt As String)
+                   C.CurrentX = (C.ScaleWidth - C.TextWidth(Txt)) / 2
+                   C.Print Txt
+               'End Sub
+
+
+               'Sub Form_Load ()
+                p1.autoredraw = true
+                p1.visible = false
+                p1.FontSize = 12
+                p1.ForeColor = &HFF0000
+                p1.BackColor = BackColor
+                p1.ScaleMode = 3
+
+                centerIT p1, "Xtreme Software"
+                centerIT p1, "<< Master Add-In 3.0 >>"
+
+                ScaleMode = 3
+                theleft = (ScaleWidth - p1.TextWidth("Scroll Test...")) / 2
+
+                thetop = ScaleHeight
+                p1hgt = p1.ScaleHeight
+                p1wid = p1.ScaleWidth
+
+                timer1.Enabled = True
+                timer1.Interval = 10
+               'End Sub
+
+
+               'Sub Timer1_Timer ()
+                X% = BitBlt(hDC, theleft, thetop, p1wid, p1hgt, p1.hDC, 0, 0, &HCC0020)
+                thetop = thetop - 1
+                If thetop < -p1hgt Then
+                 Timer1.Enabled = False
+                 Txt$ = "Finished With Scrolling"
+                 CurrentY = ScaleHeight / 2
+                 CurrentX = (ScaleWidth - TextWidth(Txt$)) / 2
+                 Print Txt$
+                End If
+               'End Sub

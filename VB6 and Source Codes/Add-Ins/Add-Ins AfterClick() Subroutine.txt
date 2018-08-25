@@ -1,0 +1,6 @@
+'Description: Example AfterClick subroutine. Event occurs after Add-In menu item
+'             is clicked.
+
+'Sub AfterClick()
+msgbox "My Add-In Works!"
+'End Sub

@@ -1,0 +1,80 @@
+Tip 52: Modifying a Window's Title Bar Caption
+Created: April 10, 1995
+
+Abstract
+Almost every Windows®-based application displays a caption in its title bar. This caption is usually the application's name. This article will tell you how you can modify the caption of an application.
+
+Replacing the Title Bar Caption of a Window
+The Windows® application programming interface (API) provides two functions you can use in your program to modify the caption displayed in a window's title bar. The GetWindowText function retrieves the caption of the title bar and the SetWindowText function sets the caption of the title bar to a new string.
+
+To declare the GetWindowText function within your Visual Basic® program, include the following Declare statement in the Global Module or General Declarations section of your form:
+
+Declare Function GetWindowText Lib "User" (ByVal hWnd As Integer, ByVal lpString 
+   As String, ByVal aint As Integer) As Integer
+
+Note that this Declare statement must be typed as one single line of text.
+
+The GetWindowText function requires three arguments, as follows:
+
+hWnd An integer value containing the window's handle. 
+lpString A string buffer long enough to hold the caption text in the titlebar. 
+aint An integer value set to the length of lpString. 
+
+After calling this function, GetWindowText will return an integer value set to the length of the caption's text. This length count does not include the string's terminating NULL character.
+
+The Windows API SetWindowText function allows you to set the contents of the title bar's caption to a string of your choice. The SetWindowText function requires two arguments, as follows:
+
+hWnd An integer value containing the window's handle. 
+lpString A string containing the window's new title bar caption. 
+
+The example program below retrieves the text stored in the title bar ("Caption Demo") and adds the current time to the string. However, we must take a couple of steps to ensure that Visual Basic displays the new caption correctly.
+
+First, we use the Left$ function to remove the original caption's terminating NULL byte. Later on in the program, we retrieve the current time as a string and append it to the end of the original caption stored in the title bar. If we did not remove the terminating NULL byte from the original caption's string, Visual Basic would stop printing the text before it reached the time portion of the string.
+
+Approximately every ten seconds, the Timer control is used to update the target window's title bar. However, another step must be included in this routine to prevent Windows from appending the time string more than once.
+
+The example program below adds the current time to the window's title bar. The first time the Timer executes its code, the original title bar's caption is "Caption Demo". The second time the routine is executed, the original title bar's caption is "Caption Demo 08:12:11" (or whatever the current time happens to be). If we keep appending the current time to the original title bar's caption, the string will soon contain multiple but different time stamps. This is not what we want—we only want one time stamp to be included in the string. This is why the example program searches for the first colon character in the original string (":") and sets the "original" caption's text back to only the actual "Caption Demo" text.
+
+Example Program
+The following program shows how to modify an application's title bar. This program adds the current time to the caption of the target window—in this case, our own Visual Basic program. After executing this program, Visual Basic will add the current time to the caption of Form1. The entire string will be updated approximately every ten seconds. 
+
+Create a new project in Visual Basic. Form1 is created by default. Set its Caption property to "Caption Demo". 
+Add a Timer control to Form1. Timer1 is created by default. Set its Interval property to 10000. 
+Add the following Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of code): 
+Declare Function GetWindowText Lib "User" (ByVal hWnd As Integer, ByVal lpString 
+   As String, ByVal aint As Integer) As Integer
+Declare Function SetWindowText Lib "User" (ByVal hWnd As Integer, ByVal lpString 
+   As String) As Integer
+
+Add the following code to the Timer1-Timer event for Timer1: 
+Sub Timer1_Timer()
+  Timer1.Enabled = True
+  Dim X As Integer
+  Dim CurTime As String * 35
+  Dim CapText As String * 35
+  Dim NewCap As String * 35
+  Dim CapLength As Integer
+  Dim L As Integer
+    
+  CapLength = 30
+  X = GetWindowText(Form1.hWnd, CapText, CapLength)
+  ' X now equals the length of CapText not including the terminating
+  ' NULL character. We MUST remove the NULL character.
+  CapText = Left$(CapText, X)
+  ' The original caption is up to the first colon in the time string,
+  ' minus 3 bytes to go back to end of original caption's text.
+  L = InStr(CapText, ":")
+  
+  If L = 0 Then
+        GoTo Adjust
+  End If
+    
+  CapText = Left$(CapText, L - 3)
+Adjust:
+  NewCap = ""
+  CurTime = Time$
+  NewCap = RTrim$(CapText) + " " + RTrim$(CurTime)
+  
+  X = SetWindowText(Form1.hWnd, NewCap)
+End Sub
+

@@ -1,0 +1,12 @@
+'Description: Automatically calls up Dial Up Networking and "Clicks" Connect
+
+'Place the following code under a command button or in a menu, etc...
+
+Dim X
+'"MyConnectionsName" is the name under the icon in Dial-up Networking
+X = Shell("rundll32.exe rnaui.dll,RnaDial " & "MyConnectionsName", 1)
+DoEvents
+'You can type in your password before the { below.
+SendKeys "{enter}", True
+DoEvents
+'End Sub

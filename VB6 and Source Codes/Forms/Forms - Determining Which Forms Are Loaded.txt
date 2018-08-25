@@ -1,0 +1,49 @@
+Tip 28: Determining Which Forms Are Loaded
+Created: March 1, 1995
+
+Abstract
+A program created in Visual Basic® may contain many different forms. Forms can be loaded into memory whenever they are required and removed from memory when no longer needed. Sometimes you need to find out if a specific form is currently loaded. This article provides a technique for determining if a form is loaded or not.
+
+Which Form Is Loaded?
+Depending on the application you are developing, you can selectively display a Visual Basic® form on the computer screen at any time. To do this, you use the Load statement:
+
+Load Form2
+
+You can also remove a form from the program by using the Unload statement:
+
+Unload Form2
+
+It is important to realize that you can only load a form once—two copies of the same form cannot be in memory at the same time.
+
+Because a Visual Basic application may consist of many different forms, you need a method of determining which form or forms are currently loaded. The Count property can be used to find out how many forms are actually loaded into memory at any given time. The statement:
+
+X = Forms.Count
+
+sets the variable X equal to the number of forms in this application. Once you know this count value, its easy to develop a function to search through the index of forms in memory and find out if a specific form is loaded.
+
+Example Program
+Start a new project in Visual Basic. Form1 is created by default. Set its Caption property to "First Form". 
+Create a second form. Form2 is created by default. Set its Caption property to "Second Form". 
+Create a third form. Form3 is created by default. Set its Caption property to "Third Form". 
+Add a Text Box control to Form1. Text1 is created by default. 
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+    Dim F As Integer
+    Load Form2
+    F = IsLoaded(Form2)
+    Text1.Text = "Form" + Str$(F)
+End Sub
+
+Create a new function called IsLoaded: 
+Function IsLoaded(F_Form As Form) As Integer
+    Dim X As Integer  
+    For X = 0 To Forms.Count
+        If Forms(X) Is F_Form Then
+            IsLoaded = X + 1
+            Exit Function
+        End If
+    Next X
+    IsLoaded = 0
+End Function
+
+Execute this demonstration program by pressing the F5 function key. The first form is displayed with a text box. The string "Form 2" should be displayed in the Text Box. The IsLoaded function was passed the index number of the form to be checked. If that form was indeed loaded into memory, the text box will display the form's number. You can change the example program to display the third form's status by changing the "Load Form2" statement to "Load Form3" and the "F=IsLoaded(Form2)" statement to "F=IsLoaded(Form3)" to see if the third form is reported as being loaded.

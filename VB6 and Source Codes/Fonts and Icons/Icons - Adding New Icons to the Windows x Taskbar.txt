@@ -1,0 +1,197 @@
+Tip 156: Adding New Icons to the Windows 95 Taskbar
+December 5, 1995
+
+Abstract
+The Microsoft® Windows® 95 taskbar allows you to quickly switch between applications, launch other applications by using the Start button, and perform many other similar tasks. When developing your own Microsoft Visual Basic® applications, you can also add new icons (that is, programs) to the Windows 95 taskbar. This article explains how you can add icons to and remove icons from the notification area of the Windows 95 taskbar.
+
+Using the Shell_NotifyIcon Function to Add Taskbar Icons
+On a typical desktop in the Microsoft® Windows® 95 operating system, you can see that the Clock applet is running and that there are no additional icons on the taskbar—you see only the Clock applet icon. After you run the example program described in this article, the new icon is added to the taskbar. When the mouse pointer is placed on the taskbar, you can see that the new icon has been added to the taskbar.
+
+It's easy to add a new icon to the taskbar. The example program below shows how to add a new icon to the taskbar, perform functions relevant to that new icon, and then remove the icon from the taskbar. All this functionality is accomplished by using the Shell_NotifyIcon function. You can use the Shell_NotifyIcon function in a Visual Basic application to modify the Windows 95 taskbar. To use this function, you must include the following Declare statement in the General Declarations section of your form:
+
+Declare Function Shell_NotifyIcon Lib "shell32.dll" Alias "Shell_NotifyIconA" 
+   (ByVal dwMessage As Long, lpData As NOTIFYICONDATA) As Long
+
+The Shell_NotifyIcon function requires only two arguments. The first argument is one of the following three messages you want to send to the Windows 95 taskbar:
+
+NIM_ADD Add a new icon to the taskbar. 
+NIM_DELETE Remove (delete) an icon from the taskbar. 
+NIM_MODIFY Modify an existing icon on the taskbar. 
+
+In each case, either a True value is returned if the message was executed successfully or a False value is returned if an error occurred in the attempt to process the message.
+
+The second argument required by the Shell_NotifyIcon function is the address of a NOTIFYICONDATA structure. This structure contains the information used by the Shell_NotifyIcon function to modify the taskbar as specified. This structure must be defined as follows:
+
+Type NOTIFYICONDATA
+    cbSize As Long
+    hwnd As Long
+    uID As Long
+    uFlags As Long
+    uCallbackMessage As Long
+    hIcon As Long
+    szTip As String * pnTOOLTIP_SZ
+End Type
+
+where:
+
+cbSize The size of the NOTIFYICONDATA structure itself.   
+hWnd The handle of the window that will receive the notification messages associated with an icon on the taskbar.   
+wID An application-defined identifier of the taskbar icon.   
+uFlags An array of flags indicating which of the other structure members contain valid data. The uFlags argument can be a combination of the following:   
+  NIF_ICON hIcon is valid. 
+  NIF_MESSAGE uCallbackMessage is valid. 
+  NIF_TIP szTip is valid. 
+uCallbackMessage An application-defined message identifier.   
+
+When a mouse event occurs over the icon, the identifier is used for notification messages sent to the hWnd window:
+
+hIcon The handle of the taskbar icon 
+szTip The text for the taskbar icon's tooltip 
+
+Note that the Shell_NotifyIcon function is used to send a particular message to the system. The individual message you send to the taskbar adds a new icon, deletes an existing icon, or modifies an existing icon.
+
+You can add a new icon to the Windows 95 taskbar by sending a NIM_ADD message. The newly added icon appears on either the right side or the bottom of the toolbar. If the Show Clock option of the taskbar is selected, the new taskbar icon is set to the immediate left of the Clock applet icon. Each time you add a new icon to the taskbar, any and all existing taskbar icons are shifted one position to the left.
+
+The NOTIFYICONDATA structure must be used when adding, deleting, or modifying icons on the taskbar. This structure contains the information necessary for each particular message you want to send. When adding new icons to the taskbar, for example, the NOTIFYICONDATA structure must contain the handle of the new icon, the identifier of the icon, and optionally, the text for the icon's tooltip. In addition, if your application needs to receive mouse messages for the taskbar icon, then the NOTIFYICONDATA structure must also include the identifier of the callback message that should be sent to your application's window.
+
+To process the incoming callback messages, however, you must use a subclassing control such as Message Blaster. This third-party control will allow your Visual Basic application to detect when the system has received a mouse message for your taskbar icon. The wParam argument contains the identifier of the taskbar icon that received the mouse message, and the lParam argument contains the actual message. This functionality allows you to insert several icons on the taskbar from within a single Visual Basic application. However, it is highly recommended that you not go overboard when adding these new icons to the taskbar.
+
+To add a new icon to the taskbar, you need to store information about the icon in the NOTIFYICONDATA structure. In the example program below, you use the CreateNewIcon function to set the values in the NOTIFYICONDATA structure for your new taskbar icon. This function is shown here:
+
+Sub CreateNewIcon(OurWindow As Object, OurMsg As Long, OurToolTip As String)
+    On Error Resume Next
+    Dim X As Long
+    NewIcon.uFlags = NIF_ICON Or NIF_TIP Or NIF_MESSAGE
+    NewIcon.szTip = OurToolTip & Chr$(0)
+    NewIcon.hWnd = OurWindow.hWnd
+    NewIcon.uID = OurWindow.Icon
+    NewIcon.uCallbackMessage = OurMsg
+    NewIcon.hIcon = OurWindow.Icon
+    NewIcon.cbSize = Len(NewIcon)
+    X = Shell_NotifyIcon(NIM_ADD, NewIcon)
+End Sub
+
+In the routine shown above, notice that several steps have been taken before you actually run the Shell_NotifyIcon function. The cbSize field of the NOTIFYICONDATA structure is set to the actual size of the structure. This is not an optional step. You also tell your application that you want to capture and later process all mouse messages received by the taskbar icon of your application. In addition, you tell the Shell_NotifyIcon function that you want to use the icon specified in the form's Icon property (this is the icon you will see on the taskbar when the example program is run). You also tell Shell_NotifyIcon which messages you need to process—in this case, you want your icon to display a tooltip when the mouse pointer is moved over the icon, you want the icon itself to be displayed on the taskbar, and you want to process incoming mouse messages.
+
+Alternatively, when you want to remove an icon from the taskbar, you send a NIM_DELETE message to your window. You do not need to modify the contents of the NOTIFYICONDATA structure because that structure already contains the data used by the program to add the new icon to the taskbar. After the NIM_DELETE message is processed by the system, the icon is removed from the taskbar.
+
+Example Program
+This program shows how to add a new icon to the Windows 95 taskbar. In addition, it shows how to remove the newly added icon and to receive callback messages, using the Message Blaster custom control, from the new taskbar icon. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Set the following properties to the specified values for Form1: 
+BorderStyle: 2-Sizable
+MaxButton: True
+MinButton: True
+ShowInTaskBar: True
+WhatsThisHelp: False
+WindowState: 0-Normal 
+
+Select a new icon for this form (in the Icon property) to any icon that you want. This is the icon that appears on the taskbar when you run the example program. 
+
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    On Error Resume Next
+    MessageBlaster1.hWndTarget = Me.hwnd
+    MessageBlaster1.AddMessage WM_USER, POSTPROCESS
+    CreateNewIcon Me, WM_USER, "My Little App"
+End Sub
+
+Add a Message Blaster control to Form1. MessageBlaster1 is created by default. 
+Add the following code to the MessageBlaster1_Message event (note that the Private statement must be typed as a single line of code): 
+Private Sub MessageBlaster1_Message(ByVal hwnd As Long, ByVal Msg As Long, 
+   wParam As Long, lParam As Long, nPassage As Integer, lReturnValue As Long)
+    On Error Resume Next
+    Select Case lParam
+    Case WM_LBUTTONDOWN
+        MsgBox "My Little App is running!", , App.Title
+    Case WM_RBUTTONDOWN
+        PopupMenu mnuMain, 0, , , mnuClose
+    Case WM_USER + 1
+        End
+    End Select
+End Sub
+
+From the Visual Basic Tools menu, select Menu Editor. Create a menu with the following items: 
+Caption: &Main
+Name: mnuMain 
+
+Caption: &Date
+Name: mnuDate 
+
+Caption: &Time
+Name: mnuTime 
+
+Caption: &Close
+Name: mnuClose 
+
+Add the following code to the Click event for mnuClose: 
+Private Sub mnuClose_Click()
+    On Error Resume Next
+    DeleteOldIcon
+    SendMessage hwnd, WM_USER, 0, WM_USER + 1
+End Sub
+
+Add the following code to the Click event for mnuDate: 
+Private Sub mnuDate_Click()
+    MsgBox "Today is: " & Date, , App.Title
+End Sub
+
+Add the following code to the Click event mnuTime: 
+Private Sub mnuTime_Click()
+    MsgBox "Time is: " & Time, , App.Title
+End Sub
+
+From the Visual Basic Insert menu, select Module to create a new module. Module1.Bas is created by default. 
+Add the following code to Module1.Bas (note that the Declare statement must be typed as a single line of code): 
+Option Explicit
+
+Declare Function Shell_NotifyIcon Lib "shell32.dll" Alias "Shell_NotifyIconA" 
+   (ByVal dwMessage As Long, lpData As NOTIFYICONDATA) As Long
+Public Const NIF_ICON = &H2
+Public Const NIF_MESSAGE = &H1
+Public Const NIF_TIP = &H4
+Public Const NIM_ADD = &H0
+Public Const NIM_DELETE = &H2
+Public Const MyToolTip As Integer = 64
+
+Type NOTIFYICONDATA
+        cbSize As Long
+        hWnd As Long
+        uID As Long
+        uFlags As Long
+        uCallbackMessage As Long
+        hIcon As Long
+        szTip As String * MyToolTip
+End Type
+
+Public NewIcon As NOTIFYICONDATA
+
+Create a new subroutine called CreateNewIcon. Add the following code to this subroutine: 
+Sub CreateNewIcon(OurWindow As Object, OurMsg As Long, OurToolTip As String)
+    On Error Resume Next
+    Dim X As Long
+    NewIcon.uFlags = NIF_ICON Or NIF_TIP Or NIF_MESSAGE
+    NewIcon.szTip = OurToolTip & Chr$(0)
+    NewIcon.hWnd = OurWindow.hWnd
+    NewIcon.uID = OurWindow.Icon
+    NewIcon.uCallbackMessage = OurMsg
+    NewIcon.hIcon = OurWindow.Icon
+    NewIcon.cbSize = Len(NewIcon)
+    X = Shell_NotifyIcon(NIM_ADD, NewIcon)
+End Sub
+
+Create a new subroutine called DeleteIcon. Add the following code to this subroutine: 
+Sub DeleteOldIcon()
+    On Error Resume Next
+    Dim X As Long
+    X = Shell_NotifyIcon(NIM_DELETE, NewIcon)
+End Sub
+
+Create a new routine called Main. Add the following code to this function: 
+Sub Main()
+    Load Form1
+End Sub
+
+From the Visual Basic Tools menu, select Options. From the Options windows, select Project. Change the Startup Form to Sub Main. Click OK to save the change to the project. 
+Run the example program by pressing F5. Notice the icon for the program is on the taskbar. Move the cursor over this taskbar icon and the tooltip text "My Little App" appears. When you use the left mouse button to click the icon, a message box appears that tells you "My Little App is running!". Click the OK command button. When you click the right mouse button on the icon, a pop-up menu appears, listing three options: display the current date, display the current time, and close the application. Note that when you close the application, the icon is removed from the Windows 95 taskbar.

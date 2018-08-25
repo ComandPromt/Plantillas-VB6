@@ -1,0 +1,35 @@
+Tip 118: Converting a Word for Windows Document to RTF Format
+July 1, 1995
+
+Abstract
+In a Microsoft® Visual Basic® application, you may need to convert a Microsoft Word for Windows® version 6.0 document to rich-text format (RTF). This article explains how this can be accomplished in Visual Basic.
+
+Using OLE Automation in Visual Basic
+You can use OLE Automation in a Microsoft® Visual Basic® application to perform specific tasks in another Microsoft Windows®-based application. For example, you may need to convert a Microsoft Word for Windows version 6.0 document to rich-text format (RTF).
+
+The example program below shows how to run Word for Windows, load an existing document into Word, and then save that document to disk in RTF format. The OLE commands sent to Microsoft Word enable you to have total control over Word; that is, from within Visual Basic you can tell Word exactly what to do and when to do it.
+
+In this example program, you need some way to communicate with Microsoft Word. You do this by creating an object variable for Word. In this case, you use WordBasic. Next, you tell Microsoft Word that you want to load a specific document. Therefore, you tell Word to carry out a FileOpen command to load the document into memory.
+
+In the same manner, you use the object variable to tell Word to save the document (using the WordBasic FileSaveAs command) in RTF format. You must specify both a file name for the document and the file format in which you want to save the document. Because you want to save the file as an RTF document, specify the value 6 for RTF.
+
+After Word has saved the document in RTF format, you want to exit Word and return to your Visual Basic application. This is done by setting the object variable to Nothing, which closes the server application.
+
+Example Program
+This program shows how to use OLE Automation to convert a Microsoft Word for Windows 6.0 document to RTF format from within a Visual Basic application. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Convert to RTF". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim Obj As Object
+    Set Obj = CreateObject("Word.basic")
+    Obj.FileOpen "c:\demo.doc"
+    Obj.FileSaveAs "c:\demo.rtf", 6
+    Set Obj = Nothing
+    MsgBox "Document converted to RTF format"
+End Sub
+
+Note   This program assumes that you have a Word for Windows 6.0 document named DEMO.DOC stored in the root directory of drive C. This document will be converted to RTF format and stored on drive C as DEMO.RTF.
+Run the example program by pressing F5. Click the "Convert to RTF" command button. Visual Basic runs Microsoft Word, loads DEMO.DOC into memory, and saves a new copy of the document to disk in RTF format. A message box is displayed when the whole process has been completed.
+

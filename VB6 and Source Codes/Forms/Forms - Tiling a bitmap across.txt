@@ -1,0 +1,30 @@
+Description: Tiles a bitmap across a form
+
+'Private Declare Function BitBlt Lib "GDI32" (ByVal hDestDC As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal nWidth As Integer, ByVal nHeight As Integer, ByVal hSrcDC As Integer, ByVal XSrc As Integer, ByVal YSrc As Integer, ByVal dwRop As Long) As Integer
+
+Dim maxhgt As Long, maxwid As Long
+Dim pwid As Integer, phgt As Integer
+
+'Sub Form_Load ()
+	picture1.ScaleMode = 3
+        picture1.Visible = False
+        picture1.AutoSize = True
+        picture1.AutoRedraw = True
+        pwid = picture1.ScaleWidth
+        phgt = picture1.ScaleHeight 
+'End Sub
+
+'Sub Form_Paint ()
+	phDC& = picture1.hDC
+        frmhdc& = hdc
+	For j% = 0 To maxhgt Step phgt
+        	For i% = 0 To maxwid Step pwid
+                	X% = BitBlt(frmhdc&, i%, j%, pwid, phgt, phDC&, 0, 0, &HCC0020)
+                Next
+        Next
+'End Sub
+
+'Sub Form_Resize ()
+	maxhgt = Height \ screen.TwipsPerPixelY
+        maxwid = Width \ screen.TwipsPerPixelX
+'End Sub

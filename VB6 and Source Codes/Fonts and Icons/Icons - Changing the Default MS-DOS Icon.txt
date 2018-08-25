@@ -1,0 +1,107 @@
+Tip 47: Changing the Default MS-DOS Icon
+Created: April 5, 1995
+
+Abstract
+When you execute an MS-DOS® program from within a Visual Basic® application, your MS-DOS program uses the default MS-DOS icon. This article explains how, using some functions from Windows®, you can change this default icon to a different icon of your choice.
+
+Substituting One Icon for Another
+The key to changing the default MS-DOS® icon to one of your choosing is to use the Windows® ExtractIcon function. The Declare statement for the ExtractIcon function is:
+
+Declare Function ExtractIcon Lib "Shell" (ByVal hInst%, ByVal lpExeName$, ByVal
+    hIcon%) As Integer
+
+Note that this statement must be typed as a single line of code.
+
+The ExtractIcon function requires three arguments, as follows:
+
+hInst The program's instance handle. 
+lpszExeName The name of the program that contains the icon you want to extract. 
+iIcon The index number associated with the icon you want to retrieve. If this value is -1, the total number of icons in the file will be returned. 
+
+To extract an icon from a program's executable file (.EXE) or from a dynamic-link library (.DLL) file, you need to know the application's instance handle and the index number of the specific icon you want to retrieve from the file. Calling the ExtractIcon function returns the handle of the icon.
+
+The next step is to use the SetClassWord function to retrieve the handle of the default icon used by the specified window. After the Shell method has executed the TEST.BAT file (in our demonstration program below), we use the SetClassWord function to actually change the default icon to another icon.
+
+You should note that we are changing the icon for the MS-DOS window to another icon, and that this new icon will be used by all other applications within this same window class (DOS). This is why, in the demonstration program below, we take the final step of deleting the new MS-DOS icon just before the program is terminated.
+
+Example Program
+The following program shows how the default MS-DOS icon can be changed to a different icon from within a Visual Basic application. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each statement must be typed as a single line of text): 
+Const SWP_NOSIZE = 1
+Const SWP_NOMOVE = 2
+Const SWP_NOACTIVATE = &H10
+Const SWP_SHOWWINDOW = &H40
+Const SWP_HIDEWINDOW = &H80
+Const SWP_FLAGS = SWP_NOMOVE Or SWP_NOSIZE Or SWP_NOACTIVATE
+Const SWP_SHOW = SWP_SHOWWINDOW Or SWP_FLAGS
+Const SWP_HIDE = SWP_HIDEWINDOW Or SWP_FLAGS
+Const HWND_BOTTOM = 1
+Const GCW_HICON = (-14)
+Const GCW_HMODULE = (-16)
+
+Declare Function GetModuleUsage Lib "Kernel" (ByVal hWnd%) As Integer
+
+Declare Function ExtractIcon Lib "Shell" (ByVal hInst%, ByVal lpExeName$,
+   ByVal hIcon%) As Integer
+
+Declare Function DestroyIcon Lib "User" (ByVal hIcon%) As Integer
+
+Declare Function FindWindow Lib "User" (ByVal lpClassName As Any, ByVal 
+   lpCaption As Any) As Integer
+
+Declare Function SetWindowPos Lib "User" (ByVal h%, ByVal hb%, ByVal X%, ByVal 
+   y%, ByVal cx%, ByVal cy%, ByVal F%) As Integer
+
+Declare Function GetClassWord Lib "User" (ByVal hWnd%, ByVal nIndex%) As Integer
+
+Declare Function SetClassWord Lib "User" (ByVal hWnd%, ByVal nIndex%, ByVal 
+   wNewWord%) As Integer
+
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+  Dim DosFile As String, IconFile As String
+  DosFile = "C:\TEST.PIF"
+  IconFile = "C:\VB\ICONS\ARROWS\ARW01RT.ICO"
+  Call LaunchPif(DosFile, IconFile)
+End Sub
+
+Create a new subroutine procedure called LaunchPif. Add the following code to this procedure: 
+Sub LaunchPif(PifFile As String, IconName As String)
+  Dim Res As Integer     
+  Dim MyInst As Integer  
+  Dim PifIcon As Integer 
+  Dim OldIcon As Integer 
+  Dim PifhWnd As Integer 
+  Dim PifInst As Integer
+    
+  PifInst = Shell(PifFile, 2)
+  MyInst = GetClassWord((Form1.hWnd), GCW_HMODULE)
+  If Dir$(IconName) <> "" Then
+      IconName = IconName & Chr$(0)
+      PifIcon = ExtractIcon(MyInst, IconName, 0)
+  Else
+      PifIcon = 0
+  End If
+  If GetModuleUsage(PifInst) <> 0 And PifIcon > 0 Then
+      PifhWnd = FindWindow(0&, "TEST")
+      OldIcon = SetClassWord(PifhWnd, GCW_HICON, PifIcon)
+      Res = SetWindowPos(PifhWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_HIDE)
+      Res = SetWindowPos(PifhWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_SHOW)
+  End If
+  Do While GetModuleUsage(PifInst) <> 0
+      DoEvents
+  Loop
+
+  If PifIcon > 0 Then
+      Res = SetClassWord(PifhWnd, GCW_HICON, OldIcon)
+      Res = DestroyIcon(PifIcon)
+  End If
+End Sub
+
+Using Notepad, create a DOS batch file called TEST.BAT in the root directory of drive C. Type the "dir" command as the text for this batch file. 
+Create a new .PIF file in the root directory of drive C. Set the program filename to TEST.BAT. Click on the windowed and background options to run TEST.BAT as a windowed, background task. 
+Save the project as DOSBOX.MAK. Select Make EXE File from Visual Basic's File menu to create an executable program file called C:\DOSMAK.EXE. 
+In Program Manager, add the DOSBOX.EXE program to an existing program group or create a new program group. In the properties window, type the program's filename as "C:\DOSBOX.EXE" and click on the Run Minimized option. 
+From Program Manager, execute the DOSBOX.EXE program file. You will see the TEST icon temporarily displayed on the desktop. The TEST icon has been modified to show the new arrow icon instead of the regular MS-DOS icon used by default. Next, the program will display its own icon on the desktop. Click the DOSBOX icon and select Close from its Control menu to terminate the program.

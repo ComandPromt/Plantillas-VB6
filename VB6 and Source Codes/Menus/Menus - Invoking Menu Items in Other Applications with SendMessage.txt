@@ -1,0 +1,51 @@
+Tip 75: Invoking Menu Items in Other Applications with SendMessage
+May 8, 1995
+
+Abstract
+Within a Visual Basic® application, you can execute a menu item in another Windows®-based program. This article explains how to use several Windows application programming interface (API) functions to execute menu commands.
+
+Executing Menu Commands
+In some situations, you may need to actuate an application, such as Notepad, and execute one or more of that application's menu commands. The Windows® application programming interface (API) provides several functions that enable you to perform this type of operation in Visual Basic®. 
+
+The Windows API FindWindow function can be used to determine the handle of the application that contains the menu item you want to execute. FindWindow returns an integer value containing the application's handle. 
+You also need to retrieve the handle associated with the target window's menu. The GetMenu function will return the handle as an integer value. 
+Once you have the target window's menu handle, you need to determine the entry's position in the menu and retrieve the handle of the pop-up menu. In the example program below, we want to retrieve the handle of the File menu selection. Therefore, we would call the GetSubMenu function with zero as the entry's position. The first entry in every pop-up menu always begins with entry number zero. 
+Next, we want to retrieve the ID number of the specific menu entry we want to execute. We retrieve this ID number by calling the GetMenuItemID function with the entry's position specified as one (the position of the Open menu selection in the pop-up menu). 
+The final step is to make the target application the active application and to issue the SendMessage function, which in turn sends a WM_COMMAND message to the target window. The WM_COMMAND message is set to the target application's window to execute the File/Open command. 
+Example Program
+The following example program executes another application's menu commands. This program assumes that the Windows Notepad application program is already running in memory. This program uses SendMessage to execute the File/Open menu selection in Notepad.
+
+When you execute the program, click the Command Button. After a second or two, you will see that Notepad has been activated and that its Open File dialog box is displayed on the screen. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each Declare statement should be typed as a single line of code): 
+Private Declare Function FindWindow Lib "User" (ByVal lpClassName As Any, ByVal 
+   lpWindowName As Any) As Integer
+Private Declare Function GetMenu Lib "User" (ByVal hWnd As Integer) As Integer
+Private Declare Function GetMenuItemID Lib "User" (ByVal hMenu As Integer, ByVal 
+   nPos As Integer) As Integer
+Private Declare Function GetSubMenu Lib "User" (ByVal hMenu As Integer, ByVal 
+   nPos As Integer) As Integer
+Private Declare Function SendMessage Lib "User" (ByVal hWnd As Integer, ByVal 
+   wMsg As Integer, ByVal wParam As Integer, lParam As Any) As Long
+Const WM_COMMAND = &H111
+
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim hWnd As Integer
+    Dim hMainMenu As Integer
+    Dim hMenu As Integer
+    Dim MenuID As Integer
+    
+    hWnd = FindWindow("NotePad", "Untitled - NotePad")
+    If hWnd = 0 Then Exit Sub
+    
+    hMainMenu = GetMenu(hWnd)
+    hMenu = GetSubMenu(hMainMenu, 0)
+    MenuID = GetMenuItemID(hMenu, 1)
+    AppActivate "Untitled - NotePad"
+    X& = SendMessage(hWnd, WM_COMMAND, MenuID, 0&)
+    
+End Sub
+

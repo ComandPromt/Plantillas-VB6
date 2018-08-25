@@ -1,0 +1,46 @@
+Tip 109: Modifying an MDI Form's Border Style
+June 12, 1995
+
+Abstract
+This article explains how you can create a multiple-document interface (MDI) form that has a fixed border in a Microsoft® Visual Basic® application.
+
+Retrieving and Setting a Form's BorderStyle
+Every form you create when designing a Microsoft® Visual Basic® application can have one of four border styles. Just set the form's BorderStyle property to one of the following styles.
+
+Property Style 
+0 None 
+1 Fixed Single 
+2 Sizeable 
+3 Fixed Double 
+
+An MDI child form, however, does not have a BorderStyle property. But by using the Microsoft Windows® GetWindowLong and SetWindowLong application programming interface (API) functions , you can change an MDI form's border style to a fixed border style.
+
+The GetWindowLong function retrieves information about the specified window's style attributes and the SetWindowLong function modifies the specified window's style attributes.
+
+GetWindowLong requires only two arguments. The first argument is the target window's handle. The second argument specifies the type of information you want to retrieve, which is the style settings for the window.
+
+After retrieving the window's current style settings, use the bitwise And Not function to remove the WS_THICKFRAME attribute from the style settings value. Next, issue a call to the SetWindowLong function to set the new style settings for the specified window. This creates an MDI form that has a fixed border style.
+
+Example Program
+This program shows how to create an MDI form that has a fixed border. Run the example program by pressing F5. The MDI form will be displayed with a fixed border. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+From the Insert menu, select MDI Form to create an MDI form. MDIForm1 is created by default. 
+Set Form1's MDIChild property to True. Modify the size of this form so that it is smaller than the MDIForm1 form. 
+Add the following Constant and Declare statements to the General Declarations section of Form1 (note that each Declare statement must be typed as a single line of text): 
+Private Declare Function GetWindowLong Lib "User" (ByVal hWnd As Integer, ByVal 
+  nIndex As Integer) As Long
+Private Declare Function SetWindowLong Lib "User" (ByVal hWnd As Integer, ByVal 
+  nIndex As Integer, ByVal dwNewLong As Long) As Long
+Const GWL_STYLE = (-16)
+Const WS_THICKFRAME = &H40000
+
+Add the following code to the Load event for MDIForm1 (note that the NewStyle line must be typed as a single line of code): 
+Private Sub MDIForm_Load()
+    Dim CurStyle As Long
+    Dim NewStyle As Long
+    CurStyle = GetWindowLong(MDIForm1.hWnd, GWL_STYLE)
+    NewStyle = SetWindowLong(MDIForm1.hWnd, GWL_STYLE, CurStyle And 
+       Not (WS_THICKFRAME))
+End Sub
+

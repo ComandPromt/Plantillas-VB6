@@ -1,0 +1,84 @@
+'Description: Demonstrates three graphics manipulation routines.
+
+
+'  add three command buttons and two pictureboxes. Load a bitmap into picture1 in design
+'  mode. Set both box to the same size. Routines execute 3 times faster than routines
+'  found in Microsoft's Knowledge Base.
+
+               'Const SRCCOPY = &HCC0020
+               'Const Pi = 3.14159265359
+               'private Declare Function SetPixel Lib "GDI32" (ByVal hDC As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal crColor As Long) As Long
+               'private Declare Function GetPixel Lib "GDI32" (ByVal hDC As Integer, ByVal X As Integer, ByVal Y As Integer) As Long
+               'private Declare Function StretchBlt% Lib "GDI32" (ByVal hDC%, ByVal X%, ByVal Y%, ByVal nWidth%, ByVal nHeight%, ByVal hSrcDC%, ByVal XSrc%, ByVal YSrc%, ByVal nSrcWidth%, ByVal nSrcHeight%, ByVal dwRop&)
+
+               'Sub Form_Load ()
+                picture1.ScaleMode = 3
+                picture2.ScaleMode = 3
+               'End Sub
+
+
+               'Sub Command1_Click ()
+               'flip horizontal
+                picture2.Cls
+                px% = picture1.ScaleWidth
+                py% = picture1.ScaleHeight
+                retval% = StretchBlt(picture2.hDC, px%, 0, -px%, py%, picture1.hDC, 0, 0, px%, py%, SRCCOPY)
+               'End Sub
+
+
+               'Sub Command2_Click ()
+                'flip vertical
+                picture2.Cls
+                px% = picture1.ScaleWidth
+                py% = picture1.ScaleHeight
+                retval% = StretchBlt(picture2.hDC, 0, py%, px%, -py%, picture1.hDC, 0, 0, px%, py%, SRCCOPY)
+               'End Sub
+
+               'Sub Command3_Click ()
+                'rotate 45 degrees
+                picture2.Cls
+                Call bmp_rotate(picture1, picture2, 3.14 / 4)
+               'End Sub
+
+
+               'Sub bmp_rotate (pic1 As PictureBox, pic2 As PictureBox, ByVal theta!)
+                ' bmp_rotate(pic1, pic2, theta)
+                ' Rotate the image in a picture box.
+                '   pic1 is the picture box with the bitmap to rotate
+                '   pic2 is the picture box to receive the rotated bitmap
+                '   theta is the angle of rotation
+                Dim c1x As Integer, c1y As Integer
+                Dim c2x As Integer, c2y As Integer
+                Dim a As Single
+                Dim p1x As Integer, p1y As Integer
+                Dim p2x As Integer, p2y As Integer
+                Dim n As Integer, r   As Integer
+
+                c1x = pic1.ScaleWidth \ 2
+                c1y = pic1.ScaleHeight \ 2
+                c2x = pic2.ScaleWidth \ 2
+                c2y = pic2.ScaleHeight \ 2
+
+                If c2x < c2y Then n = c2y Else n = c2x
+                n = n - 1
+                pic1hDC% = pic1.hDC
+                pic2hDC% = pic2.hDC
+
+                For p2x = 0 To n
+                  For p2y = 0 To n
+                    If p2x = 0 Then a = Pi / 2 Else a = Atn(p2y / p2x)
+                    r = Sqr(1& * p2x * p2x + 1& * p2y * p2y)
+                    p1x = r * Cos(a + theta!)
+                    p1y = r * Sin(a + theta!)
+                    c0& = GetPixel(pic1hDC%, c1x + p1x, c1y + p1y)
+                    c1& = GetPixel(pic1hDC%, c1x - p1x, c1y - p1y)
+                    c2& = GetPixel(pic1hDC%, c1x + p1y, c1y - p1x)
+                    c3& = GetPixel(pic1hDC%, c1x - p1y, c1y + p1x)
+                    If c0& <> -1 Then xret& = SetPixel(pic2hDC%, c2x + p2x, c2y + p2y, c0&)
+                    If c1& <> -1 Then xret& = SetPixel(pic2hDC%, c2x - p2x, c2y - p2y, c1&)
+                    If c2& <> -1 Then xret& = SetPixel(pic2hDC%, c2x + p2y, c2y - p2x, c2&)
+                    If c3& <> -1 Then xret& = SetPixel(pic2hDC%, c2x - p2y, c2y + p2x, c3&)
+                  Next
+                  t% = DoEvents()
+                Next
+               'End Sub

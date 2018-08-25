@@ -1,0 +1,73 @@
+Tip 97: Creating a Task List
+May 29, 1995
+
+Abstract
+This article explains how you can determine what modules are currently running under Microsoft® Windows® and create a task list based on that information.
+
+Determine What Modules Are Currently Running
+The TOOLHELP.DLL dynamic-link library (.DLL) file contains two Windows® application programming interface (API) functions that can be used to create a list of modules currently loaded under Windows. These are the ModuleFirst and ModuleNext functions. To declare these functions within your program, include the following Declare statements in the Global Module or General Declarations section of a Visual Basic® form:
+
+Private Declare Function ModuleFirst Lib "toolhelp.dll" (mdlentry As 
+   ModuleEntry) As Integer
+Private Declare Function ModuleNext Lib "toolhelp.dll" (mdlentry As ModuleEntry) 
+   As Integer
+
+Note that each Declare statement must be typed as a single line of text.
+
+The ModuleFirst and ModuleNext functions are the key to traversing the chain of loaded modules in Windows. The ModuleFirst function fills the specified structure with information describing the first module in the list of currently loaded modules. The ModuleNext function is then called to find the next module in the list.
+
+The MODULEENTRY structure required by these two functions must be defined as follows:
+
+dwSize The size of the structure in bytes. 
+szModule The module's name (a null-terminated string). 
+hModule The module's handle. 
+wcUsage Used by GetModuleUsage function. 
+szExePath The module. 
+wNext The window. 
+
+Before you can use these two functions, however, you must initialize the dwSize field of the MODULEENTRY structure. This value should be specified as the number of bytes needed to store the information returned by ModuleFirst and ModuleNext.
+
+These functions return a value indicating the status of the function. The function was successful if the returned value is nonzero; the function was not successful (or no more modules were found in memory) if the value returned is zero.
+
+Example Program
+This program shows how to retrieve the module name and path for every running task under Windows. The name of each module is displayed in the first List Box control, while the full path of the module is displayed in the second List Box control. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the General Declarations section of Form1 (note that each Declare statement should be typed as a single line of text): 
+Private Declare Function ModuleFirst Lib "toolhelp.dll" (mdlentry As 
+   ModuleEntry) As Integer
+Private Declare Function ModuleNext Lib "toolhelp.dll" (mdlentry As ModuleEntry) 
+   As Integer
+
+Add a Command Button control to Form1. Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    Dim Tmp As ModuleEntry
+    Dim Retn As Integer
+    
+    Tmp.dwSize = Len(Tmp)
+    Retn = ModuleFirst(Tmp)
+    
+    While Retn <> 0
+        If InStr(Tmp.szExepath, ".VBX") <> 0 Or InStr(Tmp.szExepath, ".DLL") <> 
+                 0 Or InStr(Tmp.szExepath, ">DRV") <> 0 Then
+            List1.AddItem Tmp.szModule
+            List2.AddItem Tmp.szExepath
+        End If
+        Tmp.szExepath = ""
+        Retn = ModuleNext(Tmp)
+    Wend
+End Sub
+
+Add a List Box control to Form1. List1 is created by default. 
+Add a second List Box control to Form1. List2 is created by default. 
+From the Insert menu, select Module. Module1.Bas is created by default. 
+Add the following user-defined Type to Module1.Bas: 
+Type ModuleEntry
+    dwSize As Long
+    szModule As String * 10
+    hModule As Integer
+    wcUsage As Integer
+    szExepath As String * 256
+    wNext As Integer
+End Type
+

@@ -1,0 +1,11 @@
+'Description: AddIn declarations
+
+'Paste into class module declarations section
+
+Dim AddInItems As Object
+
+'VBIDE.MenuItems
+Dim mymenu As Object
+
+'VBIDE.MenuLine
+Dim ConnectID As Long

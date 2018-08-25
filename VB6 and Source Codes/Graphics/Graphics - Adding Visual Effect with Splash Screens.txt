@@ -1,0 +1,41 @@
+Tip 16: Adding Visual Effect with Splash Screens
+Created: March 1, 1995
+
+Abstract
+You can make your Visual Basic® applications more attractive and professional looking if you include a splash screen. Splash screens are simply forms that are displayed as soon as your application program is executed.
+
+Splash screens are used to display important information (such as copyright notices) to users when the application is first executed. Sometimes, splash screens are presented to users while the application is performing time-consuming operations.
+
+Creating Splash Screens
+To create a splash screen for an application in Visual Basic®, you add text boxes, pictures, or any other graphic element to your form. After the form has been created, you add it to your existing project file. To display the splash screen, you use the Visual Basic Show command. While the splash screen is being displayed, you can perform other operations in your program.
+
+Example Program
+The example application described below displays a splash screen to the user for a short period of time. After the splash screen is displayed, the program's main form is displayed. Click the Exit command button to terminate the application. 
+
+Create a new project in Visual Basic. Form1 is created by default. This form will be your splash screen. Set its Caption property to "Splash Screen" and its Name property to "Splash". 
+Add a Picture Box control to Form1. Picture1 is created by default. Set its Picture property to a bitmap, such as that provided in C:\VB\BITMAPS\ASSORTED\HAPPY.BMP. 
+Add a Text Box control to Form1. Text1 is created by default. Set its Text property to "Splash Screen Demo". Set its BorderStyle property to 1-Fixed Single. 
+Save the form under the filename SPLASH.FRM. 
+Create a new project in Visual Basic. Form1 is created by default. Set its Caption property to "VB Splash Screen Demo". 
+Add a Command Button control to Form1. Command1 is created by default. Set its Caption property to "Exit". 
+Add the following code to the Click event for Command1: 
+Sub Command1_Click()
+    End
+End Sub
+
+Next, add the SPLASH.FRM form created in steps 1 through 4 to your project by selecting Add File from the Visual Basic menu. 
+Create a New Module file and name the module SPLASH.BAS. 
+Add the following code to the SPLASH.BAS module: 
+Sub Main()
+    Dim X As Long, P As Integer
+    Splash.Show
+    For X = 1 To 100000
+        P = DoEvents()
+    Next X
+    Beep
+    Unload Splash
+    Load Form1
+    Form1.Show
+End Sub
+
+Set the Startup Form to Sub Main. Save the entire Visual Basic project as SPLASH.MAK. 

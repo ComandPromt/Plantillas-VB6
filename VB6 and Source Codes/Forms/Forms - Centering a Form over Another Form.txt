@@ -1,0 +1,46 @@
+Tip 96: Centering a Form over Another Form
+May 29, 1995
+
+Abstract
+You can position a form so it appears centered within another form. This article explains how to center a form within its parent form. This same technique can be applied to centering controls such as Picture Box controls over other controls.
+
+Centering Forms in Visual Basic
+When developing an application in Visual Basic®, you may need to position a form so it is centered over another form. You can position a form in this way by using Visual Basic's Left, Top, Height, and Width properties.
+
+The Left property defines the position of the form's left edge and the Top property defines the position of the form's top edge. In the same manner, the Width and Height properties define how wide and high the form is. It is easy enough to center a form on a container by calculating the width and height of the form and dividing that value by two to center it within the control. 
+
+To center a form within a parent form, take the width of Form1 and Form2, subtract these two values, and divide the result by two. Next, add Form1's width to the result to determine the position of Form2's left edge within Form1. This will center Form2 horizontally within Form1.
+
+In the same manner, you can center a form vertically within another form by using the Top and Height properties of each form, dividing by two, and setting Form2's Top property to the result.
+
+Example Program
+This program shows how to center a form over another form. After you run this example program by pressing the F5 function key, click the Command Button. The program displays Form2 centered over its "parent," Form1. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add a Command Button control to Form1. Command1 is created by default. 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+Form2.Show
+CentreFormWithParent Form2, Form1
+End Sub
+
+From the Insert menu, select Form to create a second form. Form2 is created by default. Change this form's size so it is smaller than Form1. 
+Create a new function called CreateFormWithParent. Add the following code to this function: 
+Sub CenterFormWithParent(aForm As Form, aParent As Form)
+    aForm.Left = aParent.Left + (aParent.Width - aForm.Width) / 2
+    
+    aForm.Top = aParent.Top + (aParent.Height - aForm.Height) / 2
+    
+    If (aForm.Left + aForm.Width) > Screen.Width Then
+        aForm.Left = Screen.Width - aForm.Width
+    Else
+    If aForm.Left < 0 Then aForm.Left = 0
+    End If
+    
+    If (aForm.Top + aForm.Height) > Screen.Height Then
+        aForm.Top = Screen.Height - aForm.Height
+    Else
+        If aForm.Top < 0 Then aForm.Top = 0
+    End If
+End Sub
+

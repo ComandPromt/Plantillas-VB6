@@ -1,0 +1,81 @@
+Tip 53: Adding Three-Dimensional Effects to Visual Basic Controls
+Created: April 10, 1995
+
+Abstract
+The Professional Edition of Visual Basic® provides controls to create three-dimensional (3D) check boxes, command buttons, frame controls, group push buttons, option buttons, and panels. This article explains how you can add this 3D-look to controls without using the 3D controls provided in Visual Basic. The routine used in the example program will work with both the Standard and Professional editions of Visual Basic.
+
+Creating 3D Controls
+You can change the appearance of a control such as a Text Box by giving it a three-dimensional (3D) look. This effect can be achieved by using the Line method in Visual Basic® to draw borders around the target control.
+
+The example program below draws a raised border on two sides of the Text Box and Label controls. This code can be easily modified to create more professional looking Visual Basic applications.
+
+Example Program
+The program below shows how to add three-dimensional effects to a Text Box and Label control. By modifying the BorderOffset, BorderWidth, and RaisedBorder variables, you can change the appearance of the target control very quickly. 
+
+Create a new project in Visual Basic. Form1 is created by default. Set its AutoRedraw property to True. 
+Add the following code to the Form_Load event for Form1: 
+Sub Form_Load()
+  Call Draw3DBorder(Form1, Text1, False, 3)
+  Call Draw3DBorder(Form1, Label1, False, 15)
+End Sub
+
+Add a Label control to Form1. Label1 is created by default. 
+Add a Text Box control to Form1. Text1 is created by default. 
+Create a new subroutine procedure called "Draw3DBorder." Add the following code to this procedure (note that the first line should be typed as a single line of code): 
+Sub Draw3DBorder(TargetForm As Form, TargetControl As Control, RaisedBorder
+   As Integer, BorderWidth As Integer) 
+
+Dim BorderOffset As Integer
+Dim X1 As Integer, X2 As Integer
+Dim Y1 As Integer, Y2 As Integer
+Dim OriginalForeColor As Long, OriginalDrawWidth As Long
+Dim UpperColor As Long, LowerColor As Long
+
+'Define how far the 3D lines are drawn from the outer edges of the
+'control. Modify to your taste.
+
+BorderOffset = 8
+
+'Define the four corners of the 3D box to be drawn.
+X1 = TargetControl.Left - BorderOffset
+Y1 = TargetControl.Top - BorderOffset
+X2 = X1 + TargetControl.Width + (BorderOffset * 2)
+Y2 = Y1 + TargetControl.Height + (BorderOffset * 2)
+
+'Change the form's ForeColor and DrawWidth properties,
+'so we'll save them first and restore when done.
+
+OriginalForeColor = TargetForm.ForeColor
+OriginalDrawWidth = TargetForm.DrawWidth
+
+'If RaisedBorder is True, the white lines are drawn on the
+'top and left sides.
+
+If RaisedBorder Then
+   UpperColor = QBColor(15)
+   LowerColor = QBColor(8)
+Else
+   UpperColor = QBColor(8)
+   LowerColor = QBColor(15)
+End If
+
+'Draw line on left.
+TargetForm.DrawWidth = BorderWidth
+TargetForm.ForeColor = UpperColor
+TargetForm.Line (X1, Y2)-(X1, Y1)
+
+'Draw line on top.
+TargetForm.Line -(X2, Y1)
+
+'Draw line on right.
+TargetForm.ForeColor = LowerColor
+TargetForm.Line -(X2, Y2)
+
+'Draw line on bottom.
+TargetForm.Line -(X1, Y2)
+
+'Return the form's properties to their original state.
+TargetForm.ForeColor = OriginalForeColor
+TargetForm.DrawWidth = OriginalDrawWidth
+End Sub
+
