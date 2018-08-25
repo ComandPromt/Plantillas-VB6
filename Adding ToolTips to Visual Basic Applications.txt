@@ -1,0 +1,98 @@
+Tip 90: Adding ToolTips to Visual Basic Applications
+May 22, 1995
+
+Abstract
+Many Windows®-based applications have a toolbox from which you can select a command to execute. When you move the cursor (mouse pointer) over an item in the toolbox, a ToolTip is displayed. This article shows how to add this ToolTip help feature to your own Visual Basic® applications.
+
+Creating ToolTips in Visual Basic
+You can create a more professional-looking Visual Basic® application if you include the ToolTips that are featured in the newest version of Microsoft® Word. ToolTips are small, yellow description "balloons" that pop up on your screen when your cursor (mouse pointer) is over a control. The ToolTip usually contains a short descriptive word or phrase that describes the control's underlying purpose. It makes memorizing what icons do a thing of the past.
+
+The example program below shows the code you need to add to your application to create and use ToolTips. Let's assume that you want to add a Command Button control to your form. In the Tag property of the Command Button control you place the text that you want displayed when the user moves the cursor over the control. This descriptive text can be as long as you like, but keep in mind that the shorter the description, the better. The AutoSize property of the Picture Box control must be set to True so that when the program is running, the Picture Box will size itself according to the length of the descriptive text you entered in the Tag property.
+
+Next, you need to tell your Visual Basic application when to display the ToolTips description. In the MouseMove event, you want to call the ToolTips function with the statement:
+
+ToolTip Me, Command1, True
+where "Me" is the form the control resides on, "Command1" is the name of the individual control, and True means you want to display the ToolTip for this control. If you don't want to display a ToolTip for this particular control, set the last argument to False. This is done in the form's MoveMove event so that no ToolTip is ever displayed while the cursor is over the form itself. Once the Timer's interval has elapsed, the ToolTip will be displayed for that control.
+
+Example Program
+This program shows how to add ToolTips to a Visual Basic application. Press the F5 function key to run the example program. You will see a Command Button control and a Text Box control on the form. Move the cursor over the Command Button and the ToolTip message "A command button control to click on" will be displayed. Move the cursor over the Text Box control and the ToolTip message "A text box control" will be displayed. 
+
+Create a new project in Visual Basic. Form1 is created by default. 
+Add the following code to the Form_Load event for Form1: 
+Private Sub Form_Load()
+    Timer1.Enabled = True
+    ToolTips Me, ToolTip, False
+End Sub
+
+Add the following code to the MouseMove event for Form1 (note that the Private line must be typed as a single line of code): 
+Private Sub Form_MouseMove(Button As Integer, Shift As Integer, X As Single,
+  Y As Single)
+    ToolTips Me, ToolTip, False
+End Sub
+
+Add a Timer control to Form1. Timer1 is created by default. Set its Interval property to 1. 
+Add the following code to the Timer_Event for Timer1: 
+Private Sub Timer1_Timer()
+      ToolTip.Visible = True
+      ToolTip.ZOrder 0      
+      Timer1.Enabled = False
+End Sub
+
+Add a Picture Box control to Form1. Picture1 is created by default. Set the following properties for Picture1: 
+AutoSize  True 
+BackColor  &H0000FFFF& (yellow) 
+Height  255 
+Left  480 
+Name  ToolTip 
+Top  480 
+Visible  False 
+Width  975 
+
+Add a Command Button control to Form1. Command1 is created by default. Set its Tag property to "A command button control to click on". 
+Add the following code to the Click event for Command1: 
+Private Sub Command1_Click()
+    ToolTips Me, Command1, False
+End Sub
+
+Add the following code to the MouseMove event for Command1 (note that the Private line must be typed as a single line of code): 
+Private Sub Command1_MouseMove(Button As Integer, Shift As Integer, X As Single,
+  Y As Single)
+    ToolTips Me, Command1, True
+End Sub
+
+Add a Text Box control to Form1. Text1 is created by default. Set its Tag property to "A text box". 
+Add the following code to the Click event for Text1: 
+Private Sub Text1_Click()
+    ToolTips Me, Text1, False
+End Sub
+
+Add the following code to the MouseMove event for Text1 (note that the Private line must be typed as a single line of code): 
+Private Sub Text1_MouseMove(Button As Integer, Shift As Integer, X As Single,
+  Y As Single)
+    ToolTips Me, Text1, True
+End Sub
+
+Create a new function called ToolTips. Add the following code to this function: 
+Sub ToolTips(Frm As Form, Ctl As Control, OnOff As Integer)
+ If OnOff Then  
+   Frm.ToolTip.Cls 
+   Frm.ToolTip.Print " " & Ctl.Tag & " "   
+   Frm.ToolTip.Width = Frm.ToolTip.TextWidth(Ctl.Tag & "  ") 
+   If Ctl.Top + Ctl.Height + Frm.ToolTip.Height + 40 < Frm.ScaleHeight Then
+      Frm.ToolTip.Top = Ctl.Top + Ctl.Height + 40
+   Else
+      Frm.ToolTip.Top = Ctl.Top - Frm.ToolTip.Height - 40
+   End If
+   If Ctl.Left + Frm.ToolTip.Width < Frm.ScaleWidth Then
+      Frm.ToolTip.Left = Ctl.Left
+   Else
+      Frm.ToolTip.Left = Ctl.Left - Frm.ToolTip.Width + Ctl.Width
+   End If
+   Frm.Timer1.Enabled = True   
+ Else
+   Frm.ToolTip.Visible = False 
+   Frm.ToolTip.ZOrder 1     
+   Frm.Timer1.Enabled = False  
+ End If
+End Sub
+
