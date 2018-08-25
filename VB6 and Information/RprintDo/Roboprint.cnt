@@ -1,0 +1,43 @@
+:Base Roboprint
+:Title Robocx - Roboprint
+1 How to Work with Roboprint
+2 Get Started=Start@Roboprint.hlp
+2 Customized=custom@Roboprint.hlp
+2 Trouble Shots=Trouble
+2 Exclude Grid.Column When Printing =Exclude @Roboprint.hlp
+2 Faster Preview=Faster@roboprint.hlp
+2 Related to the Screen=Toscreen@Roboprint.hlp
+2 Dialogue Box of the Printer=Dialogue@Roboprint.hlp
+2 noprint and newpage value=dialogue@roboprint.hlp
+1 Features
+2 Properties
+3 AlignTitles=Align@Roboprint.hlp
+3 BordetText=border@Roboprint.hlp
+3 BtnPrintToolTipText=BtnPrintToolTip@Roboprint.hlp
+3 BtnViewToolTipText=BtnVTip@Roboprint.hlp
+3 Copies=Copies@Roboprint.hlp
+3 Color=Color@Roboprint.hlp
+3 FromPage  and ToPage =fromto@Roboprint.hlp
+3 GridLines=Grid@Roboprint.hlp
+3 GridToFit=GridToFit@Roboprint.hlp
+3 Orientation=Orientation@Roboprint.hlp
+3 PagesNumbers=PagesNumbers@Roboprint.hlp
+3 PrevBkColor=PrevBkColor@Roboprint.hlp
+3 PreviewBtnEnabled and PrintBtnEnabled=BtnEnabled@Roboprint.hlp
+3 PrviewMonochrome=Monochrome@Roboprint.hlp
+3 PrevPrintVisible=PrevPrintVisible@Roboprint.hlp
+3 RepeatHeader=RepeatHeader@Roboprint.hlp
+3 ShowPrinterAlways=Always@Roboprint.hlp
+3 SideBySide=SideBySide@Roboprint.hlp
+3 TitlesFont=TFont@Roboprint.hlp
+3 TopFootAlignTxt=Align@Roboprint.hlp
+3 TopMargin, FootMargin, LeftMargin and RightMargin=margin@Roboprint.hlp
+3 TopTitle and FootTitle=Title@Roboprint.hlp
+3 Zoom=Zoom@Roboprint.hlp
+2 Eventes
+3 AfterPrint=AfterPrint@Roboprint.hlp
+3 BeforePrint=BeforePrint@Roboprint.hlp
+2 Methods
+3 Lprint=Lprint@Roboprint.hlp
+3 Preview=Preview@Roboprint.hlp
+3 ShowPrinter=ShowPrinter@ROBOPRINT.hlp

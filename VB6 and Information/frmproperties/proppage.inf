@@ -1,0 +1,63 @@
+[version]
+Signature="$Chicago$"
+Class=base
+Version=2.5
+
+[DefaultInstall]
+AddReg=prop.addreg
+DelReg=prop.delreg1
+CopyFiles=prop.copy
+
+[DefaultUninstall]
+DelReg=prop.delreg
+DelFiles=prop.del
+
+[SourceDisksNames]
+1="",,1
+
+[SourceDisksFiles]
+psadd.dll=1
+
+
+[SourceDisksFiles]
+proppage.inf=1
+
+[DestinationDirs]
+prop.inf=17
+prop.copy=11
+
+[prop.copy]
+psadd.dll
+
+[prop.inf]
+proppage.inf
+
+[prop.del]
+propmenu.inf
+psadd.dll
+
+[prop.addreg]
+HKLM,"Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved","{3630721B-5A7E-11D3-81C5-89E6F3215875}",,"Shell Extensions - Property Page"
+HKLM,"Software\Microsoft\Windows\CurrentVersion\Uninstall\proppage","DisplayName",,"Vb Tools properties - Property Page"
+HKLM,"Software\Microsoft\Windows\CurrentVersion\Uninstall\proppage","UninstallString",,"RunDll32 advpack.dll,LaunchINFSection %17%\proppage.inf,DefaultUninstall"
+HKCR,".frm",,,"frmfile"
+HKCR,"frmfile",,,"Visual Basic Form"
+HKCR,"frmfile\shellex\PropertySheetHandlers\VBSample",,,"{3630721B-5A7E-11D3-81C5-89E6F3215875}"
+HKCR,"CLSID\{3630721B-5A7E-11D3-81C5-89E6F3215875}\InprocServer32","ThreadingModel",,"Apartment"
+
+[prop.delreg]
+HKLM,"SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved","{3630721B-5A7E-11D3-81C5-89E6F3215875}"
+HKLM,"Software\Microsoft\Windows\CurrentVersion\Uninstall\proppage"
+HKCR,"frmfile\shellex\PropertySheetHandlers\VBSample"
+HKCR,"CLSID\{3630721B-5A7E-11D3-81C5-89E6F3215875}"
+
+[prop.delreg1]
+HKCR,"CLSID\{3630721B-5A7E-11D3-81C5-89E6F3215875}\control"
+HKCR,"CLSID\{3630721B-5A7E-11D3-81C5-89E6F3215875}\MiscStatus"
+HKCR,"CLSID\{3630721B-5A7E-11D3-81C5-89E6F3215875}\ProgID"
+HKCR,"CLSID\{3630721B-5A7E-11D3-81C5-89E6F3215875}\ToolboxBitmap32"
+HKCR,"CLSID\{3630721B-5A7E-11D3-81C5-89E6F3215875}\TypeLib"
+HKCR,"CLSID\{3630721B-5A7E-11D3-81C5-89E6F3215875}\Implemented Categories"
+
+
+
