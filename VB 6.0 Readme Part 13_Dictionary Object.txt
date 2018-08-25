@@ -1,0 +1,35 @@
+INFO: VB 6.0 Readme Part 13: Dictionary Object
+The information in this article applies to:
+Microsoft Visual Basic Learning Edition for Windows 6.0
+Microsoft Visual Basic Professional Edition for Windows 6.0
+Microsoft Visual Basic Enterprise Edition for Windows 6.0
+
+This article was previously published under Q191792 
+SUMMARY
+The information below includes the documentation and workarounds for Visual Basic 6.0. This information can also be found in the README.htm file that ships with Visual Basic 6.0 on the Visual Basic 6.0 CD-ROM. Please see the REFERENCES section of this article for a list of the Microsoft Knowledge Base articles relating to the Visual Basic 6.0 readme. 
+
+Following is a list of all parts of the readme file: 
+
+Part 1.  Important Issues - Please Read First!
+Part 2.  Data Access Issues and DataBinding Tips
+Part 3.  Control Issues
+Part 4.  Language Issues
+Part 5.  Samples Issues
+Part 6.  Wizard Issues
+Part 7.  Error Message Issues
+Part 8.  WebClass Designer Issues
+Part 9.  DHTML Page Designer Issues
+Part 10. Extensibility issues
+Part 11. Miscellaneous Issues
+Part 12. Microsoft Transaction Server (MTS) Issues
+Part 13. Dictionary Object
+Part 14. Visual Component Manager
+Part 15. Application Performance Manager
+				
+MORE INFORMATION
+Introducing the Dictionary Object
+Visual Basic 6.0 includes a new Dictionary object that can be used instead of a Collection object or an Array. A Dictionary object is the equivalent of an associative array as used in PERL and other languages. The Dictionary object provides additional properties and methods that aren't available for Collections or Arrays. 
+
+The Dictionary object is contained in the Microsoft Scripting Runtime (Scrrun.dll) that ships with Visual Basic 6.0. You must add a reference to Scrrun.dll in order to use the Dictionary object in your project. 
+
+To learn more about the Dictionary object, search online, with Search titles only selected, for "Dictionary Object" in the MSDN Library Visual Studio 6.0 documentation. 
