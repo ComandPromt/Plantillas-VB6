@@ -1,0 +1,30 @@
+Created by Billy Conner
+
+
+TaskModifier Patch Info
+1.04
+Added a few more comments
+Fixed a few bugs
+Pondered a few ideas
+Optimized a bit of the code more
+
+
+1.03
+Optimized Memory Usage a bit.
+Added Option to Find window/control with Mouse.
+No longer needs the VB Dialog Control .OCX
+App no longer eats tons of system memory when searching for dead windows
+
+1.02
+added Legend (color info)
+app no longer ends when option windows are open. you must close them first
+added hourglass mousepointer when refreshing treeview.
+added Options Dialog with a few options
+added Author Mode. Used to set read/write capabilities
+added ability to launch an external app from within your app.
+you can now save your options
+
+1.01
+commented more code
+fixed a few minor bugs with variables
+added better formatting to code and Option Explicit

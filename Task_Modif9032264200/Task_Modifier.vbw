@@ -1,0 +1,15 @@
+Task_Modifier = 36, 66, 561, 506, 
+frmMain = 132, 17, 621, 465, , 44, 44, 533, 492, C
+MainNode = 88, 89, 613, 528, 
+Task_StopChanges = 88, 88, 621, 536, 
+Task_WindowStyle = 22, 22, 411, 482, 
+Task_ListMenu = 110, 110, 643, 558, 
+Task_Menus = 0, 0, 389, 460, 
+Task_CProperties = 155, 73, 544, 533, 
+Task_Props = 154, 154, 687, 602, 
+Task_Search = 88, 88, 621, 536, 
+Task_ProcessInfo = 44, 44, 577, 492, 
+Legend = 44, 44, 586, 492, , 110, 110, 652, 558, C
+Options = 44, 44, 586, 492, , 22, 22, 564, 470, C
+Task_MouseOver = 88, 88, 448, 536, 
+CDg1 = 88, 88, 621, 536, 
